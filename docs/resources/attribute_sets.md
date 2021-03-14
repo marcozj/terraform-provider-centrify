@@ -1,5 +1,5 @@
 ---
-page_title: "sets attribute in Resources - terraform-provider-centrify"
+page_title: "sets attribute in Resources - terraform-provider-centrifyvault"
 description: |-
   Sets attribute in resources.
 ---

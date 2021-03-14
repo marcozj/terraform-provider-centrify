@@ -1,5 +1,5 @@
 ---
-page_title: "system_set attribute in policy - terraform-provider-centrify"
+page_title: "system_set attribute in policy - terraform-provider-centrifyvault"
 description: |-
   system_set attribute in centrifyvault_policy Resource.
 ---
@@ -49,7 +49,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/system_set.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/system_set.tf)
 
 ## Argument Reference
 
@@ -60,9 +60,9 @@ Optional:
 - `allow_rdp_clipboard` - (Boolean) Allow RDP client to sync local clipboard with remote session. When enabled, allows users to copy texts or images from the local machine and paste them to the remote session, or vice versa. Applies to RDP native client and web client on supported browsers only.
 - `local_account_automatic_maintenance` - (Boolean) Enable local account automatic maintenance.
 - `local_account_manual_unlock` - (Boolean) Enable local account manual unlock.
-- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](../attribute_challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default System Login Profile (used if no conditions matched).
-- `privilege_elevation_rule` - (Block List) Privilege Elevation Challenge Rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `privilege_elevation_rule` - (Block List) Privilege Elevation Challenge Rules. Refer to [challenge_rule](../attribute_challengerule.md) attribute for details.
 - `privilege_elevation_default_profile_id` - (String) Default Privilege Elevation Profile (used if no conditions matched).
 - `remove_user_on_session_end` - (Bollean) Remove local accounts upon session termination (Windows only). When enabled, the client removes local accounts created when a session is started and their local system profiles and settings after the session terminates. This setting affects Windows systems only.
 - `allow_multiple_checkouts` - (Boolean) Allow multiple password checkouts for this system. Specifies whether multiple users can have the same account password checked out at the same time for a selected system. Enable it if only one user is allowed check out the password for a selected system at any given time. If disabled, the user must check the password in and have a new password generated before another user can access the system with the updated password. Enable it if you want to allow multiple users to have the account password checked out at the same time for a selected system. If you select Yes, multiple users can access the system without waiting for the password to be checked in.

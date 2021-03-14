@@ -1,5 +1,5 @@
 ---
-page_title: "mobile_device attribute in policy - terraform-provider-centrify"
+page_title: "mobile_device attribute in policy - terraform-provider-centrifyvault"
 description: |-
   mobile_device attribute in centrifyvault_policy Resource.
 ---
@@ -37,7 +37,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/mobile_device.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/mobile_device.tf)
 
 ## Argument Reference
 

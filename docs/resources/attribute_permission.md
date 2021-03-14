@@ -1,5 +1,5 @@
 ---
-page_title: "permission & member_permission attributes in Resources - terraform-provider-centrify"
+page_title: "permission & member_permission attributes in Resources - terraform-provider-centrifyvault"
 description: |-
   Permission and member_permission attributes in resources.
 ---

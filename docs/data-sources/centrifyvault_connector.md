@@ -1,5 +1,5 @@
 ---
-page_title: "centrifyvault_connector Data Source - terraform-provider-centrify"
+page_title: "centrifyvault_connector Data Source - terraform-provider-centrifyvault"
 description: |-
   This data source gets information of Centrify Connector.
 ---

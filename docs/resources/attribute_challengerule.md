@@ -1,5 +1,5 @@
 ---
-page_title: "challenge_rule attribute in Resources - terraform-provider-centrify"
+page_title: "challenge_rule attribute in Resources - terraform-provider-centrifyvault"
 description: |-
   challenge_rule attribute in resources.
 ---

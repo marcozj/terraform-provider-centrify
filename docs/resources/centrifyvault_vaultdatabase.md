@@ -1,5 +1,5 @@
 ---
-page_title: "centrifyvault_vaultdatabase Resource - terraform-provider-centrify"
+page_title: "centrifyvault_vaultdatabase Resource - terraform-provider-centrifyvault"
 description: |-
   This resource allows you to create/update/delete database.
 ---

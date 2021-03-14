@@ -1,5 +1,5 @@
 ---
-page_title: "centrifyvault_policy & centrifyvault_policyorder Resources - terraform-provider-centrify"
+page_title: "centrifyvault_policy & centrifyvault_policyorder Resources - terraform-provider-centrifyvault"
 description: |-
   These resources allows you to create/update/delete policy.
 ---
@@ -131,7 +131,7 @@ More examples for `centrifyvault_policy` can be found [here](../../examples/cent
   - `password_settings` - (Block List, Max: 1) Settings in **User Security -> Password Settings** menu. Refer to [password_settings](./policy/password_settings.md) attribute for details.
   - `oath_otp` (Block List, Max: 1) Settings in **User Security -> OATH OTP** menu. Refer to [oath_otp](./policy/oath_otp.md) attribute for details.
   - `radius` - (Block List, Max: 1) Settings in **User Security -> RADIUS** menu. Refer to [radius](./policy/radius.md) attribute for details.
-  - `user_account` - (Block List, Max: 1) Settings in **User Security -> User Account** menu. Refer to [radius](./policy/user_account.md) attribute for details.
+  - `user_account` - (Block List, Max: 1) Settings in **User Security -> User Account** menu. Refer to [user_account](./policy/user_account.md) attribute for details.
   - `system_set` - (Block List, Max: 1) Settings in **Resouces -> Systems** menu. Refer to [system_set](./policy/system_set.md) attribute for details.
   - `database_set` - (Block List, Max: 1) Settings in **Resouces -> Databases** menu. Refer to [database_set](./policy/database_set.md) attribute for details.
   - `domain_set` - (Block List, Max: 1) Settings in **Resouces -> Domains** menu. Refer to [domain_set](./policy/domain_set.md) attribute for details.

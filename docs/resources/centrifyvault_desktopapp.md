@@ -1,5 +1,5 @@
 ---
-page_title: "centrifyvault_desktopapp Resource - terraform-provider-centrify"
+page_title: "centrifyvault_desktopapp Resource - terraform-provider-centrifyvault"
 description: |-
   This resource allows you to create/update/delete DesktopApp.
 ---

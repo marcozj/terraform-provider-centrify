@@ -1,5 +1,5 @@
 ---
-page_title: "centrifyvault_passwordprofile Data Source - terraform-provider-centrify"
+page_title: "centrifyvault_passwordprofile Data Source - terraform-provider-centrifyvault"
 description: |-
   This data source gets information of password profile.
 ---
@@ -31,9 +31,6 @@ More examples can be found [here](../../examples/centrifyvault_passwordprofile/)
 ## Attributes Reference
 
 - `id` - id of the password profile.
-
 - `name` - name property.
-
 - `profile_type` - profile_type property.
-
 - `description` - (String) description property.

@@ -1,5 +1,5 @@
 ---
-page_title: "secret_set attribute in policy - terraform-provider-centrify"
+page_title: "secret_set attribute in policy - terraform-provider-centrifyvault"
 description: |-
   secret_set attribute in centrifyvault_policy Resource.
 ---
@@ -34,11 +34,11 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/secret_set.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/secret_set.tf)
 
 ## Argument Reference
 
 Optional:
 
-- `challenge_rule` (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `challenge_rule` (Block List) Authentication rules. Refer to [challenge_rule](../attribute_challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default Profile (used if no conditions matched)

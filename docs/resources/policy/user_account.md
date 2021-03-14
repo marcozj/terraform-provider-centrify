@@ -1,5 +1,5 @@
 ---
-page_title: "user_account attribute in policy - terraform-provider-centrify"
+page_title: "user_account attribute in policy - terraform-provider-centrifyvault"
 description: |-
   user_account attribute in centrifyvault_policy Resource.
 ---
@@ -46,7 +46,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/user_account.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/user_account.tf)
 
 ## Argument Reference
 

@@ -12,7 +12,7 @@ Use the navigation to the left to read about the available resources.
 
 ## Using The Provider
 
-### Specifying Provider Requirements**
+### Specifying Provider Requirements
 
 Use special `terraform` configuration block type to configure some behaviors of Terraform itself, such as provider source and minimum version.
 

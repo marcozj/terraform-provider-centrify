@@ -1,5 +1,5 @@
 ---
-page_title: "connector_list attribute in Resources - terraform-provider-centrify"
+page_title: "connector_list attribute in Resources - terraform-provider-centrifyvault"
 description: |-
   connector_list attribute in resources.
 ---

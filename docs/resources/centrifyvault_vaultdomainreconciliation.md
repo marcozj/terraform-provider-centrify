@@ -1,5 +1,5 @@
 ---
-page_title: "centrifyvault_vaultdomainreconciliation Resource - terraform-provider-centrify"
+page_title: "centrifyvault_vaultdomainreconciliation Resource - terraform-provider-centrifyvault"
 description: |-
   This resource allows you to create/update/delete domain reconciliation settings.
 ---

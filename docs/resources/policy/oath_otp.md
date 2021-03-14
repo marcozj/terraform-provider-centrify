@@ -1,5 +1,5 @@
 ---
-page_title: "oath_otp attribute in policy - terraform-provider-centrify"
+page_title: "oath_otp attribute in policy - terraform-provider-centrifyvault"
 description: |-
   oath_otp attribute in centrifyvault_policy Resource.
 ---
@@ -27,7 +27,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/oath_otp.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/oath_otp.tf)
 
 ## Argument Reference
 

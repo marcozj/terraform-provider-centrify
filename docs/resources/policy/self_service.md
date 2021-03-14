@@ -1,5 +1,5 @@
 ---
-page_title: "self_service attribute in policy - terraform-provider-centrify"
+page_title: "self_service attribute in policy - terraform-provider-centrifyvault"
 description: |-
   self_service attribute in centrifyvault_policy Resource.
 ---
@@ -45,7 +45,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/self_service.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/self_service.tf)
 
 ## Argument Reference
 
