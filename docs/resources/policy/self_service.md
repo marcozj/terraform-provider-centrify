@@ -45,7 +45,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/self_service.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/policy_self_service.tf)
 
 ## Argument Reference
 

@@ -52,7 +52,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/password_settings.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/policy_password_settings.tf)
 
 ## Argument Reference
 

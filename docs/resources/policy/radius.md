@@ -31,7 +31,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/radius.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/policy_radius.tf)
 
 ## Argument Reference
 

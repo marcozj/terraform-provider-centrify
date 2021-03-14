@@ -37,7 +37,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/mobile_device.tf)
+More examples can be found [here](../../../examples/centrifyvault_policy/policy_mobile_device.tf)
 
 ## Argument Reference
 
