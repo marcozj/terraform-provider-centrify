@@ -100,4 +100,4 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Windows Service | [`centrifyvault_service`](./resources/service.md) | |
 | Desktop App | [`centrifyvault_desktopapp`](./resources/desktopapp.md) | |
 | Policy | [`centrifyvault_policyorder`](./resources/policy.md) | |
-| Policy | [`centrifyvault_policy`](./resources/olicy.md) | [`centrifyvault_policy`](./data-sources/policy.md) |
+| Policy | [`centrifyvault_policy`](./resources/policy.md) | [`centrifyvault_policy`](./data-sources/policy.md) |
