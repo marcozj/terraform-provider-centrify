@@ -1,5 +1,11 @@
 # RELEASE NOTES
 
+## 0.1.2 (March 18, 2021)
+
+BUG FIXES:
+
+- Documentation links and file layout.
+
 ## 0.1.1 (March 14, 2021)
 
 BUG FIXES:

@@ -1,7 +1,5 @@
 ---
-page_title: "domain_set attribute in policy - terraform-provider-centrifyvault"
-description: |-
-  domain_set attribute in centrifyvault_policy Resource.
+subcategory: "Policy Configuration"
 ---
 
 # domain_set attribute
@@ -37,7 +35,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/policy_domain_set.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_domain_set.tf)
 
 ## Argument Reference
 

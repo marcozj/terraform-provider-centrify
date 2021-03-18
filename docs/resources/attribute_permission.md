@@ -1,7 +1,5 @@
 ---
-page_title: "permission & member_permission attributes in Resources - terraform-provider-centrifyvault"
-description: |-
-  Permission and member_permission attributes in resources.
+subcategory: "Common Attribute"
 ---
 
 # Permission and member_permission attribute

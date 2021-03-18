@@ -43,5 +43,5 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 - `description` - (String) Description of an manual set.
 - `subtype` - (String) SubObjectType for application. Can be set to `Web` or `Desktop`. Only applicable if type is `Application`.
-- `permission` - (Block Set) Set permissions. Refer to [permission attribute](/docs/resources/attribute/permission.md) for details.
-- `member_permission` - (Block Set) Set member permissions. Refer to [member_permission attribute](/docs/resources/attribute/permission.md) for details. Each type of Set has different member_permission values and you can find them in [examples](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_manualset).
+- `permission` - (Block Set) Set permissions. Refer to [permission attribute](./attribute_permission.md) for details.
+- `member_permission` - (Block Set) Set member permissions. Refer to [member_permission attribute](./attribute_permission.md) for details. Each type of Set has different member_permission values and you can find them in [examples](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_manualset).

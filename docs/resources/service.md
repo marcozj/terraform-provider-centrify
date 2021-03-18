@@ -46,5 +46,5 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `restart_start_time` - (String) Start time of the time range restart is allowed.
 - `restart_end_time` - (String) End time of the time range restart is allowed.
 - `use_utc_time` - (Boolean) Whether to use UTC time.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.

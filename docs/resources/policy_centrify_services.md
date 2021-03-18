@@ -1,7 +1,5 @@
 ---
-page_title: "centrify_services attribute in policy - terraform-provider-centrifyvault"
-description: |-
-  centrify_services attribute in centrifyvault_policy Resource.
+subcategory: "Policy Configuration"
 ---
 
 # centrify_services attribute
@@ -48,14 +46,14 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/policy_centrify_services.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_centrify_services.tf)
 
 ## Argument Reference
 
 Optional:
 
 - `authentication_enabled` - (Boolean) Enable authentication policy controls.
-- `challenge_rule` (Block List) Authentication rules. Refer to [challenge_rule](../attribute_challengerule.md) attribute for details.
+- `challenge_rule` (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default Profile (used if no conditions matched)
 - `session_lifespan` (Number) Hours until session expires (default 12). Range between `1` to `9999`.
 - `allow_session_persist` - (Boolean) Allow 'Keep me signed in' checkbox option at login (session spans browser sessions).

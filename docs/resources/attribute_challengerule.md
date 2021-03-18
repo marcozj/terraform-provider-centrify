@@ -1,7 +1,5 @@
 ---
-page_title: "challenge_rule attribute in Resources - terraform-provider-centrifyvault"
-description: |-
-  challenge_rule attribute in resources.
+subcategory: "Common Attribute"
 ---
 
 # challenge_rule attribute
@@ -35,12 +33,12 @@ resource "centrifyvault_vaultsystem" "win_system" {
       }
       rule {
         filter = "Browser"
-		    condition = "OpNotEqual"
+        condition = "OpNotEqual"
         value = "Firefox"
       }
       rule {
         filter = "CountryCode"
-		    condition = "OpNotEqual"
+        condition = "OpNotEqual"
         value = "GA"
       }
     }

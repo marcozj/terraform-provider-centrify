@@ -28,9 +28,9 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 ### Optional
 
 - `description` - (String) Description of the SSH Key
-- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](/docs/resources/attribute/challengerule.md) attribute for details.
+- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default SSH Key Challenge Profile ID (used if no conditions matched).
 - `private_key` - (String, Sensitive) SSH private key.
 - `passphrase` - (String, Sensitive) Passphrase to use for encrypting the PrivateKey.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.

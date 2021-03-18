@@ -1,7 +1,5 @@
 ---
-page_title: "sets attribute in Resources - terraform-provider-centrifyvault"
-description: |-
-  Sets attribute in resources.
+subcategory: "Common Attribute"
 ---
 
 # Sets attribute

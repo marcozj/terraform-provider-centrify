@@ -67,6 +67,6 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
   - `zone_role_cleanup_interval` - (Number) Expired zone role assignment removal interval (hours). Range between `1` to `2147483647`. Default is `6`.
 - Zone Role Workflow (TODO)
 
-- `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](/docs/resources/attribute/connector_list.md) attribute for details.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.
+- `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.

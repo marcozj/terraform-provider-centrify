@@ -1,7 +1,5 @@
 ---
-page_title: "radius attribute in policy - terraform-provider-centrifyvault"
-description: |-
-  radius attribute in centrifyvault_policy Resource.
+subcategory: "Policy Configuration"
 ---
 
 # radius attribute
@@ -31,7 +29,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/policy_radius.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_radius.tf)
 
 ## Argument Reference
 

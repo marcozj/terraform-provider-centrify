@@ -1,7 +1,5 @@
 ---
-page_title: "password_settings attribute in policy - terraform-provider-centrifyvault"
-description: |-
-  password_settings attribute in centrifyvault_policy Resource.
+subcategory: "Policy Configuration"
 ---
 
 # password_settings attribute
@@ -52,7 +50,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](../../../examples/centrifyvault_policy/policy_password_settings.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_password_settings.tf)
 
 ## Argument Reference
 

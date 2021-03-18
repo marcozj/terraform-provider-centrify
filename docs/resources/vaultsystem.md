@@ -51,10 +51,10 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `checkout_lifetime` - (Number) Checkout lifetime (minutes). Specifies the number of minutes that a checked out password is valid. Range between `15` to `2147483647`.
 - `allow_remote_access` - (Boolean) Allow access from a public network (web client only). Specifies whether remote connections are allowed from a public network for a selected system.
 - `allow_rdp_clipboard` - (Boolean) Allow RDP client to sync local clipboard with remote session. When enabled, allows users to copy texts or images from the local machine and paste them to the remote session, or vice versa. Applies to RDP native client and web client on supported browsers only.
-- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](/docs/resources/attribute/challengerule.md) attribute for details.
+- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default System Login Profile (used if no conditions matched).
 - `privilege_elevation_default_profile_id` - (String) Default Privilege Elevation Profile (used if no conditions matched).
-- `privilege_elevation_rule` - (Block List) Privilege Elevation Challenge Rules. Refer to [privilege_elevation_rule](/docs/resources/attribute/challengerule.md) attribute for details.
+- `privilege_elevation_rule` - (Block List) Privilege Elevation Challenge Rules. Refer to [privilege_elevation_rule](./attribute_challengerule.md) attribute for details.
 
 - `local_account_automatic_maintenance` - (Boolean) Local Account Automatic Maintenance. Specifies whether local account automatic maintenance is enabled.
 - `local_account_manual_unlock` - (Boolean) Local Account Manual Unlock - Windows only. Specifies whether local account manual unlock is enabled.
@@ -81,6 +81,6 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `use_domain_workflow_rules` - (Boolean) Assignable Zone Roles - Use domain assignments.
 - `use_domain_workflow_approvers` - (Boolean) Approver list - Use domain assignments
 
-- `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](/docs/resources/attribute/connector_list.md) attribute for details.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.
+- `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
