@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_manualset Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of manual Set.
+subcategory: "Resources"
 ---
 
 # centrifyvault_manualset (Data Source)
@@ -17,7 +15,7 @@ data "centrifyvault_manualset" "lab_systems" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_manualset/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_manualset)
 
 ## Search Attributes
 

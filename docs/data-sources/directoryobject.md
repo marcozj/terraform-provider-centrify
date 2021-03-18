@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_directoryobject Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of directory object such as account and group.
+subcategory: "Settings"
 ---
 
 # centrifyvault_directoryobject (Data Source)
@@ -27,7 +25,7 @@ data "centrifyvault_directoryobject" "ad_user" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_role/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_role)
 
 ## Search Attributes
 

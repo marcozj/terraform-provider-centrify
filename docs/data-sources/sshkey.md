@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_sshkey Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of ssh key.
+subcategory: "Resources"
 ---
 
 # centrifyvault_sshkey (Data Source)
@@ -24,7 +22,7 @@ output "testkey_sshkey" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_sshkey/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_sshkey)
 
 ## Search Attributes
 

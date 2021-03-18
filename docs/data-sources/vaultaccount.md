@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultaccount Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of account.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultaccount (Data Source)
@@ -17,7 +15,7 @@ data "centrifyvault_vaultaccount" "centos1_local_account" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultaccount/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultaccount)
 
 ## Search Attributes
 

@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultdomain Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of domain.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultdomain (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_vaultdomain" "example.com" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultdomain/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdomain)
 
 ## Search Attributes
 

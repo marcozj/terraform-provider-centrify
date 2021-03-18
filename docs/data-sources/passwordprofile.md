@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_passwordprofile Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of password profile.
+subcategory: "Settings"
 ---
 
 # centrifyvault_passwordprofile (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_passwordprofile" "win_profile" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_passwordprofile/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_passwordprofile)
 
 ## Search Attributes
 

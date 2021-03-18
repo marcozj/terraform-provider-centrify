@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_multiplexedaccount Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of multiplexed account.
+subcategory: "Resources"
 ---
 
 # centrifyvault_multiplexedaccount (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_multiplexedaccount" "testmultiplex" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_service/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_service)
 
 ## Search Attributes
 

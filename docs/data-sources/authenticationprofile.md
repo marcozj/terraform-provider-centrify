@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_authenticationprofile Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of authentication profile.
+subcategory: "Settings"
 ---
 
 # centrifyvault_authenticationprofile (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_authenticationprofile" "new_device" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_authenticationprofile/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_authenticationprofile)
 
 ## Search Attributes
 

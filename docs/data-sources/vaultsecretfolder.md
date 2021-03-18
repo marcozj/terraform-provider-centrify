@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultsecretfolder Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of secret folder.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultsecretfolder (Data Source)
@@ -21,7 +19,7 @@ data "centrifyvault_vaultsecretfolder" "level2_folder" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultsecret/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsecret)
 
 ## Search Attributes
 

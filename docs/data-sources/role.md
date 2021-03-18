@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_role Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of role.
+subcategory: "Access"
 ---
 
 # centrifyvault_role (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_role" "system_admin" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_role/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_role)
 
 ## Search Attributes
 

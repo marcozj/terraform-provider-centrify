@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_directoryservice Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of directory service.
+subcategory: "Settings"
 ---
 
 # centrifyvault_directoryservice (Data Source)
@@ -24,7 +22,7 @@ data "centrifyvault_directoryservice" "federated_dir" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_role/role_member_with_federatedgroup.tf) and [here](../../examples/centrifyvault_role/role_member_with_adgroup.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_role/role_member_with_federatedgroup.tf) and [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_role/role_member_with_adgroup.tf)
 
 ## Search Attributes
 

@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_user Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of Centrify Directory User.
+subcategory: "Access"
 ---
 
 # centrifyvault_user (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_user" "admin" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_user/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_user)
 
 ## Search Attributes
 
