@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_cloudprovider Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of authentication cloud provider.
+subcategory: "Resources"
 ---
 
 # centrifyvault_cloudprovider (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_cloudprovider" "my_aws" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_cloudprovider/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_cloudprovider)
 
 ## Search Attributes
 

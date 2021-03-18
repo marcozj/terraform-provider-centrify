@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultsecret Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of secret.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultsecret (Data Source)
@@ -17,7 +15,7 @@ data "centrifyvault_vaultsecret" "test_secret" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultsecret/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsecret)
 
 ## Search Attributes
 

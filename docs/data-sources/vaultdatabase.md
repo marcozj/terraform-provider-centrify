@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultdatabase Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of database.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultdatabase (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_vaultdatabase" "sql-centrifysuite" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultdatabase/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdatabase)
 
 ## Search Attributes
 

@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_policy Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of policy.
+subcategory: "Access"
 ---
 
 # centrifyvault_policy (Data Source)
@@ -16,7 +14,7 @@ data "centrifyvault_policy" "Default_Policy" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_policy/policyorder.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policyorder.tf)
 
 ## Search Attributes
 

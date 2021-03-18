@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_authenticationprofile Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete Authentication Profile.
+subcategory: "Settings"
 ---
 
 # centrifyvault_authenticationprofile (Resource)
@@ -24,7 +22,7 @@ resource "centrifyvault_authenticationprofile" "twofa" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_authenticationprofile/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_authenticationprofile)
 
 ## Argument Reference
 

@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultsystem Data Source - terraform-provider-centrifyvault"
-description: |-
-  This data source gets information of system.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultsystem (Data Source)
@@ -18,7 +16,7 @@ data "centrifyvault_vaultsystem" "demo_system" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultsystem/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsystem)
 
 ## Search Attributes
 
