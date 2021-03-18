@@ -1,9 +1,3 @@
----
-page_title: "Centrify Provider"
-description: |-
-  The Centrify provider is used to interact with the resources in Centrify Vault.
----
-
 # Centrify Provider
 
 The Centrify provider is used to interact with the resources in Centrify Vault. It also allows other Terraform providers to retrieve vaulted password or secret from Centrify Vault.

@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_role Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete role.
+subcategory: "Access"
 ---
 
 # centrifyvault_role (Resource)
@@ -20,7 +18,7 @@ resource "centrifyvault_role" "test_role" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_role/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_role)
 
 ## Argument Reference
 

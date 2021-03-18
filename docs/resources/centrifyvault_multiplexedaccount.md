@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_multiplexedaccount Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete multiplexed account.
+subcategory: "Resources"
 ---
 
 # centrifyvault_multiplexedaccount (Resource)
@@ -21,7 +19,7 @@ resource "centrifyvault_multiplexedaccount" "testmultiplex" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_service/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_service)
 
 ## Argument Reference
 
@@ -33,4 +31,4 @@ More examples can be found [here](../../examples/centrifyvault_service/)
 ### Optional
 
 - `description` - (String) Description of the multiplexed account.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.

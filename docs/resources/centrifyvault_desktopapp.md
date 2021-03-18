@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_desktopapp Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete DesktopApp.
+subcategory: "Applications"
 ---
 
 # centrifyvault_desktopapp (Resource)
@@ -34,7 +32,7 @@ resource "centrifyvault_desktopapp" "test_desktopapp" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_desktopapp/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_desktopapp)
 
 ## Argument Reference
 
@@ -53,11 +51,11 @@ More examples can be found [here](../../examples/centrifyvault_desktopapp/)
 - `command_line` - (String) Command line. The command line used to initiate launching the desktop application. Values can be entered directly or substituted at run-time using the command line arguments table.
 - `command_parameter` - (Block Set) Command Line Arguments. (see [reference for `command_parameter`](#reference-for-command_parameter)) Run-time argument substitutions for the command line.
 
-- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](/docs/resources/attribute/challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default Profile (used if no conditions matched).
 - `policy_script` - (String) Use script to specify authentication rules (configured rules are ignored)
-- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.
 
 ## Reference for `command_parameter`
 

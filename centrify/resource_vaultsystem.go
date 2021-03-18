@@ -395,15 +395,16 @@ func resourceVaultSystemCreate(d *schema.ResourceData, m interface{}) error {
 	d.SetPartial("session_type")
 	d.SetPartial("description")
 
-	// 2nd step to update system login profile
-	// Create API call doesn't set system login profile so need to run update again
-	if object.LoginDefaultProfile != "" {
-		logger.Debugf("Update login profile for System creation: %s", ResourceIDString(d))
+	// 2nd step to update system login profile and connectors
+	// Create API call doesn't set system login profile and connectors so need to run update again
+	if object.LoginDefaultProfile != "" || object.ProxyCollectionList != "" {
+		logger.Debugf("Update login profile and connector for System creation: %s", ResourceIDString(d))
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating System attribute: %v", err)
 		}
 		d.SetPartial("default_profile_id")
+		d.SetPartial("connector_list")
 	}
 
 	// 3rd step to add system to Sets

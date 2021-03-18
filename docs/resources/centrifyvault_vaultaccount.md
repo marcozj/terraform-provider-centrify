@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultaccount Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete account.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultaccount (Resource)
@@ -23,13 +21,13 @@ resource "centrifyvault_vaultaccount" "unix_account" {
 }
 ```
 
-Examples of system account can be found [here](../../examples/centrifyvault_vaultsystem/)
+Examples of system account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsystem)
 
-Examples of database account can be found [here](../../examples/centrifyvault_vaultdatabase/)
+Examples of database account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdatabase)
 
-Examples of domain account can be found [here](../../examples/centrifyvault_vaultdomain/)
+Examples of domain account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdomain)
 
-Examples of cloud provider account can be found [here](../../examples/centrifyvault_cloudprovider/)
+Examples of cloud provider account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_cloudprovider)
 
 ## Argument Reference
 
@@ -43,8 +41,8 @@ Examples of cloud provider account can be found [here](../../examples/centrifyva
 - `use_proxy_account` - (Boolean) Use proxy account to manage this account. Only applicable if `credential_type` is `Password` and the system that this account belongs to has `proxyuser` configured.
 - `managed` - (Boolean) If this account is managed. By enabling this option the credential will be automatically changed and become unknown to other applications or users.
 - `description` - (String) Description of the account.
-- `checkout_lifetime` - (Number) Checkout lifetime (minutes). Specifies the number of minutes that a checked out password is valid. Range between `15` to `2147483647`. **Note:** Do NOT set this if it is IAM user otherwise `access_secret_checkout_default_profile_id` and 
-- `challenge_rule` - (Block List) Password checkout challenge rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `checkout_lifetime` - (Number) Checkout lifetime (minutes). Specifies the number of minutes that a checked out password is valid. Range between `15` to `2147483647`. **Note:** Do NOT set this if it is IAM user.
+- `challenge_rule` - (Block List) Password checkout challenge rules. Refer to [challenge_rule](/docs/resources/attribute/challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default password checkout profile (used if no conditions matched).
 - `access_secret_checkout_default_profile_id` - (String) "Default secret access key checkout challenge rule ID. Only applicable to AWS IAM user.
 - `access_secret_checkout_rule` - (Block List) Secret Access Key Checkout Challenge Rules. Only applicable to AWS IAM user. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
@@ -57,8 +55,8 @@ Examples of cloud provider account can be found [here](../../examples/centrifyva
 - `domain_id` - (String) ID of the domain it belongs to.
 - `database_id` - (String) ID of the database it belongs to.
 - `cloudprovider_id` - (String) ID of the cloud provider it belongs to.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the account belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the account belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.
 
 ## Reference for `access_key`
 

@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_globalgroupmappings Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete global federated group mapping.
+subcategory: "Settings"
 ---
 
 # centrifyvault_globalgroupmappings (Resource)
@@ -23,7 +21,7 @@ resource "centrifyvault_globalgroupmappings" "group_mappings" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_globalgroupmappings/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_globalgroupmappings)
 
 ## Argument Reference
 
