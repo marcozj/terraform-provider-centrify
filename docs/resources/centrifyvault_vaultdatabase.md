@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultdatabase Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete database.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultdatabase (Resource)
@@ -22,7 +20,7 @@ resource "centrifyvault_vaultdatabase" "mssql" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultdatabase/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdatabase)
 
 ## Argument Reference
 
@@ -48,6 +46,6 @@ More examples can be found [here](../../examples/centrifyvault_vaultdatabase/)
 - `password_profile_id` - (String) Password complexity profile id.
 - `enable_password_history_cleanup` - (Boolean) Enable periodic password history cleanup. Specifies whether retired passwords should be deleted periodically.
 - `password_historycleanup_duration` - (Number) Password history cleanup (days). Deletes retired passwords automatically that were last modified either equal to or greater than the number of days specified here. Range between `90` to `2147483647`.
-- `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
+- `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](/docs/resources/attribute/connector_list.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./docs/resources/attribute/sets.md) attribute for details.

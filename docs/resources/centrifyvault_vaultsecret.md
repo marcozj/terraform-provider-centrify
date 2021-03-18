@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_vaultsecret Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete secret.
+subcategory: "Resources"
 ---
 
 # centrifyvault_vaultsecret (Resource)
@@ -19,7 +17,7 @@ resource "centrifyvault_vaultsecret" "test_secret" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_vaultsecret/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsecret)
 
 ## Argument Reference
 
@@ -31,10 +29,10 @@ More examples can be found [here](../../examples/centrifyvault_vaultsecret/)
 ### Optional
 
 - `description` - (String) Description of the secret.
-- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](/docs/resources/attribute/challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default System Login Profile (used if no conditions matched).
 - `folder_id` - (String) ID of the folder where the secret is located.
 - `parent_path` - (String) Path of parent folder
 - `secret_text` - (String, Sensitive) Content of the secret.
-- `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
-- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
+- `permission` - (Block Set) Domain permissions. Refer to [permission](/docs/resources/attribute/permission.md) attribute for details.
+- `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](/docs/resources/attribute/sets.md) attribute for details.

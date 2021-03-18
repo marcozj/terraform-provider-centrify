@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_user Resource - terraform-provider-centrifyvault"
-description: |-
-  This resource allows you to create/update/delete Centrify Directory User.
+subcategory: "Access"
 ---
 
 # centrifyvault_user (Resource)
@@ -22,7 +20,7 @@ resource "centrifyvault_user" "testuser" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_user/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_user)
 
 ## Argument Reference
 

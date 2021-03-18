@@ -1,7 +1,5 @@
 ---
-page_title: "centrifyvault_passwordprofile Resource - terraform-provider-centrifyvault"
-description: |-
-   This resource allows you to create/update/delete password profile.
+subcategory: "Settings"
 ---
 
 # centrifyvault_passwordprofile (Resource)
@@ -30,7 +28,7 @@ resource "centrifyvault_passwordprofile" "test_pw_profile" {
 }
 ```
 
-More examples can be found [here](../../examples/centrifyvault_passwordprofile/)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_passwordprofile)
 
 ## Argument Reference
 
