@@ -39,4 +39,4 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Optional:
 
 - `challenge_rule` (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
-- `default_profile_id` - (String) Default Profile (used if no conditions matched)
+- `default_profile_id` - (String) Default Profile (used if no conditions matched).
