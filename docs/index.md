@@ -87,6 +87,7 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Role | [`centrifyvault_role`](./resources/role.md) | [`centrifyvault_role`](./data-sources/role.md) |
 | Authentication Profile | [`centrifyvault_authenticationprofile`](./resources/authenticationprofile.md) | [`centrifyvault_authenticationprofile`](./data-sources/authenticationprofile.md) |
 | Password Profile | [`centrifyvault_passwordprofile`](./resources/passwordprofile.md) | [`centrifyvault_passwordprofile`](./data-sources/passwordprofile.md) |
+| Connector | | [`centrifyvault_connector`](./connector.md) |
 | System | [`centrifyvault_vaultsystem`](./resources/vaultsystem.md) | [`centrifyvault_vaultsystem`](./data-sources/vaultsystem.md) |
 | Database | [`centrifyvault_vaultdatabase`](./resources/vaultdatabase.md) | [`centrifyvault_vaultdatabase`](./data-sources/vaultdatabase.md) |
 | Domain | [`centrifyvault_vaultdomain`](./resources/vaultdomain.md) | [`centrifyvault_vaultdomain`](./data-sources/vaultdomain.md) |
