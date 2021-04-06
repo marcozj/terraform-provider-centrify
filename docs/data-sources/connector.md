@@ -25,6 +25,9 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 ### Optional
 
 - `status` - (String) Online status of the Connector. Can be set to `Active` or `Inactive`.
+- `machine_name` - (String) Machine name of the Connector.
+- `dns_host_name` - (String) DNS host name of the Connector.
+- `forest` - (String) Forst name of the Connector.
 - `version` - (String) Version number of the Connector.
 - `vpc_identifier` - (String) AWS VPC Identifier. In a format of arn:aws:ec2:\<region name\>:\<VPC owner ID\>:vpc/\<VPC ID\>. For example: arn:aws:ec2:ap-southeast-1:012345678912:vpc/vpc-06e6bcae08ed8577c
 
@@ -33,6 +36,8 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `id` - (String) The ID of this resource.
 - `name` - (String) name property.
 - `machine_name` - (String) machine_name property.
+- `dns_host_name` - (String) dns_host_name property.
+- `forest` - (String) forest property.
 - `ssh_service` - (String) ssh_service property.
 - `rdp_service` - (String) rdp_service property.
 - `ad_proxy` - (String) ad_proxy property.

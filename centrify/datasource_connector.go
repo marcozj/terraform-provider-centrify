@@ -24,6 +24,14 @@ func dataSourceConnector() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"dns_host_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"forest": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"ssh_service": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -86,6 +94,9 @@ func dataSourceConnectorRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*restapi.RestClient)
 	object := vault.NewConnector(client)
 	object.Name = d.Get("name").(string)
+	object.MachineName = d.Get("machine_name").(string)
+	object.DnsHostName = d.Get("dns_host_name").(string)
+	object.Forest = d.Get("forest").(string)
 	object.Status = d.Get("status").(string)
 	object.Version = d.Get("version").(string)
 	object.VpcIdentifier = d.Get("vpc_identifier").(string)
@@ -93,13 +104,15 @@ func dataSourceConnectorRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving connector with name '%s': %s", object.Name, err)
 	}
 
 	//logger.Debugf("Found connector: %+v", result)
 	d.SetId(result["ID"].(string))
 	d.Set("name", result["Name"].(string))
 	d.Set("machine_name", result["MachineName"].(string))
+	d.Set("dns_host_name", result["DnsHostName"].(string))
+	d.Set("forest", result["Forest"].(string))
 	d.Set("ssh_service", result["SSHService"].(string))
 	d.Set("rdp_service", result["RDPService"].(string))
 	d.Set("ad_proxy", result["ADProxy"].(string))
