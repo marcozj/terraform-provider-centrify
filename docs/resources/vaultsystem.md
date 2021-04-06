@@ -76,10 +76,17 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `enable_sshkey_history_cleanup` - (Boolean) Enable periodic SSH key history cleanup - SSH system only. Specifies whether retired passwords should be deleted periodically.
 - `sshkey_historycleanup_duration` - (Number) SSH key history cleanup (days) - SSH system only. Deletes retired SSH keys automatically that were last modified either equal to or greater than the number of days specified here. Range between `90` to `2147483647`.
 
+- `agent_auth_workflow_enabled` - (Boolean) Enable Agent Auth Workflow. Windows and Unix/Linux only.
+- `agent_auth_workflow_approver` - (Block List) List of approvers. Windows and Unix/Linux only. Refer to [agent_auth_workflow_approver](./attribute_workflow_approver.md) attribute for details.
+- `privilege_elevation_workflow_enabled` - (Boolean) Enable Privilege Elevation Request Workflow. Windows and Unix/Linux only.
+- `privilege_elevation_workflow_approver` - (Block List) List of approvers. Windows and Unix/Linux only. Refer to [privilege_elevation_workflow_approver](./attribute_workflow_approver.md) attribute for details.
+
 - `use_domainadmin_for_zonerole_workflow` - (Boolean) Use Domain Administrator Account for Zone Role Workflow operations - Windows and Unix/Linux only.
 - `enable_zonerole_workflow` - (Boolean) Enable zone role requests for this system - Windows and Unix/Linux only.
-- `use_domain_workflow_rules` - (Boolean) Assignable Zone Roles - Use domain assignments.
-- `use_domain_workflow_approvers` - (Boolean) Approver list - Use domain assignments
+- `use_domain_assignment_for_zoneroles` - (Boolean) Assignable Zone Roles - Use domain assignments.
+- `assigned_zonerole` - (Block Set) List of zone Role. Windows and Unix/Linux only. Applicable only if `use_domainadmin_for_zonerole_workflow` is `true` and`enable_zonerole_workflow` is `true` and `use_domain_assignment_for_zoneroles` is `false`. Refer to [assigned_zonerole](./attribute_assigned_zonerole.md) attribute for details.
+- `use_domain_assignment_for_zonerole_approvers` - (Boolean) Approver list - Use domain assignments
+- `assigned_zonerole_approver` - (Block List) List of approvers for Zone Role request. Windows and Unix/Linux only. Applicable only if `use_domainadmin_for_zonerole_workflow` is `true` and`enable_zonerole_workflow` is `true` and `use_domain_assignment_for_zonerole_approvers` is `false`. Refer to [workflow_approver](./attribute_workflow_approver.md) and [assigned_zonerole_approver](./attribute_assigned_zonerole.md) for details.
 
 - `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.

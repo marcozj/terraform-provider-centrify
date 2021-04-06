@@ -23,6 +23,12 @@ resource "centrifyvault_vaultsecret" "test_secret" {
         data.centrifyvault_manualset.test_set.id,
     ]
 
+    workflow_enabled = true
+    workflow_approver {
+      guid = data.centrifyvault_role.system_admin.id
+      name = data.centrifyvault_role.system_admin.name
+      type = "Role"
+    }
     permission {
         principal_id = data.centrifyvault_role.system_admin.id
         principal_name = data.centrifyvault_role.system_admin.name

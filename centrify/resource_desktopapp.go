@@ -123,6 +123,12 @@ func resourceDesktopApp() *schema.Resource {
 				Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
 				Description: "Default authentication profile ID",
 			},
+			// Workflow
+			"workflow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"workflow_approver": getWorkflowApproversSchema(),
 			"sets": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -167,7 +173,7 @@ func resourceDesktopAppRead(d *schema.ResourceData, m interface{}) error {
 	logger.Infof("Reading DesktopApp: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
-	// Create a NewVaultSecret object and populate ID attribute
+	// Create a NewDesktopApp object and populate ID attribute
 	object := vault.NewDesktopApp(client)
 	object.ID = d.Id()
 	err := object.Read()
@@ -185,7 +191,21 @@ func resourceDesktopAppRead(d *schema.ResourceData, m interface{}) error {
 	}
 	logger.Debugf("Generated Map for resourceDesktopAppRead(): %+v", schemamap)
 	for k, v := range schemamap {
-		d.Set(k, v)
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		case "workflow_settings":
+			if object.WorkflowEnabled && v.(string) != "" {
+				wfschema, err := convertWorkflowSchema(v.(string))
+				if err != nil {
+					return err
+				}
+				d.Set("workflow_approver", wfschema)
+				d.Set(k, v)
+			}
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	logger.Infof("Completed reading DesktopApp: %s", object.Name)
@@ -283,7 +303,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "template_name", "description", "application_host_id", "login_credential_type", "application_account_id", "application_alias",
-		"command_line", "command_parameter", "default_profile_id", "challenge_rule", "policy_script") {
+		"command_line", "command_parameter", "default_profile_id", "challenge_rule", "policy_script", "workflow_enabled", "workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating DesktopApp attribute: %v", err)
@@ -301,6 +321,8 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 		d.SetPartial("default_profile_id")
 		d.SetPartial("challenge_rule")
 		d.SetPartial("policy_script")
+		d.SetPartial("workflow_enabled")
+		d.SetPartial("workflow_approver")
 	}
 
 	if d.HasChange("sets") {
@@ -418,6 +440,13 @@ func getUpateGetDesktopAppData(d *schema.ResourceData, object *vault.DesktopApp)
 	}
 	if v, ok := d.GetOk("sets"); ok {
 		object.Sets = flattenSchemaSetToStringSlice(v)
+	}
+	// Workflow
+	if v, ok := d.GetOk("workflow_enabled"); ok {
+		object.WorkflowEnabled = v.(bool)
+	}
+	if v, ok := d.GetOk("workflow_approver"); ok {
+		object.WorkflowApproverList = expandWorkflowApprovers(v.([]interface{})) // This is a slice
 	}
 	// Permissions
 	if v, ok := d.GetOk("permission"); ok {

@@ -63,6 +63,13 @@ func resourceVaultSecret() *schema.Resource {
 				Optional:    true,
 				Description: "Default Secret Challenge Profile (used if no conditions matched)",
 			},
+			// Workflow
+			"workflow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			//"workflow_default_options": getWorkflowDefaultOptionsSchema(),
+			"workflow_approver": getWorkflowApproversSchema(),
 			// Add to Sets
 			"sets": {
 				Type:     schema.TypeSet,
@@ -121,7 +128,14 @@ func resourceVaultSecretRead(d *schema.ResourceData, m interface{}) error {
 	}
 	logger.Debugf("Generated Map for resourceVaultSecretRead(): %+v", schemamap)
 	for k, v := range schemamap {
-		d.Set(k, v)
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		case "workflow_approver":
+			d.Set(k, processBackupApproverSchema(v))
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	logger.Infof("Completed reading VaultSecret: %s", object.Name)
@@ -216,7 +230,8 @@ func resourceVaultSecretUpdate(d *schema.ResourceData, m interface{}) error {
 	}
 
 	// Deal with normal attribute changes first
-	if d.HasChanges("secret_name", "description", "secret_text", "folder_id", "type", "parent_path", "default_profile_id", "challenge_rule") {
+	if d.HasChanges("secret_name", "description", "secret_text", "folder_id", "type", "parent_path", "default_profile_id", "challenge_rule",
+		"workflow_enabled", "workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating VaultSecret attribute: %v", err)
@@ -230,6 +245,9 @@ func resourceVaultSecretUpdate(d *schema.ResourceData, m interface{}) error {
 		d.SetPartial("parent_path")
 		d.SetPartial("default_profile_id")
 		d.SetPartial("challenge_rule")
+		d.SetPartial("workflow_enabled")
+		//d.SetPartial("workflow_default_options")
+		d.SetPartial("workflow_approver")
 	}
 
 	if d.HasChange("sets") {
@@ -347,6 +365,16 @@ func getCreateSecretData(d *schema.ResourceData, object *vault.Secret) error {
 	}
 	if v, ok := d.GetOk("parent_path"); ok {
 		object.ParentPath = v.(string)
+	}
+	// Workflow
+	if v, ok := d.GetOk("workflow_enabled"); ok {
+		object.WorkflowEnabled = v.(bool)
+	}
+	//if v, ok := d.GetOk("workflow_default_options"); ok {
+	//	object.WorkflowDefaultOptions = expandWorkflowDefaultOptions(v.(interface{}))
+	//}
+	if v, ok := d.GetOk("workflow_approver"); ok {
+		object.WorkflowApprovers = expandWorkflowApprovers(v.([]interface{})) // This is a slice
 	}
 
 	return nil

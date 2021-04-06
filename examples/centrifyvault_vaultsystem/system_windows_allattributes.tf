@@ -39,9 +39,36 @@ resource "centrifyvault_vaultsystem" "windows2" {
     enable_password_history_cleanup = true
     password_historycleanup_duration = 100
 
+    # System -> Workflow menu
+    agent_auth_workflow_enabled = true
+    agent_auth_workflow_approver {
+        guid = data.centrifyvault_role.system_admin.id
+        name = data.centrifyvault_role.system_admin.name
+        type = "Role"
+    }
+    privilege_elevation_workflow_enabled = true
+    privilege_elevation_workflow_approver {
+        guid = data.centrifyvault_role.system_admin.id
+        name = data.centrifyvault_role.system_admin.name
+        type = "Role"
+    }
+
     # System -> Zone Role Workflow menu related settings
+    // domain_id must be set
 	  use_domainadmin_for_zonerole_workflow = true
 	  enable_zonerole_workflow = true
+    // Assing override zone roles
+    use_domain_assignment_for_zoneroles = false
+    assigned_zonerole {
+      name = "Windows Login/Global" // name is in format of "<zone role name>/<zone name>"
+    }
+    // Assign override zone role approver
+    use_domain_assignment_for_zonerole_approvers = false
+    assigned_zonerole_approver {
+        guid = data.centrifyvault_role.system_admin.id
+        name = data.centrifyvault_role.system_admin.name
+        type = "Role"
+    }
 
     challenge_rule {
       authentication_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id
@@ -81,8 +108,8 @@ resource "centrifyvault_vaultsystem" "windows2" {
       }
     }
 
-	# System -> Connectors menu related settings
-	connector_list = [
+	  # System -> Connectors menu related settings
+	  connector_list = [
         data.centrifyvault_connector.connector1.id
     ]
 

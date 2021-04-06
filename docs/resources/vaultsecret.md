@@ -34,5 +34,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `folder_id` - (String) ID of the folder where the secret is located.
 - `parent_path` - (String) Path of parent folder
 - `secret_text` - (String, Sensitive) Content of the secret.
+- `workflow_enabled` - (Boolean) Enable workflow for this application.
+- `workflow_approver` - (Block List) List of approvers. Refer to [workflow_approver](./attribute_workflow_approver.md) attribute for details.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.

@@ -2,7 +2,9 @@ package centrify
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -73,7 +75,7 @@ func flattenSliceToString(input []string) string {
 	return str
 }
 
-// schemaSetToSflattenSchemaSetToStringSlicetringSlice used for converting terraform schema set to a string slice
+// flattenSchemaSetToStringSlice used for converting terraform schema set to a string slice
 func flattenSchemaSetToStringSlice(s interface{}) []string {
 	vL := []string{}
 
@@ -94,6 +96,15 @@ func flattenSchemaListToStringSlice(iface interface{}) []string {
 	}
 
 	return s
+}
+
+// flattenStringSliceToSet converts slice of string to schema Set
+func flattenStringSliceToSet(input []string) *schema.Set {
+	var out = make([]interface{}, len(input))
+	for i, v := range input {
+		out[i] = v
+	}
+	return schema.NewSet(schema.HashString, out)
 }
 
 func expandListToMap(input []interface{}) map[string]interface{} {
@@ -207,6 +218,45 @@ func customGroupMappingHash(v interface{}) int {
 	if v, ok := m["group_name"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
+	return hashcode.String(buf.String())
+}
+
+func customZoneRoleHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["name"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+
+	return hashcode.String(buf.String())
+}
+
+func customSamlAttributeHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["name"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	if v, ok := m["value"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+
+	return hashcode.String(buf.String())
+}
+
+func customOauthScopeHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["name"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	if v, ok := m["description"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	if v, ok := m["allowed_rest_apis"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(*schema.Set).GoString()))
+	}
+
 	return hashcode.String(buf.String())
 }
 
@@ -463,4 +513,236 @@ func expandAccessKeys(v interface{}) []vault.AccessKey {
 	}
 
 	return accesskeys
+}
+
+func getZoneRoleSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:        schema.TypeSet,
+		Optional:    true,
+		Description: "Zone Role",
+		Set:         customZoneRoleHash,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"name": {
+					Type:        schema.TypeString,
+					Required:    true,
+					Description: "Zone role name. In the format of <zone role name>/<zone name>",
+				},
+				"zone_description": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Description of the zone",
+				},
+				"zone_dn": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Distinguished Name (DN) of the zone",
+				},
+				"description": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Description of the zone role",
+				},
+				"zone_canonical_name": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Cannoical name of the zone",
+				},
+				"parent_zone_dn": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "DN of the parent zone",
+				},
+				"unix": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "The zone role is for Unix",
+				},
+				"windows": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "The zone role is for Windows",
+				},
+			},
+		},
+	}
+}
+
+func getWorkflowApproversSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:        schema.TypeList,
+		Optional:    true,
+		Description: "Workflow approvers",
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"guid": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "ID of the principal",
+				},
+				"name": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "User or role name of the approver",
+				},
+				"type": {
+					Type:         schema.TypeString,
+					Optional:     true,
+					Description:  "Type of principal",
+					ValidateFunc: validation.StringInSlice([]string{"User", "Role", "Manager"}, false),
+				},
+				"no_manager_action": {
+					Type:         schema.TypeString,
+					Optional:     true,
+					Description:  "Type of principal",
+					ValidateFunc: validation.StringInSlice([]string{"approve", "deny", "useBackup"}, false),
+				},
+				"backup_approver": {
+					Type:     schema.TypeList,
+					Optional: true,
+					MaxItems: 1,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"guid": {
+								Type:        schema.TypeString,
+								Optional:    true,
+								Description: "ID of the principal",
+							},
+							"name": {
+								Type:        schema.TypeString,
+								Optional:    true,
+								Description: "User or role name of the approver",
+							},
+							"type": {
+								Type:         schema.TypeString,
+								Optional:     true,
+								Description:  "Type of principal",
+								ValidateFunc: validation.StringInSlice([]string{"User", "Role"}, false),
+							},
+						},
+					},
+				},
+				"options_selector": {
+					Type:     schema.TypeBool,
+					Optional: true,
+				},
+			},
+		},
+	}
+}
+
+func expandZoneRoles(v interface{}) []vault.ZoneRole {
+	m := v.(*schema.Set).List()
+	var zoneroles []vault.ZoneRole
+	for _, lrv := range m {
+		zonerole := vault.ZoneRole{}
+		zonerole.Name = lrv.(map[string]interface{})["name"].(string)
+		zonerole.ZoneDescription = lrv.(map[string]interface{})["zone_description"].(string)
+		zonerole.ZoneDn = lrv.(map[string]interface{})["zone_dn"].(string)
+		zonerole.Description = lrv.(map[string]interface{})["description"].(string)
+		zonerole.ZoneCanonicalName = lrv.(map[string]interface{})["zone_canonical_name"].(string)
+		zonerole.ParentZoneDn = lrv.(map[string]interface{})["parent_zone_dn"].(string)
+		zonerole.Unix = lrv.(map[string]interface{})["unix"].(bool)
+		zonerole.Windows = lrv.(map[string]interface{})["windows"].(bool)
+		zoneroles = append(zoneroles, zonerole)
+	}
+
+	return zoneroles
+}
+
+func expandWorkflowApprovers(v []interface{}) []vault.WorkflowApprover {
+	var approvers []vault.WorkflowApprover
+
+	for _, lrv := range v {
+		approver := vault.WorkflowApprover{}
+		approver.Guid = lrv.(map[string]interface{})["guid"].(string)
+		approver.Name = lrv.(map[string]interface{})["name"].(string)
+		approver.Type = lrv.(map[string]interface{})["type"].(string)
+		approver.NoManagerAction = lrv.(map[string]interface{})["no_manager_action"].(string)
+		something := lrv.(map[string]interface{})["backup_approver"].([]interface{})
+		if len(something) > 0 && something[0] != nil {
+			d := something[0].(map[string]interface{})
+			approver.BackupApprover = &vault.BackupApprover{
+				Guid: d["guid"].(string),
+				Name: d["name"].(string),
+				Type: d["type"].(string),
+			}
+		}
+		approver.OptionsSelector = lrv.(map[string]interface{})["options_selector"].(bool)
+		approvers = append(approvers, approver)
+	}
+
+	return approvers
+}
+
+func getWorkflowDefaultOptionsSchema() *schema.Schema {
+	return &schema.Schema{
+		Type:     schema.TypeList,
+		Optional: true,
+		MaxItems: 1,
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"grant_minute": {
+					Type:     schema.TypeInt,
+					Optional: true,
+				},
+			},
+		},
+	}
+}
+
+func expandWorkflowDefaultOptions(v interface{}) *vault.WorkflowDefaultOptions {
+	options := v.([]interface{})
+	if len(options) > 0 && options[0] != nil {
+		d := options[0].(map[string]interface{})
+		data := &vault.WorkflowDefaultOptions{
+			GrantMin: d["grant_minute"].(int),
+		}
+		return data
+	}
+	return nil
+}
+
+func convertWorkflowSchema(v string) (interface{}, error) {
+	str := strings.Replace(v, "\\", "", -1)
+	var wfapprovers vault.ProxyWorkflowApprover
+	err := json.Unmarshal([]byte(str), &wfapprovers)
+	if err != nil {
+		logger.ErrorTracef(err.Error())
+		return nil, fmt.Errorf("failed to unmarshal ProxyWorkflowApprover: %v", err)
+	}
+	approvers, err := vault.GenerateSchemaMap(wfapprovers)
+	if err != nil {
+		return nil, err
+	}
+	return processBackupApproverSchema(approvers["proxy_approver"]), nil
+}
+
+// processBackupApproverSchema converts "backup_approver" from map to list of map so that it conforms to schema
+func processBackupApproverSchema(v interface{}) []interface{} {
+	approvers := v.([]interface{})
+	for i, v := range approvers {
+		backupapprover := v.(map[string]interface{})["backup_approver"]
+		if backupapprover != nil {
+			// backup_approver is schema.TypeList but BackupApprover struct is not, so convert it
+			v.(map[string]interface{})["backup_approver"] = []interface{}{backupapprover}
+			approvers[i] = v
+		}
+	}
+	return approvers
+}
+
+func convertZoneRoleSchema(v string) (interface{}, error) {
+	str := strings.Replace(v, "\\", "", -1)
+	var zoneroles vault.ProxyZoneRole
+	err := json.Unmarshal([]byte(str), &zoneroles)
+	if err != nil {
+		logger.ErrorTracef(err.Error())
+		return nil, fmt.Errorf("failed to unmarshal ProxyZoneRole: %v", err)
+	}
+	zroles, err := vault.GenerateSchemaMap(zoneroles)
+	if err != nil {
+		return nil, err
+	}
+	return processBackupApproverSchema(zroles["proxy_zonerole"]), nil
 }

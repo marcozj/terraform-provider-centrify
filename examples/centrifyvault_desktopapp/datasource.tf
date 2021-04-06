@@ -37,3 +37,7 @@ data "centrifyvault_manualset" "test_set" {
 data "centrifyvault_role" "system_admin" {
   name = "System Administrator"
 }
+
+data "centrifyvault_user" "approver" {
+  username = "approver@example.com"
+}

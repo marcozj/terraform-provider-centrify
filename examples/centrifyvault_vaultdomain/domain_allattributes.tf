@@ -17,8 +17,8 @@ resource "centrifyvault_vaultdomain" "example_lab" {
     // Advanced -> Domain/Zone Tasks
     enable_zone_joined_check = true
     zone_joined_check_interval = 90
-    enable_zone_role_cleanup = true
-    zone_role_cleanup_interval = 6
+    enable_zonerole_cleanup = true
+    zonerole_cleanup_interval = 6
 
     permission {
         principal_id = data.centrifyvault_role.system_admin.id
