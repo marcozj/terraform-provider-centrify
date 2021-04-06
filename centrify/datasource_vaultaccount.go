@@ -114,7 +114,7 @@ func dataSourceVaultAccountRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving account with name '%s': %s", object.User, err)
 	}
 
 	//logger.Debugf("Found account: %+v", result)

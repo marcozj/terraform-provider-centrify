@@ -129,7 +129,12 @@ func resourceCloudProviderRead(d *schema.ResourceData, m interface{}) error {
 	}
 	logger.Debugf("Generated Map for resourceCloudProviderRead(): %+v", schemamap)
 	for k, v := range schemamap {
-		d.Set(k, v)
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	logger.Infof("Completed reading CloudProvider: %s", object.Name)
@@ -225,7 +230,7 @@ func resourceCloudProviderUpdate(d *schema.ResourceData, m interface{}) error {
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating CloudProvider attribute: %v", err)
 		}
-		logger.Debugf("Updated attributes to: %+v", object)
+		//logger.Debugf("Updated attributes to: %+v", object)
 		d.SetPartial("name")
 		d.SetPartial("cloud_account_id")
 		d.SetPartial("description")

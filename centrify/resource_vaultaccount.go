@@ -130,6 +130,16 @@ func resourceVaultAccount() *schema.Resource {
 				Description:   "Default secret access key checkout challenge rule id",
 			},
 			"access_secret_checkout_rule": getChallengeRulesSchema(),
+			// Workflow
+			"workflow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			//"workflow_default_options": {
+			//	Type:     schema.TypeString,
+			//	Optional: true,
+			//},
+			"workflow_approver": getWorkflowApproversSchema(),
 			// Add to Sets
 			"sets": {
 				Type:     schema.TypeSet,
@@ -188,7 +198,27 @@ func resourceVaultAccountRead(d *schema.ResourceData, m interface{}) error {
 	}
 	logger.Debugf("Generated Map for resourceVaultAccountRead(): %+v", schemamap)
 	for k, v := range schemamap {
-		d.Set(k, v)
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		case "workflow_approvers":
+			if object.WorkflowEnabled && v.(string) != "" {
+				// convertWorkflowSchema expects "workflow_approvers" in format of {"WorkflowApprover":[{"Type":"Manager","NoManagerAction":"useBackup","BackupApprover":{"Guid":"xxxxxx_xxxx_xxxx_xxxxxxxxx","Name":"Infrastructure Owners","Type":"Role"}}]}
+				// which matches ProxyWorkflowApprover struct
+				wfschema, err := convertWorkflowSchema("{\"WorkflowApprover\":" + v.(string) + "}")
+				if err != nil {
+					return err
+				}
+				d.Set("workflow_approver", wfschema)
+				d.Set(k, v)
+			}
+		default:
+			// Password value from read operation returns encrypted string which is different from clear text string in local state.
+			// This causes apply action to update password. So, ignore password attribute
+			if k != "password" {
+				d.Set(k, v)
+			}
+		}
 	}
 
 	logger.Infof("Completed reading VaultAccount: %s", object.Name)
@@ -291,7 +321,8 @@ func resourceVaultAccountUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "credential_type", "host_id", "domain_id", "database_id", "cloudprovider_id", "sshkey_id", "description",
-		"use_proxy_account", "managed", "checkout_lifetime", "default_profile_id", "challenge_rule") {
+		"use_proxy_account", "managed", "checkout_lifetime", "default_profile_id", "challenge_rule", "workflow_enabled",
+		"workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating VaultAccount attribute: %v", err)
@@ -310,6 +341,8 @@ func resourceVaultAccountUpdate(d *schema.ResourceData, m interface{}) error {
 		d.SetPartial("checkout_lifetime")
 		d.SetPartial("default_profile_id")
 		d.SetPartial("challenge_rule")
+		d.SetPartial("workflow_enabled")
+		d.SetPartial("workflow_approver")
 	}
 
 	// Deal with Set member
@@ -522,6 +555,18 @@ func createUpateGetAccountData(d *schema.ResourceData, object *vault.Account) er
 	if v, ok := d.GetOk("access_secret_checkout_default_profile_id"); ok {
 		object.AccessSecretCheckoutDefaultProfile = v.(string)
 	}
+	// Workflow
+	if v, ok := d.GetOk("workflow_enabled"); ok {
+		object.WorkflowEnabled = v.(bool)
+	}
+	//if v, ok := d.GetOk("workflow_default_options"); ok {
+	//	object.WorkflowDefaultOptions = v.(string)
+	//}
+	if v, ok := d.GetOk("workflow_approver"); ok {
+		object.WorkflowApproverList = expandWorkflowApprovers(v.([]interface{})) // This is a slice
+		//object.WorkflowApprovers = vault.FlattenWorkflowApprovers(object.WorkflowApproverList)
+	}
+
 	// Permissions
 	if v, ok := d.GetOk("permission"); ok {
 		var err error
@@ -549,9 +594,11 @@ func createUpateGetAccountData(d *schema.ResourceData, object *vault.Account) er
 	}
 
 	// Perform validations
-	if err := object.ValidateCredentialType(); err != nil {
-		logger.Errorf("there is error: %s", err)
-		return fmt.Errorf("Schema setting error: %s", err)
+	if object.ID == "" {
+		if err := object.ValidateCredentialType(); err != nil {
+			logger.Errorf("there is error: %s", err)
+			return fmt.Errorf("Schema setting error: %s", err)
+		}
 	}
 	return nil
 }

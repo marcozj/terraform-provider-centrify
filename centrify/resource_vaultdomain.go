@@ -41,6 +41,14 @@ func resourceVaultDomain() *schema.Resource {
 				Default:     true,
 				Description: "Whether to verify the Domain upon creation",
 			},
+			"forest_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"parent_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			// Policy menu related settings
 			"checkout_lifetime": {
 				Type:         schema.TypeInt,
@@ -146,20 +154,20 @@ func resourceVaultDomain() *schema.Resource {
 				Description:  "Domain/zone joined check interval (minutes)",
 				ValidateFunc: validation.IntBetween(1, 2147483647),
 			},
-			"enable_zone_role_cleanup": {
+			"enable_zonerole_cleanup": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
 				Description: "Enable periodic removal of expired zone role assignments",
 			},
-			"zone_role_cleanup_interval": {
+			"zonerole_cleanup_interval": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      6,
 				Description:  "Expired zone role assignment removal interval (hours)",
 				ValidateFunc: validation.IntBetween(1, 2147483647),
 			},
-			// System -> Connectors menu related settings
+			// Domain -> Connectors menu related settings
 			"connector_list": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -375,8 +383,8 @@ func resourceVaultDomainUpdate(d *schema.ResourceData, m interface{}) error {
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "description", "checkout_lifetime", "allow_multiple_checkouts", "enable_password_rotation", "password_rotate_interval",
 		"enable_password_rotation_after_checkin", "minimum_password_age", "password_profile_id", "enable_password_history_cleanup",
-		"password_historycleanup_duration", "enable_zone_joined_check", "zone_joined_check_interval", "enable_zone_role_cleanup",
-		"zone_role_cleanup_interval", "connector_list") {
+		"password_historycleanup_duration", "enable_zone_joined_check", "zone_joined_check_interval", "enable_zonerole_cleanup",
+		"zonerole_cleanup_interval", "connector_list") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating Domain attribute: %v", err)
@@ -395,8 +403,8 @@ func resourceVaultDomainUpdate(d *schema.ResourceData, m interface{}) error {
 		d.SetPartial("password_historycleanup_duration")
 		d.SetPartial("enable_zone_joined_check")
 		d.SetPartial("zone_joined_check_interval")
-		d.SetPartial("enable_zone_role_cleanup")
-		d.SetPartial("zone_role_cleanup_interval")
+		d.SetPartial("enable_zonerole_cleanup")
+		d.SetPartial("zonerole_cleanup_interval")
 		d.SetPartial("connector_list")
 	}
 
@@ -455,6 +463,16 @@ func resourceVaultDomainDelete(d *schema.ResourceData, m interface{}) error {
 
 func createUpateGetDomainData(d *schema.ResourceData, object *vault.Domain) error {
 	object.Name = d.Get("name").(string)
+	if v, ok := d.GetOk("parent_id"); ok {
+		object.ParentID = v.(string)
+	}
+	if v, ok := d.GetOk("forest_id"); ok {
+		object.ForestID = v.(string)
+	}
+	// If ForestID isn't set then this is the top level domain in the forst. Set ForestID the same as ID
+	if object.ForestID == "" {
+		object.ForestID = object.ID
+	}
 	if v, ok := d.GetOk("description"); ok {
 		object.Description = v.(string)
 	}
@@ -524,10 +542,10 @@ func createUpateGetDomainData(d *schema.ResourceData, object *vault.Domain) erro
 	if v, ok := d.GetOk("zone_joined_check_interval"); ok {
 		object.RefreshZoneJoinedIntervalMinutes = v.(int)
 	}
-	if v, ok := d.GetOk("enable_zone_role_cleanup"); ok {
+	if v, ok := d.GetOk("enable_zonerole_cleanup"); ok {
 		object.AllowZoneRoleCleanup = v.(bool)
 	}
-	if v, ok := d.GetOk("zone_role_cleanup_interval"); ok {
+	if v, ok := d.GetOk("zonerole_cleanup_interval"); ok {
 		object.ZoneRoleCleanupIntervalHours = v.(int)
 	}
 	// System -> Connectors menu related settings

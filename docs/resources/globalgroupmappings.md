@@ -27,7 +27,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 ### Optional
 
-- `mapping` - (Block Set) (see [below reference for mapping](#reference-for-mapping))
+- `mapping` - (Block Set) (see below [reference for mapping](#reference-for-mapping))
 
 ## [Reference for `mapping`]
 

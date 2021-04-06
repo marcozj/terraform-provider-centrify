@@ -41,10 +41,37 @@ resource "centrifyvault_vaultsystem" "unix2" {
     sshkey_algorithm = "RSA_2048"
     enable_sshkey_history_cleanup = true
     sshkey_historycleanup_duration = 120
+    
+    # System -> Workflow menu
+    agent_auth_workflow_enabled = true
+    agent_auth_workflow_approver {
+        guid = data.centrifyvault_role.system_admin.id
+        name = data.centrifyvault_role.system_admin.name
+        type = "Role"
+    }
+    privilege_elevation_workflow_enabled = true
+    privilege_elevation_workflow_approver {
+        guid = data.centrifyvault_role.system_admin.id
+        name = data.centrifyvault_role.system_admin.name
+        type = "Role"
+    }
 
     # System -> Zone Role Workflow menu related settings
+	  // domain_id must be set
 	  use_domainadmin_for_zonerole_workflow = true
 	  enable_zonerole_workflow = true
+     // Assing override zone roles
+    use_domain_assignment_for_zoneroles = false
+    assigned_zonerole {
+      name = "UNIX Login/Global" // name is in format of "<zone role name>/<zone name>"
+    }
+    // Assign override zone role approver
+    use_domain_assignment_for_zonerole_approvers = false
+    assigned_zonerole_approver {
+        guid = data.centrifyvault_role.system_admin.id
+        name = data.centrifyvault_role.system_admin.name
+        type = "Role"
+    }
 
     challenge_rule {
       authentication_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id

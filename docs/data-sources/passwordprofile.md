@@ -31,4 +31,4 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `id` - id of the password profile.
 - `name` - name property.
 - `profile_type` - profile_type property.
-- `description` - (String) description property.
+- `description` - description property.

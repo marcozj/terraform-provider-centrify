@@ -57,7 +57,7 @@ func dataSourcePolicyRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query("name")
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving policy with name '%s': %s", object.Name, err)
 	}
 
 	//logger.Debugf("Found user: %+v", result)

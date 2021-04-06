@@ -23,4 +23,3 @@ data "centrifyvault_vaultsecretfolder" "level3_folder" {
     name = "Level 3 Folder"
     parent_path = "Level 1 Folder\\Level 2 Folder"
 }
-

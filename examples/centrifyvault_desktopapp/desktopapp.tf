@@ -38,4 +38,17 @@ resource "centrifyvault_desktopapp" "test_desktopapp" {
         principal_type = "Role"
         rights = ["Grant","View","Run"]
     }
+
+    workflow_enabled = true
+    workflow_approver {
+      guid = data.centrifyvault_user.approver.id
+      name = data.centrifyvault_user.approver.username
+      type = "User"
+      options_selector = true // this attribute must be added to only one approver if there are multiple levels
+    }
+    workflow_approver {
+      guid = data.centrifyvault_role.system_admin.id
+      name = data.centrifyvault_role.system_admin.name
+      type = "Role"
+    }
 }

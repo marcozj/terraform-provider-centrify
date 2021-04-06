@@ -31,7 +31,7 @@ func dataSourceVaultDomainRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving domain with name '%s': %s", object.Name, err)
 	}
 
 	//logger.Debugf("Found domain: %+v", result)

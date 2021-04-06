@@ -56,7 +56,7 @@ func dataSourceMultiplexedAccountRead(d *schema.ResourceData, m interface{}) err
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving multiplexed account: %s", err)
+		return fmt.Errorf("error retrieving multiplexed account with name '%s': %s", object.Name, err)
 	}
 
 	//logger.Debugf("Found multiplexed account: %+v", result)

@@ -60,7 +60,7 @@ func dataSourceVaultSecretRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving secret with name '%s': %s", object.SecretName, err)
 	}
 
 	//logger.Debugf("Found secret: %+v", result)
@@ -80,7 +80,7 @@ func dataSourceVaultSecretRead(d *schema.ResourceData, m interface{}) error {
 	if d.Get("checkout").(bool) {
 		text, err := object.CheckoutSecret()
 		if err != nil {
-			return fmt.Errorf("Error retrieving secret content: %s", err)
+			return fmt.Errorf("error checking out secret content with name '%s': %s", object.SecretName, err)
 		}
 		d.Set("secret_text", text)
 	}

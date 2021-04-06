@@ -44,7 +44,7 @@ func dataSourceVaultSecretFolderRead(d *schema.ResourceData, m interface{}) erro
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving secret folder with name '%s': %s", object.Name, err)
 	}
 
 	if result["ID"] == nil {

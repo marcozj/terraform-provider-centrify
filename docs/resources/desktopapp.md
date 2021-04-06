@@ -53,7 +53,9 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 - `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
 - `default_profile_id` - (String) Default Profile (used if no conditions matched).
-- `policy_script` - (String) Use script to specify authentication rules (configured rules are ignored)
+- `policy_script` - (String) Use script to specify authentication rules (configured rules are ignored).
+- `workflow_enabled` - (Boolean) Enable workflow for this application.
+- `workflow_approver` - (Block List) List of approvers. Refer to [workflow_approver](./attribute_workflow_approver.md) attribute for details.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
 

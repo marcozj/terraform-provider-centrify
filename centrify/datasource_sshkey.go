@@ -84,7 +84,7 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving SSH Key: %s", err)
+		return fmt.Errorf("error retrieving SSH key with name '%s': %s", object.Name, err)
 	}
 
 	//logger.Debugf("Found account: %+v", result)
@@ -102,7 +102,7 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
 	if d.Get("checkout").(bool) {
 		thekey, err := object.RetriveSSHKey()
 		if err != nil {
-			return fmt.Errorf("Error retrieving SSH Key: %s", err)
+			return fmt.Errorf("error checking out SSH Key with name '%s': %s", object.Name, err)
 		}
 		d.Set("ssh_key", thekey)
 	}

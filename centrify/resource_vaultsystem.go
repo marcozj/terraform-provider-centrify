@@ -257,7 +257,17 @@ func resourceVaultSystem() *schema.Resource {
 				Description:  "SSH key history cleanup (days)",
 				ValidateFunc: validation.IntBetween(90, 2147483647),
 			},
-
+			// Workflow - Agent Auth and Privilege Elevation
+			"agent_auth_workflow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"agent_auth_workflow_approver": getWorkflowApproversSchema(),
+			"privilege_elevation_workflow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"privilege_elevation_workflow_approver": getWorkflowApproversSchema(),
 			// System -> Zone Role Workflow menu related settings
 			"use_domainadmin_for_zonerole_workflow": {
 				Type:        schema.TypeBool,
@@ -269,16 +279,20 @@ func resourceVaultSystem() *schema.Resource {
 				Optional:    true,
 				Description: "Enable zone role requests for this system",
 			},
-			"use_domain_workflow_rules": {
+			"use_domain_assignment_for_zoneroles": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Default:     true,
 				Description: "Assignable Zone Roles - Use domain assignments",
 			},
-			"use_domain_workflow_approvers": {
+			"assigned_zonerole": getZoneRoleSchema(),
+			"use_domain_assignment_for_zonerole_approvers": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Default:     true,
 				Description: "Approver list - Use domain assignments",
 			},
+			"assigned_zonerole_approver": getWorkflowApproversSchema(),
 			// System -> Connectors menu related settings
 			"connector_list": {
 				Type:     schema.TypeSet,
@@ -349,10 +363,31 @@ func resourceVaultSystemRead(d *schema.ResourceData, m interface{}) error {
 	}
 	logger.Debugf("Generated Map for resourceSystemRead(): %+v", schemamap)
 	for k, v := range schemamap {
-		if k == "connector_list" {
+		switch k {
+		case "connector_list":
 			// Convert "value1,value1" to schema.TypeSet
 			d.Set("connector_list", schema.NewSet(schema.HashString, StringSliceToInterface(strings.Split(v.(string), ","))))
-		} else {
+		case "challenge_rule", "privilege_elevation_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		case "agent_auth_workflow_approver", "privilege_elevation_workflow_approver":
+			d.Set(k, processBackupApproverSchema(v))
+		case "assigned_zoneroles":
+			zrschema, err := convertZoneRoleSchema("{\"ZoneRoleWorkflowRole\":" + v.(string) + "}")
+			if err != nil {
+				return err
+			}
+			d.Set("assigned_zonerole", zrschema)
+			d.Set(k, v)
+		case "assigned_zonerole_approvers":
+			// convertWorkflowSchema expects "assigned_zonerole_approvers" in format of {"WorkflowApprover":[{"Type":"Manager","NoManagerAction":"useBackup","BackupApprover":{"Guid":"xxxxxx_xxxx_xxxx_xxxxxxxxx","Name":"Infrastructure Owners","Type":"Role"}}]}
+			// which matches ProxyWorkflowApprover struct
+			wfschema, err := convertWorkflowSchema("{\"WorkflowApprover\":" + v.(string) + "}")
+			if err != nil {
+				return err
+			}
+			d.Set("assigned_zonerole_approver", wfschema)
+			d.Set(k, v)
+		default:
 			d.Set(k, v)
 		}
 	}
@@ -453,7 +488,9 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 		"password_rotate_interval", "enable_password_rotation_after_checkin", "minimum_password_age", "password_profile_id", "enable_password_history_cleanup",
 		"password_historycleanup_duration", "enable_sshkey_rotation", "sshkey_rotate_interval", "minimum_sshkey_age", "sshkey_algorithm",
 		"enable_sshkey_history_cleanup", "sshkey_historycleanup_duration", "use_domainadmin_for_zonerole_workflow", "enable_zonerole_workflow",
-		"choose_connector", "connector_list", "challenge_rule") {
+		"use_domain_assignment_for_zoneroles", "assigned_zonerole", "use_domain_assignment_for_zonerole_approvers", "assigned_zonerole_approver",
+		"choose_connector", "connector_list", "challenge_rule", "agent_auth_workflow_enabled", "agent_auth_workflow_approver",
+		"privilege_elevation_workflow_enabled", "privilege_elevation_workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("Error updating System attribute: %v", err)
@@ -656,6 +693,19 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("sshkey_historycleanup_duration"); ok {
 		object.SSHKeysCleanUpDuration = v.(int)
 	}
+	// Workflow - Agent Auth and Privilege Elevation
+	if v, ok := d.GetOk("agent_auth_workflow_enabled"); ok {
+		object.AgentAuthWorkflowEnabled = v.(bool)
+	}
+	if v, ok := d.GetOk("agent_auth_workflow_approver"); ok {
+		object.AgentAuthWorkflowApprovers = expandWorkflowApprovers(v.([]interface{}))
+	}
+	if v, ok := d.GetOk("privilege_elevation_workflow_enabled"); ok {
+		object.PrivilegeElevationWorkflowEnabled = v.(bool)
+	}
+	if v, ok := d.GetOk("privilege_elevation_workflow_approver"); ok {
+		object.PrivilegeElevationWorkflowApprovers = expandWorkflowApprovers(v.([]interface{}))
+	}
 	// System -> Zone Role Workflow menu related settings
 	if v, ok := d.GetOk("use_domainadmin_for_zonerole_workflow"); ok {
 		object.DomainOperationsEnabled = v.(bool)
@@ -663,12 +713,19 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("enable_zonerole_workflow"); ok {
 		object.ZoneRoleWorkflowEnabled = v.(bool)
 	}
-	if v, ok := d.GetOk("use_domain_workflow_rules"); ok {
+	if v, ok := d.GetOk("use_domain_assignment_for_zoneroles"); ok {
 		object.UseDomainWorkflowRoles = v.(bool)
 	}
-	if v, ok := d.GetOk("use_domain_workflow_approvers"); ok {
+	if v, ok := d.GetOk("assigned_zonerole"); ok {
+		object.ZoneRoleWorkflowRoleList = expandZoneRoles(v)
+	}
+	if v, ok := d.GetOk("use_domain_assignment_for_zonerole_approvers"); ok {
 		object.UseDomainWorkflowApprovers = v.(bool)
 	}
+	if v, ok := d.GetOk("assigned_zonerole_approver"); ok {
+		object.ZoneRoleWorkflowApproverList = expandWorkflowApprovers(v.([]interface{})) // This is a slice
+	}
+
 	// System -> Connectors menu related settings
 	if v, ok := d.GetOk("connector_list"); ok {
 		object.ProxyCollectionList = flattenSchemaSetToString(v.(*schema.Set))

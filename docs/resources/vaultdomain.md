@@ -27,8 +27,8 @@ resource "centrifyvault_vaultdomain" "example_lab" {
     // Advanced -> Domain/Zone Tasks
     enable_zone_joined_check = true
     zone_joined_check_interval = 90
-    enable_zone_role_cleanup = true
-    zone_role_cleanup_interval = 6
+    enable_zonerole_cleanup = true
+    zonerole_cleanup_interval = 6
 }
 ```
 
@@ -45,11 +45,12 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - Settings
   - `description` - (String) Description of the domain.
   - `verify_domain` - (Boolean) Whether to verify the Domain upon creation. Default is `true`.
+  - `forest_id` - (String) Object ID of the forest. (experiment)
+  - `parent_id` - (String) Object ID of parent domain. (experiment)
 - Policy
   - `checkout_lifetime` - (Number) Checkout lifetime (minutes). Specifies the number of minutes that a checked out password is valid. Range between `15` to `2147483647`.
-- Advanced -> Account Reconciliation Settings
-  
-  Domain reconciliation configurations require vaulted domain account or domain account directly from AD. Vaulted domain account can only be added after the domain creation therefore reconciliation configurations can't be set during domain creation. It is handled separately by [`centrifyvault_vaultdomainreconciliation`](./centrifyvault_vaultdomainreconciliation.md) resource.
+- Advanced -> Account Reconciliation and Zone Role workflow settings
+  Domain reconciliation and Zone Role workflow configurations require vaulted domain account or domain account directly from AD. Vaulted domain account can only be added after the domain creation therefore reconciliation configurations can't be set during domain creation. It is handled separately by [`centrifyvault_vaultdomainconfiguration`](./centrifyvault_vaultdomainconfiguration.md) resource.
 - Advanced -> Security Settings
   - `allow_multiple_checkouts` - (Boolean) Allow multiple password checkouts per AD account added for this domain.
   - `enable_password_rotation` - (Boolean) Enable periodic password rotation.
@@ -63,8 +64,8 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - Advanced -> Domain/Zone Tasks
   - `enable_zone_joined_check` - (Boolean) Enable periodic domain/zone joined check
   - `zone_joined_check_interval` - (Number) Domain/zone joined check interval (minutes). Range between `1` to `2147483647`. Default is `1440`.
-  - `enable_zone_role_cleanup` - (Boolean) Enable periodic removal of expired zone role assignments.
-  - `zone_role_cleanup_interval` - (Number) Expired zone role assignment removal interval (hours). Range between `1` to `2147483647`. Default is `6`.
+  - `enable_zonerole_cleanup` - (Boolean) Enable periodic removal of expired zone role assignments.
+  - `zonerole_cleanup_interval` - (Number) Expired zone role assignment removal interval (hours). Range between `1` to `2147483647`. Default is `6`.
 - Zone Role Workflow (TODO)
 
 - `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.

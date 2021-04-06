@@ -1,4 +1,4 @@
-resource "centrifyvault_vaultaccount" "mssql_account" {
+resource "centrifyvault_vaultaccount" "testaccount" {
     name = "testaccount"
     credential_type = "Password"
     password = "xxxxxxxxxxxxxx"

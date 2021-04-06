@@ -101,6 +101,10 @@ func Provider() *schema.Provider {
 			"centrifyvault_directoryobject":       dataSourceDirectoryObject(),
 			"centrifyvault_multiplexedaccount":    dataSourceMultiplexedAccount(),
 			"centrifyvault_cloudprovider":         dataSourceCloudProvider(),
+			"centrifyvault_webapp_saml":           dataSourceSamlWebApp(),
+			"centrifyvault_webapp_oauth":          dataSourceOauthWebApp(),
+			"centrifyvault_webapp_oidc":           dataSourceOidcWebApp(),
+			"centrifyvault_webapp_generic":        dataSourceGenericWebApp(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"centrifyvault_user":                      resourceUser(),
@@ -111,7 +115,8 @@ func Provider() *schema.Provider {
 			"centrifyvault_passwordprofile":           resourcePasswordProfile(),
 			"centrifyvault_authenticationprofile":     resourceAuthenticationProfile(),
 			"centrifyvault_vaultdomain":               resourceVaultDomain(),
-			"centrifyvault_vaultdomainreconciliation": resourceVaultDomainReconciliation(),
+			"centrifyvault_vaultdomainreconciliation": resourceVaultDomainConfiguration(), // To be removed
+			"centrifyvault_vaultdomainconfiguration":  resourceVaultDomainConfiguration(),
 			"centrifyvault_vaultsystem":               resourceVaultSystem(),
 			"centrifyvault_vaultdatabase":             resourceVaultDatabase(),
 			"centrifyvault_vaultaccount":              resourceVaultAccount(),
@@ -123,6 +128,11 @@ func Provider() *schema.Provider {
 			"centrifyvault_service":                   resourceService(),
 			"centrifyvault_cloudprovider":             resourceCloudProvider(),
 			"centrifyvault_globalgroupmappings":       resourceGlobalGroupMappings(),
+			"centrifyvault_globalworkflow":            resourceGlobalWorkflow(),
+			"centrifyvault_webapp_saml":               resourceSamlWebApp(),
+			"centrifyvault_webapp_oauth":              resourceOauthWebApp(),
+			"centrifyvault_webapp_oidc":               resourceOidcWebApp(),
+			"centrifyvault_webapp_generic":            resourceGenericWebApp(),
 		},
 		ConfigureFunc: providerConfigure,
 	}
@@ -167,7 +177,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	restClient, err := config.getClient()
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to authenticate to Centrify Vault: %v", err)
+		return nil, fmt.Errorf("failed to authenticate to Centrify Vault: %v", err)
 	}
 	logger.Infof("Connected to Centrify Vault %s", config.URL)
 

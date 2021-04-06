@@ -55,6 +55,8 @@ Examples of cloud provider account can be found [here](https://github.com/marcoz
 - `domain_id` - (String) ID of the domain it belongs to.
 - `database_id` - (String) ID of the database it belongs to.
 - `cloudprovider_id` - (String) ID of the cloud provider it belongs to.
+- `workflow_enabled` - (Boolean) Enable account workflow.
+- `workflow_approver` - (Block List) List of approvers. Refer to [workflow_approver](./attribute_workflow_approver.md) attribute for details.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `sets` (Set of String) List of Set IDs the account belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
 

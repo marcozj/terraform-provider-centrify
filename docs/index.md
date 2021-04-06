@@ -87,10 +87,11 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Role | [`centrifyvault_role`](./resources/role.md) | [`centrifyvault_role`](./data-sources/role.md) |
 | Authentication Profile | [`centrifyvault_authenticationprofile`](./resources/authenticationprofile.md) | [`centrifyvault_authenticationprofile`](./data-sources/authenticationprofile.md) |
 | Password Profile | [`centrifyvault_passwordprofile`](./resources/passwordprofile.md) | [`centrifyvault_passwordprofile`](./data-sources/passwordprofile.md) |
+| Connector | | [`centrifyvault_connector`](./connector.md) |
 | System | [`centrifyvault_vaultsystem`](./resources/vaultsystem.md) | [`centrifyvault_vaultsystem`](./data-sources/vaultsystem.md) |
 | Database | [`centrifyvault_vaultdatabase`](./resources/vaultdatabase.md) | [`centrifyvault_vaultdatabase`](./data-sources/vaultdatabase.md) |
 | Domain | [`centrifyvault_vaultdomain`](./resources/vaultdomain.md) | [`centrifyvault_vaultdomain`](./data-sources/vaultdomain.md) |
-| Domain Reconciliation | [`centrifyvault_vaultdomainreconciliation`](./resources/vaultdomainreconciliation.md) | |
+| Domain Configuration | [`centrifyvault_vaultdomainconfiguration`](./resources/vaultdomainconfiguration.md) | |
 | CloudProviders | [`centrifyvault_cloudprovider`](./resources/cloudprovider.md) | [`centrifyvault_cloudprovider`](./data-sources/cloudprovider.md) |
 | Account | [`centrifyvault_vaultaccount`](./resources/vaultaccount.md) | [`centrifyvault_vaultaccount`](./data-sources/vaultaccount.md) |
 | Multiplexed Account | [`centrifyvault_multiplexedaccount`](./resources/multiplexedaccount.md) | [`centrifyvault_multiplexedaccount`](./data-sources/multiplexedaccount.md) |
@@ -98,6 +99,11 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Secret Folder | [`centrifyvault_vaultsecretfolder`](./resources/vaultsecretfolder.md) | [`centrifyvault_vaultsecretfolder`](./data-sources/vaultsecretfolder.md) |
 | SSH Key | [`centrifyvault_sshkey`](./resources/sshkey.md) | [`centrifyvault_sshkey`](./data-sources/sshkey.md) |
 | Windows Service | [`centrifyvault_service`](./resources/service.md) | |
+| SAML Web App | [`centrifyvault_webapp_generic`](./resources/webapp_generic.md) | [`centrifyvault_webapp_generic`](./resources/webapp_generic.md) |
+| SAML Web App | [`centrifyvault_webapp_saml`](./resources/webapp_saml.md) | [`centrifyvault_webapp_saml`](./resources/webapp_saml.md) |
+| Oauth Web App | [`centrifyvault_webapp_oauth`](./resources/webapp_oauth.md) | [`centrifyvault_webapp_oauth`](./resources/webapp_oauth.md) |
+| OpenID Connect Web App | [`centrifyvault_webapp_oidc`](./resources/webapp_oidc.md) | [`centrifyvault_webapp_oidc`](./resources/webapp_oidc.md) |
 | Desktop App | [`centrifyvault_desktopapp`](./resources/desktopapp.md) | |
 | Policy | [`centrifyvault_policyorder`](./resources/policy.md) | |
 | Policy | [`centrifyvault_policy`](./resources/policy.md) | [`centrifyvault_policy`](./data-sources/policy.md) |
+| Global Workflow | [`centrifyvault_globalworkflow`](./resources/globalworkflow.md) | |
