@@ -1,7 +1,6 @@
 package centrify
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -51,7 +50,7 @@ func dataSourceDirectoryServiceRead(d *schema.ResourceData, m interface{}) error
 
 	err := object.Read()
 	if err != nil {
-		return fmt.Errorf("Error retrieving directory services: %s", err)
+		return fmt.Errorf("error retrieving directory services: %s", err)
 	}
 
 	name := d.Get("name").(string)
@@ -76,10 +75,10 @@ func dataSourceDirectoryServiceRead(d *schema.ResourceData, m interface{}) error
 		}
 	}
 	if len(results) == 0 {
-		return errors.New("Query returns 0 object")
+		return fmt.Errorf("query returns 0 object for directory service %s", name)
 	}
 	if len(results) > 1 {
-		return fmt.Errorf("Query returns too many objects (found %d, expected 1)", len(results))
+		return fmt.Errorf("search directory service %s, but returns too many objects (found %d, expected 1)", name, len(results))
 	}
 
 	var result = results[0]

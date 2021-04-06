@@ -69,7 +69,7 @@ func dataSourceVaultDatabaseRead(d *schema.ResourceData, m interface{}) error {
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving database with name '%s' and fqdn '%s': %s", object.Name, object.FQDN, err)
 	}
 
 	d.SetId(result["ID"].(string))

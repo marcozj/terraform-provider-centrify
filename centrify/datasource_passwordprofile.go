@@ -43,11 +43,11 @@ func dataSourcePasswordProfileRead(d *schema.ResourceData, m interface{}) error 
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving password profile with name '%s': %s", object.Name, err)
 	}
 
 	if result["ID"] == nil {
-		return fmt.Errorf("Password profile ID is not set")
+		return fmt.Errorf("password profile ID is not set")
 	}
 	//logger.Debugf("Found password profile: %+v", result)
 	d.SetId(result["ID"].(string))

@@ -41,7 +41,7 @@ func dataSourceAuthenticationProfileRead(d *schema.ResourceData, m interface{}) 
 
 	result, err := object.Query()
 	if err != nil {
-		return fmt.Errorf("Error retrieving vault object: %s", err)
+		return fmt.Errorf("error retrieving authentication profile with name '%s': %s", object.Name, err)
 	}
 
 	//logger.Debugf("Found authentication profile: %+v", result)
