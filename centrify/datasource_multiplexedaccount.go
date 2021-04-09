@@ -21,28 +21,38 @@ func dataSourceMultiplexedAccount() *schema.Resource {
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Description of the multiplexed account",
 			},
 			"account1_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"account2_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"account1": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"account2": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
+			},
+			"accounts": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				MinItems: 2,
+				MaxItems: 2,
+				Set:      schema.HashString,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"active_account": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 		},
 	}
@@ -54,22 +64,19 @@ func dataSourceMultiplexedAccountRead(d *schema.ResourceData, m interface{}) err
 	object := vault.NewMultiplexedAccount(client)
 	object.Name = d.Get("name").(string)
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
 		return fmt.Errorf("error retrieving multiplexed account with name '%s': %s", object.Name, err)
 	}
+	d.SetId(object.ID)
 
-	//logger.Debugf("Found multiplexed account: %+v", result)
-	d.SetId(result["ID"].(string))
-	d.Set("name", result["Name"].(string))
-	d.Set("description", result["Description"].(string))
-	// RedRock/query doesn't return these attributes
-	//d.Set("account1_id", result["RealAccount1ID"].(string))
-	//d.Set("account2_id", result["RealAccount2ID"].(string))
-	//d.Set("account1", result["RealAccount1"].(string))
-	//d.Set("account2", result["RealAccount2"].(string))
-	if result["ActiveAccount"] != nil {
-		d.Set("active_account", result["ActiveAccount"].(string))
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
+	}
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		d.Set(k, v)
 	}
 
 	return nil

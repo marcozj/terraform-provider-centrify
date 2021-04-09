@@ -33,6 +33,10 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 ## Attributes Reference
 
-- `id` - id of the secret folder.
-- `description` - description property.
-- `parent_path` - parent_path property.
+- `id` - (String) ID of the secret folder.
+- `name` - (String) The name of the secret folder.
+- `description` - (String) Description of the secret folder.
+- `parent_path` - (String) Parent folder path of an secret folder.
+- `parent_id` - (String) Parent folder ID of an secret folder.
+- `challenge_rule` - (Block List) Authentication rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `default_profile_id` - (String) Default System Login Profile (used if no conditions matched).

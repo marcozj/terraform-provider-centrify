@@ -199,7 +199,7 @@ func resourceVaultAccountRead(d *schema.ResourceData, m interface{}) error {
 	logger.Debugf("Generated Map for resourceVaultAccountRead(): %+v", schemamap)
 	for k, v := range schemamap {
 		switch k {
-		case "challenge_rule":
+		case "challenge_rule", "access_secret_checkout_rule":
 			d.Set(k, v.(map[string]interface{})["rule"])
 		case "workflow_approvers":
 			if object.WorkflowEnabled && v.(string) != "" {

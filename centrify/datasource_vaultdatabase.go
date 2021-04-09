@@ -2,6 +2,7 @@ package centrify
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -37,12 +38,6 @@ func dataSourceVaultDatabase() *schema.Resource {
 					databaseclass.SAPASE.String(),
 				}, false),
 			},
-			"port": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Port that used to connect to the Database",
-				ValidateFunc: validation.IsPortNumber,
-			},
 			"instance_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -52,6 +47,72 @@ func dataSourceVaultDatabase() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Service name of Oracle database",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Description of the Database",
+			},
+			"port": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Port that used to connect to the Database",
+			},
+			"checkout_lifetime": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Specifies the number of minutes that a checked out password is valid.",
+			},
+			// Database -> Advanced menu related settings
+			"allow_multiple_checkouts": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Allow multiple password checkouts for this database",
+			},
+			"enable_password_rotation": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enable periodic password rotation",
+			},
+			"password_rotate_interval": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Password rotation interval (days)",
+			},
+			"enable_password_rotation_after_checkin": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enable password rotation after checkin",
+			},
+			"minimum_password_age": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Minimum Password Age (days)",
+			},
+			"password_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Password complexity profile id",
+			},
+			"enable_password_history_cleanup": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Enable periodic password history cleanup",
+			},
+			"password_historycleanup_duration": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Password history cleanup (days)",
+			},
+			// Database -> Connectors menu related settings
+			"connector_list": {
+				Type:     schema.TypeSet,
+				Computed: true,
+				Set:      schema.HashString,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "List of Connectors",
 			},
 		},
 	}
@@ -66,22 +127,31 @@ func dataSourceVaultDatabaseRead(d *schema.ResourceData, m interface{}) error {
 	if v, ok := d.GetOk("database_class"); ok {
 		object.DatabaseClass = v.(string)
 	}
+	if v, ok := d.GetOk("instance_name"); ok {
+		object.InstanceName = v.(string)
+	}
+	if v, ok := d.GetOk("service_name"); ok {
+		object.ServiceName = v.(string)
+	}
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
-		return fmt.Errorf("error retrieving database with name '%s' and fqdn '%s': %s", object.Name, object.FQDN, err)
+		return fmt.Errorf("error retrieving database with name '%s': %s", object.Name, err)
 	}
+	d.SetId(object.ID)
 
-	d.SetId(result["ID"].(string))
-	d.Set("name", result["Name"].(string))
-	d.Set("hostname", result["FQDN"].(string))
-	d.Set("database_class", result["DatabaseClass"].(string))
-	d.Set("port", int(result["Port"].(float64)))
-	if result["InstanceName"] != nil {
-		d.Set("instance_name", result["InstanceName"].(string))
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-	if result["ServiceName"] != nil {
-		d.Set("service_name", result["ServiceName"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		if k == "connector_list" {
+			// Convert "value1,value1" to schema.TypeSet
+			d.Set("connector_list", schema.NewSet(schema.HashString, StringSliceToInterface(strings.Split(v.(string), ","))))
+		} else {
+			d.Set(k, v)
+		}
 	}
 
 	return nil

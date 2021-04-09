@@ -90,6 +90,74 @@ func dataSourceVaultAccount() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to checkin the password immediately after checkout",
 			},
+			"credential_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Either password or sshkey",
+			},
+			"credential_name": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"sshkey_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of SSH key",
+			},
+			"is_admin_account": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether this is an administrative account",
+			},
+			"is_root_account": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Whether this is an root account for cloud provider",
+			},
+			"use_proxy_account": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Use proxy account to manage this account",
+			},
+			"managed": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "If this account is managed",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Description of the account",
+			},
+			"status": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			// Policy menu
+			"checkout_lifetime": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Checkout lifetime (minutes)",
+			},
+			"default_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Default password checkout profile id",
+			},
+			"access_secret_checkout_default_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Default secret access key checkout challenge rule id",
+			},
+			"access_secret_checkout_rule": getChallengeRulesSchema(),
+			// Workflow
+			"workflow_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"workflow_approver": getWorkflowApproversSchema(),
+			"challenge_rule":    getChallengeRulesSchema(),
+			"access_key":        getAccessKeySchema(),
 		},
 	}
 }
@@ -112,32 +180,40 @@ func dataSourceVaultAccountRead(d *schema.ResourceData, m interface{}) error {
 		object.CloudProviderID = v.(string)
 	}
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
-		return fmt.Errorf("error retrieving account with name '%s': %s", object.User, err)
+		return fmt.Errorf("error retrieving vault account with name '%s': %s", object.Name, err)
 	}
-
-	//logger.Debugf("Found account: %+v", result)
-	object.ID = result["ID"].(string)
 	d.SetId(object.ID)
-	d.Set("name", result["Name"].(string))
-	if result["Host"] != nil {
-		d.Set("host_id", result["Host"].(string))
+
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-	if result["DomainID"] != nil {
-		d.Set("domain_id", result["DomainID"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		switch k {
+		case "challenge_rule", "access_secret_checkout_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		case "workflow_approvers":
+			if object.WorkflowEnabled && v.(string) != "" {
+				// convertWorkflowSchema expects "workflow_approvers" in format of {"WorkflowApprover":[{"Type":"Manager","NoManagerAction":"useBackup","BackupApprover":{"Guid":"xxxxxx_xxxx_xxxx_xxxxxxxxx","Name":"Infrastructure Owners","Type":"Role"}}]}
+				// which matches ProxyWorkflowApprover struct
+				wfschema, err := convertWorkflowSchema("{\"WorkflowApprover\":" + v.(string) + "}")
+				if err != nil {
+					return err
+				}
+				d.Set("workflow_approver", wfschema)
+				d.Set(k, v)
+			}
+		default:
+			d.Set(k, v)
+		}
 	}
-	if result["DatabaseID"] != nil {
-		d.Set("database_id", result["DatabaseID"].(string))
-	}
-	if result["CloudProviderId"] != nil {
-		d.Set("cloudprovider_id", result["CloudProviderId"].(string))
-	}
-	credtype := result["CredentialType"].(string)
 
 	// Checkout credential
 	if d.Get("checkout").(bool) {
-		switch credtype {
+		switch object.CredentialType {
 		case "Password":
 			pw, err := object.CheckoutPassword(d.Get("checkin").(bool))
 			if err != nil {
@@ -145,7 +221,7 @@ func dataSourceVaultAccountRead(d *schema.ResourceData, m interface{}) error {
 			}
 			d.Set("password", pw)
 		case "SshKey":
-			object.CredentialID = result["CredentialId"].(string)
+			//object.CredentialID = result["CredentialId"].(string)
 			sshkey := vault.NewSSHKey(client)
 			sshkey.ID = object.CredentialID
 			sshkey.KeyPairType = d.Get("key_pair_type").(string)

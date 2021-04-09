@@ -45,7 +45,7 @@ func dataSourceSSHKey() *schema.Resource {
 			},
 			"description": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"key_type": {
 				Type:     schema.TypeString,
@@ -63,6 +63,12 @@ func dataSourceSSHKey() *schema.Resource {
 				Sensitive:   true,
 				Description: "Content of the SSH Key",
 			},
+			"default_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Default SSH Key Challenge Profile",
+			},
+			"challenge_rule": getChallengeRulesSchema(),
 		},
 	}
 }
@@ -82,20 +88,24 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
 		object.KeyFormat = v.(string)
 	}
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
-		return fmt.Errorf("error retrieving SSH key with name '%s': %s", object.Name, err)
+		return fmt.Errorf("error retrieving SSH Key with name '%s': %s", object.Name, err)
 	}
-
-	//logger.Debugf("Found account: %+v", result)
-	object.ID = result["ID"].(string)
 	d.SetId(object.ID)
-	d.Set("name", result["Name"].(string))
-	if result["Comment"] != nil {
-		d.Set("description", result["Comment"].(string))
+
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-	if result["KeyType"] != nil {
-		d.Set("key_type", result["KeyType"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	// Retrieve SSH Key

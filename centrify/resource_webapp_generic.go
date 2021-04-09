@@ -133,7 +133,6 @@ func resourceGenericWebApp() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Default:     "userprincipalname",
 				Description: "Password for all user share one name",
 			},
 			"use_ad_login_pw": {

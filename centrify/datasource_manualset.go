@@ -65,18 +65,19 @@ func dataSourceManualSetRead(d *schema.ResourceData, m interface{}) error {
 	object.ObjectType = d.Get("type").(string)
 	object.SubObjectType = d.Get("subtype").(string)
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
 		return fmt.Errorf("error retrieving Manual Set with name '%s': %s", object.Name, err)
 	}
+	d.SetId(object.ID)
 
-	if result["ID"] == nil {
-		return fmt.Errorf("ManualSet ID is not set")
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-	d.SetId(result["ID"].(string))
-	d.Set("name", result["Name"].(string))
-	if result["Description"] != nil {
-		d.Set("description", result["Description"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		d.Set(k, v)
 	}
 
 	return nil

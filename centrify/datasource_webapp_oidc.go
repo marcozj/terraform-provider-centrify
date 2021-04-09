@@ -21,7 +21,7 @@ func dataSourceOidcWebApp() *schema.Resource {
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Description of the Web App",
 			},
 			"application_id": {
@@ -30,6 +30,50 @@ func dataSourceOidcWebApp() *schema.Resource {
 				Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
 			},
 			"oauth_profile": getOidcProfileSchema(),
+			"template_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Template name of the Web App",
+			},
+			"oidc_script": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			// Policy menu
+			"default_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Default authentication profile ID",
+			},
+			// Account Mapping menu
+			"username_strategy": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Account mapping",
+			},
+			"username": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
+			},
+			"user_map_script": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Account mapping script. Applicable if 'username_strategy' is 'UseScript'",
+			},
+			// Workflow
+			"workflow_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"workflow_approver": getWorkflowApproversSchema(),
+			"challenge_rule":    getChallengeRulesSchema(),
+			"policy_script": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Use script to specify authentication rules (configured rules are ignored)",
+			},
 		},
 	}
 }
@@ -52,7 +96,7 @@ func dataSourceOidcWebAppRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	//logger.Debugf("Generated Map for resourceOidcWebAppRead(): %+v", schemamap)
+	//logger.Debugf("Generated Map: %+v", schemamap)
 	for k, v := range schemamap {
 		switch k {
 		case "oauth_profile":
