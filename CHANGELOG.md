@@ -1,5 +1,15 @@
 # RELEASE NOTES
 
+## 0.1.4 (April 9, 2021)
+
+IMPROVEMENTS:
+
+- Expose more attributes reference for all data source types.
+
+BUG FIXES:
+
+- `centrifyvault_connector` data source fail to run when Connector is not installed on AD joined machine.
+
 ## 0.1.3 (April 6, 2021)
 
 FEATURES:
