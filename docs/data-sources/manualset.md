@@ -30,6 +30,8 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 ## Attributes Reference
 
-- `id` - id of the manual set.
-- `name` - name property.
-- `description` - (String) description property.
+- `id` - (String) id of the manual set.
+- `name` - (String) The name of the manual set
+- `type` - (String) Type of set.
+- `subtype` - (String) SubObjectType for application.
+- `description` - (String) Description of an manual set.

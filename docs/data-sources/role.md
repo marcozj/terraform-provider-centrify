@@ -24,5 +24,8 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 ## Attributes Reference
 
-- `id` - id of the role.
-- `name` - Name property.
+- `id` - (String) ID of the member.
+- `type` - (String) Type of the member.
+- `description` - (String) Description of an role.
+- `adminrights` - (Set of String) List of administrative rights.
+- `member` - (Block Set) (see [below reference for member](#reference-for-member))

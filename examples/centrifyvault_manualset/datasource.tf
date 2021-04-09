@@ -14,3 +14,19 @@ data "centrifyvault_manualset" "aws_systems" {
     type = "Server"
     name = "AWS Systems"
 }
+
+output "id" {
+    value = data.centrifyvault_manualset.aws_systems.id
+}
+output "name" {
+    value = data.centrifyvault_manualset.aws_systems.name
+}
+output "type" {
+    value = data.centrifyvault_manualset.aws_systems.type
+}
+output "subtype" {
+    value = data.centrifyvault_manualset.aws_systems.subtype
+}
+output "description" {
+    value = data.centrifyvault_manualset.aws_systems.description
+}

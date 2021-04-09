@@ -27,3 +27,5 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `id` - (String) The ID of this resource.
 - `pass_through_duration` - (Number) Pass through duration of the authentication profile.
 - `uuid` - (String) UUID of the authentication profile.
+- `challenges` - (String) Authentication mechanisms for challenges.
+- `number_of_questions` - (Number) Number of questions user must answer.

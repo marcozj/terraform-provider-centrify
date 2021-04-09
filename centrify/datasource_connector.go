@@ -102,31 +102,20 @@ func dataSourceConnectorRead(d *schema.ResourceData, m interface{}) error {
 	object.VpcIdentifier = d.Get("vpc_identifier").(string)
 	object.VmIdentifier = d.Get("vm_identifier").(string)
 
-	result, err := object.Query()
+	// We can't use simple Query method because it doesn't return all attributes
+	err := object.GetByName()
 	if err != nil {
-		return fmt.Errorf("error retrieving connector with name '%s': %s", object.Name, err)
+		return fmt.Errorf("error retrieving Oauth webapp with name '%s': %s", object.Name, err)
 	}
+	d.SetId(object.ID)
 
-	//logger.Debugf("Found connector: %+v", result)
-	d.SetId(result["ID"].(string))
-	d.Set("name", result["Name"].(string))
-	d.Set("machine_name", result["MachineName"].(string))
-	d.Set("dns_host_name", result["DnsHostName"].(string))
-	d.Set("forest", result["Forest"].(string))
-	d.Set("ssh_service", result["SSHService"].(string))
-	d.Set("rdp_service", result["RDPService"].(string))
-	d.Set("ad_proxy", result["ADProxy"].(string))
-	d.Set("app_gateway", result["AppGateway"].(string))
-	d.Set("http_api_service", result["HttpAPIService"].(string))
-	d.Set("ldap_proxy", result["LDAPProxy"].(string))
-	d.Set("radius_service", result["RadiusService"].(string))
-	d.Set("radius_external_service", result["RadiusExternalService"].(string))
-	d.Set("version", result["Version"].(string))
-	if result["VpcIdentifier"] != nil {
-		d.Set("vpc_identifier", result["VpcIdentifier"].(string))
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-	if result["VmIdentifier"] != nil {
-		d.Set("vm_identifier", result["VmIdentifier"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		d.Set(k, v)
 	}
 
 	return nil

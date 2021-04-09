@@ -55,6 +55,11 @@ func resourceOauthWebApp() *schema.Resource {
 				Optional:    true,
 				Description: "Script to customize JWT token creation for this application",
 			},
+			"oidc_script": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 			"sets": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -91,6 +96,10 @@ func getOAuthProfileSchema() *schema.Schema {
 					Type:        schema.TypeString,
 					Optional:    true,
 					Description: "OAuth server audience",
+				},
+				"target_is_us": {
+					Type:     schema.TypeBool,
+					Optional: true,
 				},
 				"allowed_clients": {
 					Type:     schema.TypeSet,
@@ -239,7 +248,16 @@ func resourceOauthWebAppRead(d *schema.ResourceData, m interface{}) error {
 	for k, v := range schemamap {
 		switch k {
 		case "oauth_profile":
-			d.Set(k, []interface{}{v})
+			profile := make(map[string]interface{})
+			for attribute_key, attribute_value := range v.(map[string]interface{}) {
+				switch attribute_key {
+				case "allowed_auth":
+					profile[attribute_key] = schema.NewSet(schema.HashString, StringSliceToInterface(strings.Split(attribute_value.(string), ",")))
+				default:
+					profile[attribute_key] = attribute_value
+				}
+			}
+			d.Set(k, []interface{}{profile})
 		case "challenge_rule":
 			d.Set(k, v.(map[string]interface{})["rule"])
 		default:

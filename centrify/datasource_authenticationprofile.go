@@ -16,7 +16,7 @@ func dataSourceAuthenticationProfile() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"uuid": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "UUID of the authentication profile",
 			},
 			"name": {
@@ -24,9 +24,33 @@ func dataSourceAuthenticationProfile() *schema.Resource {
 				Required:    true,
 				Description: "The name of the authentication profile",
 			},
+			"challenges": {
+				Type:     schema.TypeList,
+				MaxItems: 2,
+				MinItems: 1,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Authentication mechanisms for challenges",
+			},
+			"additional_data": {
+				Type:     schema.TypeList,
+				Computed: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"number_of_questions": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of questions user must answer",
+						},
+					},
+				},
+			},
 			"pass_through_duration": {
 				Type:        schema.TypeInt,
-				Optional:    true,
+				Computed:    true,
 				Description: "Pass through duration of the authentication profile",
 			},
 		},
@@ -39,16 +63,25 @@ func dataSourceAuthenticationProfileRead(d *schema.ResourceData, m interface{}) 
 	object := vault.NewAuthenticationProfile(client)
 	object.Name = d.Get("name").(string)
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
 		return fmt.Errorf("error retrieving authentication profile with name '%s': %s", object.Name, err)
 	}
+	d.SetId(object.ID)
 
-	//logger.Debugf("Found authentication profile: %+v", result)
-	d.SetId(result["Uuid"].(string))
-	d.Set("uuid", result["Uuid"].(string))
-	d.Set("name", result["Name"].(string))
-	d.Set("pass_through_duration", int(result["DurationInMinutes"].(float64)))
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
+	}
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		switch k {
+		case "additional_data":
+			d.Set(k, flattenAdditionalData(object.AdditionalData))
+		default:
+			d.Set(k, v)
+		}
+	}
 
 	return nil
 }

@@ -25,6 +25,11 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 ## Attributes Reference
 
 - `id` - id of the multiplexed account.
-- `name` - name property.
-- `description` - description property.
-- `active_account` - active_account property.
+- `name` - (String) The name of the multiplexed account.
+- `description` - (String) Description of the multiplexed account.
+- `accounts` - (Block Set) List of assigned account IDs.
+- `account1_id` - (String) ID of assigned account1.
+- `account2_id` - (String) ID of assigned account2.
+- `account1` - (String) Name of assigned account1.
+- `account2` - (String) Name of assigned account2.
+- `active_account` - (String) Name of current active account.

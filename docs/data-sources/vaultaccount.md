@@ -39,6 +39,27 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 - `id` - id of the account.
 - `name` - name property.
-- `password` - Account's clear text password.
-- `private_key` - Account's SSh private key.
-- `secret_access_key` - Cloud provider IAM account's secret key.
+- `password` - (String, Sensitive) Password of the account.
+- `private_key` - String, Sensitive) Account's SSh private key.
+- `secret_access_key` - String, Sensitive) Cloud provider IAM account's secret key.
+
+- `use_proxy_account` - (Boolean) Use proxy account to manage this account.
+- `managed` - (Boolean) If this account is managed. By enabling this option the credential will be automatically changed and become unknown to other applications or users.
+- `description` - (String) Description of the account.
+- `checkout_lifetime` - (Number) Checkout lifetime (minutes). Specifies the number of minutes that a checked out password is valid.
+- `challenge_rule` - (Block List) Password checkout challenge rules. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `default_profile_id` - (String) Default password checkout profile (used if no conditions matched).
+- `access_secret_checkout_default_profile_id` - (String) "Default secret access key checkout challenge rule ID. Only applicable to AWS IAM user.
+- `access_secret_checkout_rule` - (Block List) Secret Access Key Checkout Challenge Rules. Only applicable to AWS IAM user. Refer to [challenge_rule](./attribute_challengerule.md) attribute for details.
+- `sshkey_id` - (String) ID of the SSH key.
+- `access_key` - (Block Set) AWS Access Keys (see [reference for `access_key`](#reference-for-access_key))
+- `is_admin_account` - (Boolean) Whether this is an administrative account.
+- `is_root_account` - (Boolean) Whether this is an root account for cloud provider. Only applicable if `credential_type` is `AwsAccessKey`.
+- `host_id` - (String) ID of the system it belongs to.
+- `domain_id` - (String) ID of the domain it belongs to.
+- `database_id` - (String) ID of the database it belongs to.
+- `cloudprovider_id` - (String) ID of the cloud provider it belongs to.
+- `workflow_enabled` - (Boolean) Enable account workflow.
+- `workflow_approver` - (Block List) List of approvers. Refer to [workflow_approver](./attribute_workflow_approver.md) attribute for details.
+- `credential_type` - (String) Type of account credential.
+- `credential_name` - (String) Name of SSH Key.

@@ -19,22 +19,6 @@ func dataSourceVaultSecret() *schema.Resource {
 				Required:    true,
 				Description: "Name of the secret",
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the secret",
-			},
-			"secret_text": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Content of the secret",
-			},
-			"folder_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ID of the folder where the secret is located",
-			},
 			"parent_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -45,6 +29,39 @@ func dataSourceVaultSecret() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to retrieve secret content",
 			},
+			"description": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Description of the secret",
+			},
+			"folder_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of the folder where the secret is located",
+			},
+			"secret_text": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "Content of the secret",
+			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Either Text or File",
+			},
+			"default_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Default Secret Challenge Profile (used if no conditions matched)",
+			},
+			// Workflow
+			"workflow_enabled": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"workflow_approver": getWorkflowApproversSchema(),
+			"challenge_rule":    getChallengeRulesSchema(),
 		},
 	}
 }
@@ -54,27 +71,33 @@ func dataSourceVaultSecretRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*restapi.RestClient)
 	object := vault.NewSecret(client)
 	object.SecretName = d.Get("secret_name").(string)
+	if v, ok := d.GetOk("parent_path"); ok {
+		object.ParentPath = v.(string)
+	}
 	if v, ok := d.GetOk("folder_id"); ok {
 		object.FolderID = v.(string)
 	}
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
 		return fmt.Errorf("error retrieving secret with name '%s': %s", object.SecretName, err)
 	}
-
-	//logger.Debugf("Found secret: %+v", result)
-	object.ID = result["ID"].(string)
 	d.SetId(object.ID)
-	d.Set("secret_name", result["SecretName"].(string))
-	if result["Description"] != nil {
-		d.Set("description", result["Description"].(string))
+
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-	if result["ParentPath"] != nil {
-		d.Set("parent_path", result["ParentPath"].(string))
-	}
-	if result["FolderId"] != nil {
-		d.Set("folder_id", result["FolderId"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		case "workflow_approver":
+			d.Set(k, processBackupApproverSchema(v))
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	if d.Get("checkout").(bool) {

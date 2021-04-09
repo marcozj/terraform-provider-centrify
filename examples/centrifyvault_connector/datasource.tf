@@ -36,3 +36,9 @@ output "connector1_version" {
 output "connector1_vpc_identifier" {
   value = data.centrifyvault_connector.connector1.vpc_identifier
 }
+output "connector1_forest" {
+  value = data.centrifyvault_connector.connector1.forest
+}
+output "connector1_dns_host_name" {
+  value = data.centrifyvault_connector.connector1.dns_host_name
+}

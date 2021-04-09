@@ -15,6 +15,24 @@ data "centrifyvault_webapp_oauth" "oauth_webapp" {
   application_id = "CentrifyCLI"
 }
 
-output "oauthapp_id" {
-  value = data.centrifyvault_webapp_oauth.oauth_webapp.id
+output "id" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.id
+}
+output "name" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.name
+}
+output "template_name" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.template_name
+}
+output "application_id" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.application_id
+}
+output "description" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.description
+}
+output "oauth_profile" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.oauth_profile
+}
+output "oidc_script" {
+    value = data.centrifyvault_webapp_oauth.oauth_webapp.oidc_script
 }

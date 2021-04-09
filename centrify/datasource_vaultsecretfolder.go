@@ -21,7 +21,7 @@ func dataSourceVaultSecretFolder() *schema.Resource {
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "Description of an secret folder",
 			},
 			"parent_path": {
@@ -29,6 +29,17 @@ func dataSourceVaultSecretFolder() *schema.Resource {
 				Optional:    true,
 				Description: "Parent folder path of an secret folder",
 			},
+			"parent_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Parent folder ID of an secret folder",
+			},
+			"default_profile_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Default Secret Challenge Profile (used if no conditions matched)",
+			},
+			"challenge_rule": getChallengeRulesSchema(),
 		},
 	}
 }
@@ -42,22 +53,24 @@ func dataSourceVaultSecretFolderRead(d *schema.ResourceData, m interface{}) erro
 		object.ParentPath = v.(string)
 	}
 
-	result, err := object.Query()
+	err := object.GetByName()
 	if err != nil {
 		return fmt.Errorf("error retrieving secret folder with name '%s': %s", object.Name, err)
 	}
+	d.SetId(object.ID)
 
-	if result["ID"] == nil {
-		return fmt.Errorf("VaultSecretFolder ID is not set")
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
 	}
-
-	d.SetId(result["ID"].(string))
-	d.Set("name", result["Name"].(string))
-	if result["Description"] != nil {
-		d.Set("description", result["Description"].(string))
-	}
-	if result["ParentPath"] != nil {
-		d.Set("parent_path", result["ParentPath"].(string))
+	//logger.Debugf("Generated Map: %+v", schemamap)
+	for k, v := range schemamap {
+		switch k {
+		case "challenge_rule":
+			d.Set(k, v.(map[string]interface{})["rule"])
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	return nil

@@ -66,8 +66,10 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
   - `zone_joined_check_interval` - (Number) Domain/zone joined check interval (minutes). Range between `1` to `2147483647`. Default is `1440`.
   - `enable_zonerole_cleanup` - (Boolean) Enable periodic removal of expired zone role assignments.
   - `zonerole_cleanup_interval` - (Number) Expired zone role assignment removal interval (hours). Range between `1` to `2147483647`. Default is `6`.
-- Zone Role Workflow (TODO)
-
+- Zone Role Workflow
+  - `enable_zonerole_workflow` - (Boolean) Enable zone role requests for systems in this domain.
+  - `assigned_zonerole` - (Block Set) List of zone Role. Windows and Unix/Linux only. Applicable only if `use_domainadmin_for_zonerole_workflow` is `true` and`enable_zonerole_workflow` is `true` and `use_domain_assignment_for_zoneroles` is `false`. Refer to [assigned_zonerole](./attribute_assigned_zonerole.md) attribute for details.
+  - `assigned_zonerole_approver` - (Block List) List of approvers for Zone Role request. Windows and Unix/Linux only. Applicable only if `use_domainadmin_for_zonerole_workflow` is `true` and`enable_zonerole_workflow` is `true` and `use_domain_assignment_for_zonerole_approvers` is `false`. Refer to [workflow_approver](./attribute_workflow_approver.md) and [assigned_zonerole_approver](./attribute_assigned_zonerole.md) for details.
 - `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
