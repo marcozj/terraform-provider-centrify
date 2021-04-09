@@ -4,7 +4,7 @@ WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=centrifyvault
 
 # Local provider install parameter
-version = 0.1.3
+version = 0.1.4
 registry_name = registry.terraform.io
 namespace = marcozj
 bin_name = terraform-provider-$(PKG_NAME)
