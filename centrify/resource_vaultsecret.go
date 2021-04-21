@@ -19,6 +19,9 @@ func resourceVaultSecret() *schema.Resource {
 		Update: resourceVaultSecretUpdate,
 		Delete: resourceVaultSecretDelete,
 		Exists: resourceVaultSecretExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"secret_name": {

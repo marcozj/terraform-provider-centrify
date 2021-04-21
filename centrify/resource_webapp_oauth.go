@@ -22,6 +22,9 @@ func resourceOauthWebApp() *schema.Resource {
 		Update: resourceOauthWebAppUpdate,
 		Delete: resourceOauthWebAppDelete,
 		Exists: resourceOauthWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"template_name": {

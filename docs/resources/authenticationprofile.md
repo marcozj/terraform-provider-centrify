@@ -41,3 +41,11 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Optional:
 
 - `number_of_questions` - (Number) Number of questions user must answer. Range between `0` to `10`.
+
+## Import
+
+Authenticaiton Profile can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_authenticationprofile.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```

@@ -15,6 +15,9 @@ func resourceVaultDomainConfiguration() *schema.Resource {
 		Read:   resourceVaultDomainConfigurationRead,
 		Update: resourceVaultDomainConfigurationUpdate,
 		Delete: resourceVaultDomainConfigurationDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"domain_id": {

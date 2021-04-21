@@ -66,3 +66,13 @@ Optional:
 - `allow_refresh` - (Boolean) Issue refresh tokens.
 - `refresh_lifetime` - (String) Refresh token lifetime. It is "d.hh:mm:ss" format. For example, "365.00:00:00" means 365 days.
 - `script` - (String) Script to generate OpenID Connect Authorization and UserInfo responses for this application.
+
+## Import
+
+OpenID Connect Application can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_webapp_oidc.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `sets` aren't support in import process.

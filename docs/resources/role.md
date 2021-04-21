@@ -38,3 +38,11 @@ Required:
 
 - `id` - (String) ID of the member.
 - `type` - (String) Type of the member. Can be set to `User`, `Group` or `Role`.
+
+## Import
+
+Role can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_role.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```

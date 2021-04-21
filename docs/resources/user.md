@@ -45,3 +45,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `redirect_mfa_user_id` - (String) Redirect multi factor authentication to a different user account. This is the ID of another user.
 - `manager_username` - (String) Username of the manager.
 - `roles` -  (Set of String) Add to list of Roles.
+
+## Import
+
+Centrify Directory User can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_user.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `roles` isn't support in import process.

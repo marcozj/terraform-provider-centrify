@@ -19,6 +19,9 @@ func resourcePasswordProfile() *schema.Resource {
 		Update: resourcePasswordProfileUpdate,
 		Delete: resourcePasswordProfileDelete,
 		Exists: resourcePasswordProfileExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {

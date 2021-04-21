@@ -19,6 +19,9 @@ func resourceRole() *schema.Resource {
 		Update: resourceRoleUpdate,
 		Delete: resourceRoleDelete,
 		Exists: resourceRoleExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -104,7 +107,7 @@ func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading role: %v", err)
+		return fmt.Errorf("error reading role: %v", err)
 	}
 	logger.Debugf("Role from tenant: %v", object)
 
@@ -136,12 +139,12 @@ func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
 	// Response contains only role id
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating role: %v", err)
+		return fmt.Errorf("error creating role: %v", err)
 	}
 
 	id := resp.Result["_RowKey"].(string)
 	if id == "" {
-		return fmt.Errorf("Role ID is not set")
+		return fmt.Errorf("the Role ID is not set")
 	}
 	d.SetId(id)
 	// Creation partially completed
@@ -157,7 +160,7 @@ func resourceRoleCreate(d *schema.ResourceData, m interface{}) error {
 	if len(object.Members) > 0 {
 		resp, err := object.UpdateRoleMembers(object.Members, "Add")
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error adding members to role: %v", err)
+			return fmt.Errorf("error adding members to role: %v", err)
 		}
 		d.SetPartial("member")
 	}
@@ -194,7 +197,7 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 	if d.HasChanges("name", "description") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating role attribute: %v", err)
+			return fmt.Errorf("error updating role attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 		d.SetPartial("name")
@@ -207,12 +210,12 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 		// Remove old members
 		resp, err := object.UpdateRoleMembers(expandRoleMembers(old), "Delete")
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error removing members from role: %v", err)
+			return fmt.Errorf("error removing members from role: %v", err)
 		}
 		// Add new members
 		resp, err = object.UpdateRoleMembers(expandRoleMembers(new), "Add")
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error adding members to role: %v", err)
+			return fmt.Errorf("error adding members to role: %v", err)
 		}
 		d.SetPartial("member")
 	}
@@ -222,13 +225,13 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 		// To update admin rights, we need to remove all existing ones first
 		rights, err := object.GetAdminRights()
 		if err != nil {
-			return fmt.Errorf("Error getting existing role admin rights: %v", err)
+			return fmt.Errorf("error getting existing role admin rights: %v", err)
 		}
 		logger.Debugf("Removing existing admin rights: %v", rights)
 		if rights != nil && len(rights) > 0 {
 			resp, err := object.RemoveAdminRights(rights)
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error removing existing role admin rights: %v", err)
+				return fmt.Errorf("error removing existing role admin rights: %v", err)
 			}
 		}
 		logger.Debugf("Removed existing admin rights: %v", rights)
@@ -245,7 +248,7 @@ func resourceRoleUpdate(d *schema.ResourceData, m interface{}) error {
 
 			resp, err := object.AssignAdminRights()
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error updating role admin rights: %v", err)
+				return fmt.Errorf("error updating role admin rights: %v", err)
 			}
 			logger.Debugf("Updated admin rights to: %v", adminrights)
 
@@ -270,7 +273,7 @@ func resourceRoleDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting role: %v", err)
+		return fmt.Errorf("error deleting role: %v", err)
 	}
 
 	if resp.Success {

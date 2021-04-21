@@ -29,6 +29,11 @@ func resourcePolicy() *schema.Resource {
 				ForceNew:    true,
 				Description: "The name of the policy",
 			},
+			"path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Path of the policy",
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -128,6 +133,9 @@ func resourcePolicyRead(d *schema.ResourceData, m interface{}) error {
 	logger.Debugf("Generated Map for resourcePolicyRead(): %+v", schemamap)
 	for k, v := range schemamap {
 		switch k {
+		case "path":
+			// policy name is part of path, extract it
+			d.Set("name", strings.TrimPrefix(v.(string), "/Policy/"))
 		case "plink":
 			// Handle plink content. In schema, following attributes are in root level but they are sub map section
 			d.Set("link_type", object.Plink.LinkType)
@@ -137,19 +145,22 @@ func resourcePolicyRead(d *schema.ResourceData, m interface{}) error {
 			service := make(map[string]interface{})
 			// convert each service map into []interface{}
 			for service_key, service_value := range v.(map[string]interface{}) {
-				processed_service_value := make(map[string]interface{})
-				// convert challenge_rule map into []interface{}
-				for attribute_key, attribute_value := range service_value.(map[string]interface{}) {
-					switch attribute_key {
-					case "challenge_rule", "access_secret_checkout_rule", "privilege_elevation_rule":
-						processed_service_value[attribute_key] = attribute_value.(map[string]interface{})["rule"]
-					case "admin_user_password":
-						processed_service_value[attribute_key] = []interface{}{attribute_value}
-					default:
-						processed_service_value[attribute_key] = attribute_value
+				// Only add a service if it is not empty
+				if len(service_value.(map[string]interface{})) > 0 {
+					processed_service_value := make(map[string]interface{})
+					// convert challenge_rule map into []interface{}
+					for attribute_key, attribute_value := range service_value.(map[string]interface{}) {
+						switch attribute_key {
+						case "challenge_rule", "access_secret_checkout_rule", "privilege_elevation_rule":
+							processed_service_value[attribute_key] = attribute_value.(map[string]interface{})["rule"]
+						case "admin_user_password":
+							processed_service_value[attribute_key] = []interface{}{attribute_value}
+						default:
+							processed_service_value[attribute_key] = attribute_value
+						}
 					}
+					service[service_key] = []interface{}{processed_service_value}
 				}
-				service[service_key] = []interface{}{processed_service_value}
 			}
 			d.Set(k, []interface{}{service})
 		default:

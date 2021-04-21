@@ -78,3 +78,13 @@ Optional:
 
 - `name` - (String) Name of the attribute.
 - `vaule` - (String) Value of the attribute.
+
+## Import
+
+SAML Application can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_webapp_saml.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `sets` aren't support in import process.

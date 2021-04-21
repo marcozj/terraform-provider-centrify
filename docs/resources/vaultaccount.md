@@ -66,3 +66,13 @@ Required:
 
 - `access_key_id` - (String) AWS access key id.
 - `secret_access_key` - (String, Sensitive) AWS secret access key.
+
+## Import
+
+Account can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_vaultaccount.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `set` aren't support in import process.

@@ -90,3 +90,11 @@ Optional:
 
 - `description` - (String) Description of the scope.
 - `allowed_rest_apis` - (Set of String) List of allowed REST APIs in Regex format.
+
+## Import
+
+OAuth2 Application can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_webapp_oauth.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```

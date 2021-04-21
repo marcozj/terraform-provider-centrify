@@ -18,6 +18,9 @@ func resourceAuthenticationProfile() *schema.Resource {
 		Update: resourceAuthenticationProfileUpdate,
 		Delete: resourceAuthenticationProfileDelete,
 		Exists: resourceAuthenticationProfileExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"uuid": {
@@ -97,7 +100,7 @@ func resourceAuthenticationProfileRead(d *schema.ResourceData, m interface{}) er
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading authentication profile: %v", err)
+		return fmt.Errorf("error reading authentication profile: %v", err)
 	}
 	//logger.Debugf("Authentication profile from tenant: %v", object)
 
@@ -129,7 +132,7 @@ func resourceAuthenticationProfileDelete(d *schema.ResourceData, m interface{}) 
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting authentication profile: %v", err)
+		return fmt.Errorf("error deleting authentication profile: %v", err)
 	}
 
 	if resp.Success {
@@ -151,12 +154,12 @@ func resourceAuthenticationProfileCreate(d *schema.ResourceData, m interface{}) 
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating authentication profile: %v", err)
+		return fmt.Errorf("error creating authentication profile: %v", err)
 	}
 
 	id := resp.Result["Uuid"].(string)
 	if id == "" {
-		return fmt.Errorf("Authentication profile ID is not set")
+		return fmt.Errorf("authentication profile ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -181,7 +184,7 @@ func resourceAuthenticationProfileUpdate(d *schema.ResourceData, m interface{}) 
 	if d.HasChanges("name", "challenges", "pass_through_duration", "additional_data") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating authentication profile attribute: %v", err)
+			return fmt.Errorf("error updating authentication profile attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 	}

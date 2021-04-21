@@ -21,6 +21,9 @@ func resourceDesktopApp() *schema.Resource {
 		Update: resourceDesktopAppUpdate,
 		Delete: resourceDesktopAppDelete,
 		Exists: resourceDesktopAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"template_name": {
@@ -114,6 +117,10 @@ func resourceDesktopApp() *schema.Resource {
 							Optional:    true,
 							Description: "ID of selected parameter value",
 						},
+						"value": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -203,6 +210,9 @@ func resourceDesktopAppRead(d *schema.ResourceData, m interface{}) error {
 				d.Set("workflow_approver", wfschema)
 				d.Set(k, v)
 			}
+		case "command_parameter":
+			logger.Debugf("cmd pars: %+v", v)
+			d.Set(k, v)
 		default:
 			d.Set(k, v)
 		}

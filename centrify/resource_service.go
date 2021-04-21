@@ -19,6 +19,9 @@ func resourceService() *schema.Resource {
 		Update: resourceServiceUpdate,
 		Delete: resourceServiceDelete,
 		Exists: resourceServiceExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"system_id": {

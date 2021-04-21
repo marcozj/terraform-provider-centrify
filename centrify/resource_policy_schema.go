@@ -73,6 +73,7 @@ func getCentrifyServicesSchema() *schema.Schema {
 				"certauth_skip_challenge": {
 					Type:        schema.TypeBool,
 					Optional:    true,
+					Default:     true,
 					Description: "Certificate authentication bypasses authentication rules and default profile",
 				},
 				"certauth_set_cookie": {

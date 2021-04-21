@@ -52,3 +52,11 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `last_character_type` - (String) A trailing alpha or alphanumeric character. Can be set to `AnyChar`, `AlphaOnly`, or `AlphaNumericOnly`. Default is `AnyChar`.
 - `minimum_alphabetic_character_count` - (Number) Min number of alpha characters. Range between `1` to `128`.
 - `minimum_non_alphabetic_character_count`-  (Number) Min number of non-alpha characters. Range between `1` to `128`.
+
+## Import
+
+Password Profile can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_passwordprofile.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```

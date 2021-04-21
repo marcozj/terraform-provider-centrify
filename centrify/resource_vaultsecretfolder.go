@@ -17,6 +17,9 @@ func resourceVaultSecretFolder() *schema.Resource {
 		Update: resourceVaultSecretFolderUpdate,
 		Delete: resourceVaultSecretFolderDelete,
 		Exists: resourceVaultSecretFolderExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {

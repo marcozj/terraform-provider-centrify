@@ -73,3 +73,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `connector_list` (Set of String) List of Connector IDs. Refer to [connector_list](./attribute_connector_list.md) attribute for details.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
+
+## Import
+
+Domain can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_vaultdomain.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `set` aren't support in import process.

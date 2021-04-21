@@ -45,3 +45,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `subtype` - (String) SubObjectType for application. Can be set to `Web` or `Desktop`. Only applicable if type is `Application`.
 - `permission` - (Block Set) Set permissions. Refer to [permission attribute](./attribute_permission.md) for details.
 - `member_permission` - (Block Set) Set member permissions. Refer to [member_permission attribute](./attribute_permission.md) for details. Each type of Set has different member_permission values and you can find them in [examples](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_manualset).
+
+## Import
+
+Manual Set can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_manualset.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `member_permission` aren't support in import process.

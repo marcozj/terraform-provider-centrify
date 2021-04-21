@@ -15,6 +15,9 @@ func resourcePolicyLinks() *schema.Resource {
 		Read:   resourcePolicyLinksRead,
 		Update: resourcePolicyLinksUpdate,
 		Delete: resourcePolicyLinksDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"policy_order": {
@@ -40,10 +43,15 @@ func resourcePolicyLinksRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading policy: %v", err)
+		return fmt.Errorf("error reading policy: %v", err)
 	}
 
-	d.Set("policy_order", object.Plinks)
+	// "policy_order" is list of string so extract ID from object.Plinks to form a list of string
+	var plinks []string
+	for _, v := range object.Plinks {
+		plinks = append(plinks, v.ID)
+	}
+	d.Set("policy_order", plinks)
 
 	return nil
 }
@@ -65,7 +73,7 @@ func resourcePolicyLinksCreate(d *schema.ResourceData, m interface{}) error {
 	}
 	resp, err := object.Update()
 	if err != nil || !resp.Success {
-		return fmt.Errorf("Error updating policy links: %v", err)
+		return fmt.Errorf("error updating policy links: %v", err)
 	}
 
 	// Creation completed
@@ -89,7 +97,7 @@ func resourcePolicyLinksUpdate(d *schema.ResourceData, m interface{}) error {
 	if d.HasChanges("policy_order") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating policy links: %v", err)
+			return fmt.Errorf("error updating policy links: %v", err)
 		}
 	}
 

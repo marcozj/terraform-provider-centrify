@@ -138,3 +138,17 @@ More examples for `centrifyvault_policy` can be found [here](https://github.com/
   - `sshkey_set` - (Block List, Max: 1) Settings in **Resouces -> SSH Keys** menu. Refer to [sshkey_set](./policy_sshkey_set.md) attribute for details.
   - `cloudproviders_set` - (Block List, Max: 1) Settings in **Resouces -> Cloud Providers** menu. Refer to [cloudproviders_set](./policy_cloudproviders_set.md) attribute for details.
   - `mobile_device` - (Block List, Max: 1) Settings in **Devices** menu. Refer to [mobile_device](./policy_mobile_device.md) attribute for details.
+
+## Import
+
+Policy Order can be imported using `centrifyvault_policy_links`, e.g.
+
+```shell
+terraform import centrifyvault_policyorder.example centrifyvault_policy_links
+```
+
+Policy can be imported using policy path name `/Policy/<Policy Name>`, e.g.
+
+```shell
+terraform import centrifyvault_policy.example "/Policy/Example Policy"
+```

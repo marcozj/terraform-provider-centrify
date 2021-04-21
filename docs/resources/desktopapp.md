@@ -23,11 +23,13 @@ resource "centrifyvault_desktopapp" "test_desktopapp" {
         name = "system"
         type = "Server"
         target_object_id = data.centrifyvault_vaultsystem.my_app.id
+        value = data.centrifyvault_vaultsystem.my_app.name
     }
     command_parameter {
         name = "user"
         type = "VaultAccount"
         target_object_id = data.centrifyvault_vaultaccount.admin.id
+        value = data.centrifyvault_vaultaccount.admin.name
     }
 }
 ```
@@ -69,3 +71,14 @@ Required:
 Optional:
 
 - `target_object_id` - (String) ID of selected parameter value
+- `value` - (String) Value of the parameter
+
+## Import
+
+Desktop App can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_desktopapp.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `sets` aren't support in import process.
