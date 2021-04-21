@@ -30,6 +30,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 - `id` - (String) ID of the SAML application.
 - `name` - (String) Name of the generic web application.
+- `template_name` - (String) Web application template.
 - `ur` - url property.
 - `url` - (String) The URL of the application.
 - `description` - (String) Description of the web application.

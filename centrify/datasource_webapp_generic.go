@@ -19,6 +19,11 @@ func dataSourceGenericWebApp() *schema.Resource {
 				Required:    true,
 				Description: "Name of the Web App",
 			},
+			"template_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Template name of the Web App",
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Computed:    true,
