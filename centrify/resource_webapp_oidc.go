@@ -21,6 +21,9 @@ func resourceOidcWebApp() *schema.Resource {
 		Update: resourceOidcWebAppUpdate,
 		Delete: resourceOidcWebAppDelete,
 		Exists: resourceOidcWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"template_name": {

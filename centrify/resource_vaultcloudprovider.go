@@ -19,6 +19,9 @@ func resourceCloudProvider() *schema.Resource {
 		Update: resourceCloudProviderUpdate,
 		Delete: resourceCloudProviderDelete,
 		Exists: resourceCloudProviderExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"cloud_account_id": {

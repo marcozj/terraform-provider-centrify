@@ -19,6 +19,9 @@ func resourceVaultDatabase() *schema.Resource {
 		Update: resourceVaultDatabaseUpdate,
 		Delete: resourceVaultDatabaseDelete,
 		Exists: resourceVaultDatabaseExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			// Database -> Settings menu related settings

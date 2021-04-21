@@ -32,3 +32,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 - `description` - (String) Description of the multiplexed account.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
+
+## Import
+
+Multiplexed Account can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_multiplexedaccount.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` isn't support in import process.

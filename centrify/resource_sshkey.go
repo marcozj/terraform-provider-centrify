@@ -17,6 +17,9 @@ func resourceSSHKey() *schema.Resource {
 		Update: resourceSSHKeyUpdate,
 		Delete: resourceSSHKeyDelete,
 		Exists: resourceSSHKeyExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {

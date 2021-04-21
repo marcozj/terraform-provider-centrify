@@ -21,6 +21,9 @@ func resourceVaultAccount() *schema.Resource {
 		Update: resourceVaultAccountUpdate,
 		Delete: resourceVaultAccountDelete,
 		Exists: resourceVaultAccountExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			// Settings menu

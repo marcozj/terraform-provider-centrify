@@ -12,11 +12,13 @@ resource "centrifyvault_desktopapp" "test_desktopapp" {
         name = "system"
         type = "Server"
         target_object_id = data.centrifyvault_vaultsystem.my_app.id
+        value = data.centrifyvault_vaultsystem.my_app.name
     }
     command_parameter {
         name = "user"
         type = "VaultAccount"
         target_object_id = data.centrifyvault_vaultaccount.admin.id
+        value = data.centrifyvault_vaultaccount.admin.name
     }
     
     default_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id

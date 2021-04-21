@@ -1,5 +1,16 @@
 # RELEASE NOTES
 
+## 0.1.5 (April 21, 2021)
+
+FEATURES:
+
+- **New Data Resource:** `centrifyvault_desktopapp`
+- **New Data Resource:** `centrifyvault_service`
+
+IMPROVEMENTS:
+
+- Add support for importing resources
+
 ## 0.1.4 (April 9, 2021)
 
 IMPROVEMENTS:

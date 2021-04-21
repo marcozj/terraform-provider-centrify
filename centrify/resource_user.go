@@ -17,6 +17,9 @@ func resourceUser() *schema.Resource {
 		Update: resourceUserUpdate,
 		Delete: resourceUserDelete,
 		Exists: resourceUserExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"username": {
@@ -95,6 +98,7 @@ func resourceUser() *schema.Resource {
 			"manager_username": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     "Unassigned",
 				Description: "Username of the manager",
 			},
 			// Add to roles
@@ -144,7 +148,7 @@ func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading user: %v", err)
+		return fmt.Errorf("error reading user: %v", err)
 	}
 	//logger.Debugf("User from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -173,12 +177,12 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating user: %v", err)
+		return fmt.Errorf("error creating user: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("User ID is not set")
+		return fmt.Errorf("user ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -203,7 +207,7 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 			roleObj.ID = v
 			resp, err := roleObj.UpdateMembers([]string{object.ID}, "Add", "Users")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error adding user to role: %v", err)
+				return fmt.Errorf("error adding user to role: %v", err)
 			}
 		}
 		d.SetPartial("roles")
@@ -253,7 +257,7 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("password") {
 		resp, err := object.ChangePassword()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating user password: %v", err)
+			return fmt.Errorf("error updating user password: %v", err)
 		}
 		d.SetPartial("password")
 	}
@@ -267,7 +271,7 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 			roleObj.ID = v
 			resp, err := roleObj.UpdateMembers([]string{object.ID}, "Delete", "Users")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error removing user from role: %v", err)
+				return fmt.Errorf("error removing user from role: %v", err)
 			}
 		}
 		// Add new roles
@@ -276,7 +280,7 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 			roleObj.ID = v
 			resp, err := roleObj.UpdateMembers([]string{object.ID}, "Add", "Users")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error adding user to role: %v", err)
+				return fmt.Errorf("error adding user to role: %v", err)
 			}
 		}
 		d.SetPartial("roles")
@@ -299,7 +303,7 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting user: %v", err)
+		return fmt.Errorf("error deleting user: %v", err)
 	}
 
 	if resp.Success {

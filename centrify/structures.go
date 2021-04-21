@@ -196,6 +196,9 @@ func customCommandParamHash(v interface{}) int {
 	if v, ok := m["target_object_id"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
+	if v, ok := m["value"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
 	return hashcode.String(buf.String())
 }
 

@@ -25,7 +25,7 @@ data "centrifyvault_connector" "connector1" {
 }
 
 // Data source for existing system
-data "centrifyvault_vaultsystem" "centos1" {
+data "centrifyvault_vaultsystem" "system" {
     name = "centos1"
     fqdn = "centos1.demo.lab"
     computer_class = "Unix"

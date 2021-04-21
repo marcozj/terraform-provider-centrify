@@ -20,6 +20,9 @@ func resourceVaultSystem() *schema.Resource {
 		Update: resourceVaultSystemUpdate,
 		Delete: resourceVaultSystemDelete,
 		Exists: resourceVaultSystemExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			// System -> Settings menu related settings

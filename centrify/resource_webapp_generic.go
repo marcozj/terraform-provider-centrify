@@ -21,6 +21,9 @@ func resourceGenericWebApp() *schema.Resource {
 		Update: resourceGenericWebAppUpdate,
 		Delete: resourceGenericWebAppDelete,
 		Exists: resourceGenericWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"template_name": {

@@ -22,6 +22,9 @@ func resourceSamlWebApp() *schema.Resource {
 		Update: resourceSamlWebAppUpdate,
 		Delete: resourceSamlWebAppDelete,
 		Exists: resourceSamlWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"template_name": {

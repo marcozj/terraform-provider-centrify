@@ -19,6 +19,9 @@ func resourceManualSet() *schema.Resource {
 		Update: resourceManualSetUpdate,
 		Delete: resourceManualSetDelete,
 		Exists: resourceManualSetExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -98,12 +101,18 @@ func resourceManualSetRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading Manual Set: %v", err)
+		return fmt.Errorf("error reading Manual Set: %v", err)
 	}
 	//logger.Debugf("Manual Set from tenant: %v", object)
 
-	d.Set("name", object.Name)
-	d.Set("description", object.Description)
+	schemamap, err := vault.GenerateSchemaMap(object)
+	if err != nil {
+		return err
+	}
+	logger.Debugf("Generated Map for resourceManualSetRead(): %+v", schemamap)
+	for k, v := range schemamap {
+		d.Set(k, v)
+	}
 
 	logger.Infof("Completed reading Manual Set: %s", object.Name)
 	return nil
@@ -130,12 +139,12 @@ func resourceManualSetCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating Manual Set: %v", err)
+		return fmt.Errorf("error creating Manual Set: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("Manual Set ID is not set")
+		return fmt.Errorf("the Manual Set ID is not set")
 	}
 	d.SetId(id)
 	// Creation partially completed
@@ -151,7 +160,7 @@ func resourceManualSetCreate(d *schema.ResourceData, m interface{}) error {
 
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting Manual Set permissions: %v", err)
+			return fmt.Errorf("error setting Manual Set permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -160,7 +169,7 @@ func resourceManualSetCreate(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("member_permission"); ok {
 		_, err = object.SetMemberPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting Manual Set member permissions: %v", err)
+			return fmt.Errorf("error setting Manual Set member permissions: %v", err)
 		}
 		d.SetPartial("member_permission")
 	}
@@ -193,7 +202,7 @@ func resourceManualSetUpdate(d *schema.ResourceData, m interface{}) error {
 	if d.HasChanges("name", "description") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating Manual Set attribute: %v", err)
+			return fmt.Errorf("error updating Manual Set attribute: %v", err)
 		}
 		//logger.Debugf("Updated attributes to: %v", object)
 		d.SetPartial("name")
@@ -214,7 +223,7 @@ func resourceManualSetUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing Manual Set permissions: %v", err)
+				return fmt.Errorf("error removing Manual Set permissions: %v", err)
 			}
 		}
 
@@ -225,7 +234,7 @@ func resourceManualSetUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding Manual Set permissions: %v", err)
+				return fmt.Errorf("error adding Manual Set permissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -244,7 +253,7 @@ func resourceManualSetUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetMemberPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing Manual Set member permissions: %v", err)
+				return fmt.Errorf("error removing Manual Set member permissions: %v", err)
 			}
 		}
 
@@ -256,7 +265,7 @@ func resourceManualSetUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetMemberPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding Manual Set member permissions: %v", err)
+				return fmt.Errorf("error adding Manual Set member permissions: %v", err)
 			}
 		}
 		d.SetPartial("member_permission")
@@ -279,7 +288,7 @@ func resourceManualSetDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting Manual Set: %v", err)
+		return fmt.Errorf("error deleting Manual Set: %v", err)
 	}
 
 	if resp.Success {

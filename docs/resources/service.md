@@ -48,3 +48,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `use_utc_time` - (Boolean) Whether to use UTC time.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `sets` (Set of String) List of Set IDs the resource belongs to. Refer to [sets](./attribute_sets.md) attribute for details.
+
+## Import
+
+Service can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_service.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `set` aren't support in import process.

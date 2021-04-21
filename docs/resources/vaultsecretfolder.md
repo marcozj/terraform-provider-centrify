@@ -37,3 +37,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `parent_id` - (String) Parent folder ID of an secret folder.
 - `permission` - (Block Set) Domain permissions. Refer to [permission](./attribute_permission.md) attribute for details.
 - `member_permission` - (Block Set) Set member permissions. Refer to [member_permission attribute](./attribute_permission.md) for details.
+
+## Import
+
+Secret Folder can be imported using the resource `id`, e.g.
+
+```shell
+terraform import centrifyvault_vaultsecretfolder.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Limitation:** `permission` and `member_permission` aren't support in import process.
