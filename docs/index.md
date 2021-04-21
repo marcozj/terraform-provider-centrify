@@ -92,18 +92,18 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Database | [`centrifyvault_vaultdatabase`](./resources/vaultdatabase.md) | [`centrifyvault_vaultdatabase`](./data-sources/vaultdatabase.md) |
 | Domain | [`centrifyvault_vaultdomain`](./resources/vaultdomain.md) | [`centrifyvault_vaultdomain`](./data-sources/vaultdomain.md) |
 | Domain Configuration | [`centrifyvault_vaultdomainconfiguration`](./resources/vaultdomainconfiguration.md) | |
-| CloudProviders | [`centrifyvault_cloudprovider`](./resources/cloudprovider.md) | [`centrifyvault_cloudprovider`](./data-sources/cloudprovider.md) |
+| Cloud Provider | [`centrifyvault_cloudprovider`](./resources/cloudprovider.md) | [`centrifyvault_cloudprovider`](./data-sources/cloudprovider.md) |
 | Account | [`centrifyvault_vaultaccount`](./resources/vaultaccount.md) | [`centrifyvault_vaultaccount`](./data-sources/vaultaccount.md) |
 | Multiplexed Account | [`centrifyvault_multiplexedaccount`](./resources/multiplexedaccount.md) | [`centrifyvault_multiplexedaccount`](./data-sources/multiplexedaccount.md) |
 | Secret | [`centrifyvault_vaultsecret`](./resources/vaultsecret.md) | [`centrifyvault_vaultsecret`](./data-sources/vaultsecret.md) |
 | Secret Folder | [`centrifyvault_vaultsecretfolder`](./resources/vaultsecretfolder.md) | [`centrifyvault_vaultsecretfolder`](./data-sources/vaultsecretfolder.md) |
 | SSH Key | [`centrifyvault_sshkey`](./resources/sshkey.md) | [`centrifyvault_sshkey`](./data-sources/sshkey.md) |
-| Windows Service | [`centrifyvault_service`](./resources/service.md) | |
-| SAML Web App | [`centrifyvault_webapp_generic`](./resources/webapp_generic.md) | [`centrifyvault_webapp_generic`](./resources/webapp_generic.md) |
-| SAML Web App | [`centrifyvault_webapp_saml`](./resources/webapp_saml.md) | [`centrifyvault_webapp_saml`](./resources/webapp_saml.md) |
-| Oauth Web App | [`centrifyvault_webapp_oauth`](./resources/webapp_oauth.md) | [`centrifyvault_webapp_oauth`](./resources/webapp_oauth.md) |
-| OpenID Connect Web App | [`centrifyvault_webapp_oidc`](./resources/webapp_oidc.md) | [`centrifyvault_webapp_oidc`](./resources/webapp_oidc.md) |
-| Desktop App | [`centrifyvault_desktopapp`](./resources/desktopapp.md) | |
-| Policy | [`centrifyvault_policyorder`](./resources/policy.md) | |
+| Windows Service | [`centrifyvault_service`](./resources/service.md) | [`centrifyvault_service`](./data-sources/service.md) |
+| Generic Web App | [`centrifyvault_webapp_generic`](./resources/webapp_generic.md) | [`centrifyvault_webapp_generic`](./data-sources/webapp_generic.md) |
+| SAML Web App | [`centrifyvault_webapp_saml`](./resources/webapp_saml.md) | [`centrifyvault_webapp_saml`](./data-sources/webapp_saml.md) |
+| Oauth Web App | [`centrifyvault_webapp_oauth`](./resources/webapp_oauth.md) | [`centrifyvault_webapp_oauth`](./data-sources/webapp_oauth.md) |
+| OpenID Connect Web App | [`centrifyvault_webapp_oidc`](./resources/webapp_oidc.md) | [`centrifyvault_webapp_oidc`](./data-sources/webapp_oidc.md) |
+| Desktop App | [`centrifyvault_desktopapp`](./resources/desktopapp.md) | [`centrifyvault_desktopapp`](./data-sources/desktopapp.md) |
+| Policy Order | [`centrifyvault_policyorder`](./resources/policy.md) | |
 | Policy | [`centrifyvault_policy`](./resources/policy.md) | [`centrifyvault_policy`](./data-sources/policy.md) |
 | Global Workflow | [`centrifyvault_globalworkflow`](./resources/globalworkflow.md) | |
