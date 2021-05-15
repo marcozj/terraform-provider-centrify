@@ -10,6 +10,7 @@ This resource allows you to create/update/delete global federated group mapping.
 
 ```terraform
 resource "centrifyvault_globalgroupmappings" "group_mappings" {
+    bulkupdate = true
     mapping {
         attribute_value = "Idp Group 1"
         group_name = "Okta PAS Admin"
@@ -27,6 +28,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 ### Optional
 
+- `bulkupdate` - (Bollean) When this is set to true, one API call is issued to perform create/update/delete for multiple mappings instead of one API call per mapping. This improves performance when there are large number of mappings. **NOTE:** When this is true, existing mappings not managed by Terraform will be removed when create/update/delete actions are performed.
 - `mapping` - (Block Set) (see below [reference for mapping](#reference-for-mapping))
 
 ## [Reference for `mapping`]

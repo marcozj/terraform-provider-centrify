@@ -17,6 +17,10 @@ func resourceGlobalGroupMappings() *schema.Resource {
 		Delete: resourceGroupMappingDelete,
 
 		Schema: map[string]*schema.Schema{
+			"bulkupdate": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 			"mapping": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -80,7 +84,12 @@ func resourceGroupMappingCreate(d *schema.ResourceData, m interface{}) error {
 
 	createUpateGroupMappingsData(d, object)
 
-	err := object.Create()
+	var err error
+	if object.BulkUpdate {
+		err = object.Update()
+	} else {
+		err = object.Create()
+	}
 	if err != nil {
 		return fmt.Errorf("Error creating global group mappings: %v", err)
 	}
@@ -102,17 +111,24 @@ func resourceGroupMappingUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// If there is change, delete all then add
 	if d.HasChanges("mapping") {
-		old, _ := d.GetChange("mapping")
-		oldobject := vault.NewGroupMappings(client)
-		oldobject.Mappings = expandGroupMappings(old)
-		err := oldobject.Delete()
-		if err != nil {
-			return fmt.Errorf("Error deleting global group mappings: %v", err)
-		}
+		if object.BulkUpdate {
+			err := object.Update()
+			if err != nil {
+				return fmt.Errorf("error updating global group mappings: %v", err)
+			}
+		} else {
+			old, _ := d.GetChange("mapping")
+			oldobject := vault.NewGroupMappings(client)
+			oldobject.Mappings = expandGroupMappings(old)
+			err := oldobject.Delete()
+			if err != nil {
+				return fmt.Errorf("Error deleting global group mappings: %v", err)
+			}
 
-		err = object.Create()
-		if err != nil {
-			return fmt.Errorf("Error adding global group mappings: %v", err)
+			err = object.Create()
+			if err != nil {
+				return fmt.Errorf("Error adding global group mappings: %v", err)
+			}
 		}
 	}
 
@@ -126,7 +142,13 @@ func resourceGroupMappingDelete(d *schema.ResourceData, m interface{}) error {
 	object := vault.NewGroupMappings(client)
 	// We need to fill the mappings so that they can be deleted one by one
 	createUpateGroupMappingsData(d, object)
-	err := object.Delete()
+	var err error
+	if object.BulkUpdate {
+		object.Mappings = []vault.GroupMapping{}
+		err = object.Update()
+	} else {
+		err = object.Delete()
+	}
 	if err != nil {
 		return fmt.Errorf("Error deleting global group mappings: %v", err)
 	}
@@ -138,6 +160,9 @@ func resourceGroupMappingDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func createUpateGroupMappingsData(d *schema.ResourceData, object *vault.GroupMappings) {
+	if v, ok := d.GetOk("bulkupdate"); ok {
+		object.BulkUpdate = v.(bool)
+	}
 	if v, ok := d.GetOk("mapping"); ok {
 		object.Mappings = expandGroupMappings(v)
 	}
