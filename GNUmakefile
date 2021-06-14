@@ -1,10 +1,10 @@
 TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
-PKG_NAME=centrifyvault
+PKG_NAME=centrify
 
 # Local provider install parameter
-version = 0.1.6
+version = 0.1.7
 registry_name = registry.terraform.io
 namespace = marcozj
 bin_name = terraform-provider-$(PKG_NAME)
