@@ -14,7 +14,7 @@ Use special `terraform` configuration block type to configure some behaviors of 
 terraform {
   required_providers {
     centrify = {
-      source  = "marcozj/centrify"
+      source  = "marcozj/centrifyvault"
     }
   }
 }

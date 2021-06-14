@@ -19,25 +19,25 @@ If you have not set GOPATH, you can substitute $HOME/go in those commands or els
 $ export GOPATH=$(go env GOPATH)
 ```
 
-Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-centrify`
+Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-centrifyvault`
 
 ```sh
 $ mkdir -p $GOPATH/src/github.com/terraform-providers
 $ cd $GOPATH/src/github.com/terraform-providers
-$ git clone https://github.com/marcozj/terraform-provider-centrify terraform-provider-centrify
+$ git clone https://github.com/marcozj/terraform-provider-centrifyvault terraform-provider-centrifyvault
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrify
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrifyvault
 $ make build
 ```
 
 To install the provider in your home directory
 
 ```sh
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrify
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrifyvault
 $ make install
 ```
 
