@@ -10,79 +10,92 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceService_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceServiceRead,
+
+		Schema:             getDSServiceSchema(),
+		DeprecationMessage: "dataresource centrifyvault_service is deprecated will be removed in the future, use centrify_service instead",
+	}
+}
+
 func dataSourceService() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceServiceRead,
 
-		Schema: map[string]*schema.Schema{
-			"system_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The target system id where the service runs",
+		Schema: getDSServiceSchema(),
+	}
+}
+
+func getDSServiceSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"system_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The target system id where the service runs",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the service",
+		},
+		"service_type": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"service_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the service to be managed.",
+		},
+		"enable_management": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Enable management of this service password",
+		},
+		"admin_account_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Administrative account id that used to manage the password for the service",
+		},
+		"multiplexed_account_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The multiplexed account id to run the service",
+		},
+		"restart_service": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Restart Service when password is rotated",
+		},
+		"restart_time_restriction": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Enforce restart time restrictions",
+		},
+		"days_of_week": {
+			Type:     schema.TypeSet,
+			Computed: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the service",
-			},
-			"service_type": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"service_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the service to be managed.",
-			},
-			"enable_management": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Enable management of this service password",
-			},
-			"admin_account_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Administrative account id that used to manage the password for the service",
-			},
-			"multiplexed_account_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The multiplexed account id to run the service",
-			},
-			"restart_service": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Restart Service when password is rotated",
-			},
-			"restart_time_restriction": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Enforce restart time restrictions",
-			},
-			"days_of_week": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Day of the week restart allowed",
-			},
-			"restart_start_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Start time of the time range restart is allowed",
-			},
-			"restart_end_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "End time of the time range restart is allowed",
-			},
-			"use_utc_time": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Whether to use UTC time",
-			},
+			Description: "Day of the week restart allowed",
+		},
+		"restart_start_time": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Start time of the time range restart is allowed",
+		},
+		"restart_end_time": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "End time of the time range restart is allowed",
+		},
+		"use_utc_time": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Whether to use UTC time",
 		},
 	}
 }

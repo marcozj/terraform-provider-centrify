@@ -2,19 +2,19 @@
 subcategory: "Settings"
 ---
 
-# centrifyvault_passwordprofile (Data Source)
+# centrify_passwordprofile (Data Source)
 
 This data source gets information of password profile.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_passwordprofile" "win_profile" {
+data "centrify_passwordprofile" "win_profile" {
     name = "Windows Profile"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_passwordprofile)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_passwordprofile)
 
 ## Search Attributes
 

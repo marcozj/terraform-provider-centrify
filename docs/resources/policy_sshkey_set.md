@@ -4,24 +4,24 @@ subcategory: "Policy Configuration"
 
 # sshkey_set attribute
 
-**sshkey_set** is a sub attribute in settings attribute within **centrifyvault_policy** Resource.
+**sshkey_set** is a sub attribute in settings attribute within **centrify_policy** Resource.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_policy" "test_policy" {
+resource "centrify_policy" "test_policy" {
     name = "Test Policy"
     description = "Test Policy"
     link_type = "Collection"
     policy_assignment = [
-        format("SshKeys|%s", data.centrifyvault_manualset.test_set.id),
+        format("SshKeys|%s", data.centrify_manualset.test_set.id),
     ]
     
     settings {
         sshkey_set {
-            default_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id
+            default_profile_id = data.centrify_authenticationprofile.newdevice_auth_pf.id
             challenge_rule {
-                authentication_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id
+                authentication_profile_id = data.centrify_authenticationprofile.newdevice_auth_pf.id
                 rule {
                     filter = "IpAddress"
                     condition = "OpInCorpIpRange"
@@ -32,7 +32,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_sshkey_set.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policy_sshkey_set.tf)
 
 ## Argument Reference
 

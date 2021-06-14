@@ -9,7 +9,7 @@ challenge_rule is a common attribute in various resources.
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_vaultsystem" "win_system" {
+resource "centrify_system" "win_system" {
     name = "WindowsServer"
     fqdn = "192.168.2.3"
     computer_class = "Windows"
@@ -17,7 +17,7 @@ resource "centrifyvault_vaultsystem" "win_system" {
     description = "My Windows system"
 
     challenge_rule {
-      authentication_profile_id = data.centrifyvault_authenticationprofile.xxx.id
+      authentication_profile_id = data.centrify_authenticationprofile.xxx.id
       rule {
         filter = "IpAddress"
         condition = "OpInCorpIpRange"
@@ -25,7 +25,7 @@ resource "centrifyvault_vaultsystem" "win_system" {
     }
 
     challenge_rule {
-      authentication_profile_id = data.centrifyvault_authenticationprofile.xxx.id
+      authentication_profile_id = data.centrify_authenticationprofile.xxx.id
       rule {
         filter = "DayOfWeek"
         condition = "OpIsDayOfWeek"

@@ -2,23 +2,23 @@
 subcategory: "Applications"
 ---
 
-# centrifyvault_webapp_saml (Data Source)
+# centrify_webapp_saml (Data Source)
 
 This data source gets information of SAML web application.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_webapp_saml" "saml_webapp" {
+data "centrify_webapp_saml" "saml_webapp" {
   name = "My SAML App"
 }
 
 output "idp_metadata_url" {
-  value = data.centrifyvault_webapp_saml.saml_webapp.idp_metadata_url
+  value = data.centrify_webapp_saml.saml_webapp.idp_metadata_url
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_webapp_saml)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_saml)
 
 ## Search Attributes
 

@@ -2,27 +2,27 @@
 subcategory: "Settings"
 ---
 
-# centrifyvault_globalworkflow (Resource)
+# centrify_globalworkflow (Resource)
 
 This resource allows you to configure global workflows including account, agent auth, secrets and privilege elevation workflows.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_globalworkflow" "account_wf" {
+resource "centrify_globalworkflow" "account_wf" {
     type = "wf"
     settings {
         enabled = true
         approver {
-            guid = data.centrifyvault_role.system_admin.id
-            name = data.centrifyvault_role.system_admin.name
+            guid = data.centrify_role.system_admin.id
+            name = data.centrify_role.system_admin.name
             type = "Role"
         }
     }
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_globalworkflow)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_globalworkflow)
 
 ## Argument Reference
 

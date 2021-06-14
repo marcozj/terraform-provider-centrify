@@ -2,14 +2,14 @@
 subcategory: "Applications"
 ---
 
-# centrifyvault_webapp_saml (Resource)
+# centrify_webapp_saml (Resource)
 
 This resource allows you to create/update/delete SAML web application.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_webapp_saml" "saml_webapp" {
+resource "centrify_webapp_saml" "saml_webapp" {
     name = "SAML Web App"
     template_name = "Generic SAML"
     description = "SAML Web Application"
@@ -26,11 +26,11 @@ resource "centrifyvault_webapp_saml" "saml_webapp" {
     }
     saml_response_script = "test;"
     username_strategy = "ADAttribute"
-    ad_attribute = "userprincipalname"
+    username = "userprincipalname"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_webapp_saml)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_saml)
 
 ## Argument Reference
 
@@ -65,7 +65,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 - `default_profile_id` - (String) Default Profile (used if no conditions matched). Default is `AlwaysAllowed`.
 - `policy_script` - (String) Use script to specify authentication rules (configured rules are ignored). Conflicts with `challenge_rule`.
 - `username_strategy` - (String) Account mapping method. Can be set to `ADAttribute`, `Fixed` or `UseScript`. Default is `ADAttribute`.
-- `username` - (String) All users share the user name. Applicable if `username_strategy` is `Fixed`.
+- `username` - (String) All users share the user name. Applicable if `username_strategy` is `Fixed` or `ADAttribute`.
 - `user_map_script` - (String) Account mapping script. Applicable if `username_strategy` is `UseScript`.
 - `workflow_enabled` - (Boolean) Enable workflow for this application.
 - `workflow_approver` - (Block List) List of approvers. Refer to [workflow_approver](./attribute_workflow_approver.md) attribute for details.
@@ -84,7 +84,7 @@ Optional:
 SAML Application can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_webapp_saml.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_webapp_saml.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `sets` aren't support in import process.

@@ -9,60 +9,73 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourcePolicy_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourcePolicyRead,
+
+		Schema:             getDSPolicySchema(),
+		DeprecationMessage: "dataresource centrifyvault_policy is deprecated will be removed in the future, use centrify_policy instead",
+	}
+}
+
 func dataSourcePolicy() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourcePolicyRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the policy",
+		Schema: getDSPolicySchema(),
+	}
+}
+
+func getDSPolicySchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the policy",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the policy",
+		},
+		"link_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Link type of the policy",
+		},
+		"policy_assignment": {
+			Type:     schema.TypeSet,
+			Computed: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the policy",
-			},
-			"link_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Link type of the policy",
-			},
-			"policy_assignment": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "List of roles or sets assigned to the policy",
-			},
-			"settings": {
-				Type:     schema.TypeList,
-				Computed: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"centrify_services":        getCentrifyServicesSchema(),
-						"centrify_client":          getCentrifyClientSchema(),
-						"centrify_css_server":      getCentrifyCSSServerSchema(),
-						"centrify_css_workstation": getCentrifyCSSWorkstationSchema(),
-						"centrify_css_elevation":   getCentrifyCSSElevationSchema(),
-						"self_service":             getSelfServiceSchema(),
-						"password_settings":        getPasswordSettingsSchema(),
-						"oath_otp":                 getOATHOTPSchema(),
-						"radius":                   getRadiusSchema(),
-						"user_account":             getUserAccountSchema(),
-						"system_set":               getSystemSetSchema(),
-						"database_set":             getDatabaseAndDomainSetSchema(),
-						"domain_set":               getDatabaseAndDomainSetSchema(),
-						"account_set":              getAccountSetSchema(),
-						"secret_set":               getSecretSetSchema(),
-						"sshkey_set":               getSSHKeySetSchema(),
-						"cloudproviders_set":       getCloudProvidersSchema(),
-						"mobile_device":            getMobileDeviceSchema(),
-					},
+			Description: "List of roles or sets assigned to the policy",
+		},
+		"settings": {
+			Type:     schema.TypeList,
+			Computed: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"centrify_services":        getCentrifyServicesSchema(),
+					"centrify_client":          getCentrifyClientSchema(),
+					"centrify_css_server":      getCentrifyCSSServerSchema(),
+					"centrify_css_workstation": getCentrifyCSSWorkstationSchema(),
+					"centrify_css_elevation":   getCentrifyCSSElevationSchema(),
+					"self_service":             getSelfServiceSchema(),
+					"password_settings":        getPasswordSettingsSchema(),
+					"oath_otp":                 getOATHOTPSchema(),
+					"radius":                   getRadiusSchema(),
+					"user_account":             getUserAccountSchema(),
+					"system_set":               getSystemSetSchema(),
+					"database_set":             getDatabaseAndDomainSetSchema(),
+					"domain_set":               getDatabaseAndDomainSetSchema(),
+					"account_set":              getAccountSetSchema(),
+					"secret_set":               getSecretSetSchema(),
+					"sshkey_set":               getSSHKeySetSchema(),
+					"cloudproviders_set":       getCloudProvidersSchema(),
+					"mobile_device":            getMobileDeviceSchema(),
 				},
 			},
 		},

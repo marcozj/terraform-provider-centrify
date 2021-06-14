@@ -9,64 +9,77 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
-func dataSourceVaultSecret() *schema.Resource {
+func dataSourceSecret_deprecated() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceVaultSecretRead,
+		Read: dataSourceSecretRead,
 
-		Schema: map[string]*schema.Schema{
-			"secret_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the secret",
-			},
-			"parent_path": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Path of parent folder",
-			},
-			"checkout": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Whether to retrieve secret content",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the secret",
-			},
-			"folder_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "ID of the folder where the secret is located",
-			},
-			"secret_text": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Sensitive:   true,
-				Description: "Content of the secret",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Either Text or File",
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Default Secret Challenge Profile (used if no conditions matched)",
-			},
-			// Workflow
-			"workflow_enabled": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"workflow_approver": getWorkflowApproversSchema(),
-			"challenge_rule":    getChallengeRulesSchema(),
-		},
+		Schema:             getDSSecretSchema(),
+		DeprecationMessage: "dataresource centrifyvault_vaultsecret is deprecated will be removed in the future, use centrify_secret instead",
 	}
 }
 
-func dataSourceVaultSecretRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSecret() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceSecretRead,
+
+		Schema: getDSSecretSchema(),
+	}
+}
+
+func getDSSecretSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"secret_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the secret",
+		},
+		"parent_path": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Path of parent folder",
+		},
+		"checkout": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Whether to retrieve secret content",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the secret",
+		},
+		"folder_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "ID of the folder where the secret is located",
+		},
+		"secret_text": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Sensitive:   true,
+			Description: "Content of the secret",
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Either Text or File",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Default Secret Challenge Profile (used if no conditions matched)",
+		},
+		// Workflow
+		"workflow_enabled": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"workflow_approver": getWorkflowApproversSchema(),
+		"challenge_rule":    getChallengeRulesSchema(),
+	}
+}
+
+func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	logger.Infof("Finding vault secret")
 	client := m.(*restapi.RestClient)
 	object := vault.NewSecret(client)

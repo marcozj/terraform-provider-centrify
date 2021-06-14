@@ -2,24 +2,24 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultsecretfolder (Data Source)
+# centrify_secretfolder (Data Source)
 
 This data source gets information of secret folder.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_vaultsecretfolder" "level1_folder" {
+data "centrify_secretfolder" "level1_folder" {
     name = "Level 1 Folder"
 }
 
-data "centrifyvault_vaultsecretfolder" "level2_folder" {
+data "centrify_secretfolder" "level2_folder" {
     name = "Level 2 Folder"
     parent_path = "Level 1 Folder"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsecret)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_secret)
 
 ## Search Attributes
 

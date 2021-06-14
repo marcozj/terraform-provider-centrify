@@ -2,19 +2,19 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultdatabase (Data Source)
+# centrify_database (Data Source)
 
 This data source gets information of database.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_vaultdatabase" "sql-centrifysuite" {
+data "centrify_database" "sql-centrifysuite" {
     name = "SQL-CENTRIFYSUITE"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdatabase)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_database)
 
 ## Search Attributes
 

@@ -14,6 +14,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceOidcWebApp_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceOidcWebAppCreate,
+		Read:   resourceOidcWebAppRead,
+		Update: resourceOidcWebAppUpdate,
+		Delete: resourceOidcWebAppDelete,
+		Exists: resourceOidcWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getOidcWebAppSchema(),
+		DeprecationMessage: "resource centrifyvault_webapp_oidc is deprecated will be removed in the future, use centrify_webapp_oidc instead",
+	}
+}
+
 func resourceOidcWebApp() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceOidcWebAppCreate,
@@ -25,108 +41,7 @@ func resourceOidcWebApp() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"template_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Template name of the Web App",
-				ValidateFunc: validation.StringInSlice([]string{
-					applicationtemplate.Generic.String(),
-				}, false),
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Web App",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the Web App",
-			},
-			"application_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
-			},
-			"oauth_profile": getOidcProfileSchema(),
-			"script": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Script to generate OpenID Connect Authorization and UserInfo responses for this application",
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					suppress := false
-					if new == "" && old == "@GenericOpenIDConnect" {
-						suppress = true
-					}
-					return suppress
-				},
-			},
-			"oidc_script": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			// Policy menu
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
-				Description: "Default authentication profile ID",
-			},
-			// Account Mapping menu
-			"username_strategy": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "ADAttribute",
-				Description: "Account mapping",
-				ValidateFunc: validation.StringInSlice([]string{
-					accountmapping.ADAttribute.String(),
-					accountmapping.SharedAccount.String(),
-					accountmapping.UseScript.String(),
-				}, false),
-			},
-			"username": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "userprincipalname",
-				Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
-			},
-			"user_map_script": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Account mapping script. Applicable if 'username_strategy' is 'UseScript'",
-			},
-			// Workflow
-			"workflow_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"workflow_approver": getWorkflowApproversSchema(),
-			"workflow_settings": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission":     getPermissionSchema(),
-			"challenge_rule": getChallengeRulesSchema(),
-			"policy_script": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"challenge_rule"},
-				Description:   "Use script to specify authentication rules (configured rules are ignored)",
-			},
-		},
+		Schema: getOidcWebAppSchema(),
 	}
 }
 
@@ -188,6 +103,111 @@ func getOidcProfileSchema() *schema.Schema {
 					Description: "Script to generate OpenID Connect Authorization and UserInfo responses for this application",
 				},
 			},
+		},
+	}
+}
+
+func getOidcWebAppSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"template_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Template name of the Web App",
+			ValidateFunc: validation.StringInSlice([]string{
+				applicationtemplate.Generic.String(),
+			}, false),
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Web App",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the Web App",
+		},
+		"application_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
+		},
+		"oauth_profile": getOidcProfileSchema(),
+		"script": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Script to generate OpenID Connect Authorization and UserInfo responses for this application",
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				suppress := false
+				if new == "" && old == "@GenericOpenIDConnect" {
+					suppress = true
+				}
+				return suppress
+			},
+		},
+		"oidc_script": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		// Policy menu
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
+			Description: "Default authentication profile ID",
+		},
+		// Account Mapping menu
+		"username_strategy": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "ADAttribute",
+			Description: "Account mapping",
+			ValidateFunc: validation.StringInSlice([]string{
+				accountmapping.ADAttribute.String(),
+				accountmapping.SharedAccount.String(),
+				accountmapping.UseScript.String(),
+			}, false),
+		},
+		"username": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "userprincipalname",
+			Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
+		},
+		"user_map_script": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Account mapping script. Applicable if 'username_strategy' is 'UseScript'",
+		},
+		// Workflow
+		"workflow_enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"workflow_approver": getWorkflowApproversSchema(),
+		"workflow_settings": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "Add to list of Sets",
+		},
+		"permission":     getPermissionSchema(),
+		"challenge_rule": getChallengeRulesSchema(),
+		"policy_script": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			ConflictsWith: []string{"challenge_rule"},
+			Description:   "Use script to specify authentication rules (configured rules are ignored)",
 		},
 	}
 }

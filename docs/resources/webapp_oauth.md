@@ -2,14 +2,14 @@
 subcategory: "Applications"
 ---
 
-# centrifyvault_webapp_oauth (Resource)
+# centrify_webapp_oauth (Resource)
 
 This resource allows you to create/update/delete Oauth web application.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_webapp_oauth" "oauthclient" {
+resource "centrify_webapp_oauth" "oauthclient" {
     name = "Test OAuth Client App"
     template_name = "OAuth2ServerClient"
     application_id = "TestOAuthClient"
@@ -40,7 +40,7 @@ resource "centrifyvault_webapp_oauth" "oauthclient" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_webapp_oauth)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_oauth)
 
 ## Argument Reference
 
@@ -96,5 +96,5 @@ Optional:
 OAuth2 Application can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_webapp_oauth.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_webapp_oauth.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```

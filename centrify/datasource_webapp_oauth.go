@@ -10,42 +10,55 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceOauthWebApp_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceOauthWebAppRead,
+
+		Schema:             getDSOauthWebAppSchema(),
+		DeprecationMessage: "dataresource centrifyvault_webapp_oauth is deprecated will be removed in the future, use centrify_webapp_oauth instead",
+	}
+}
+
 func dataSourceOauthWebApp() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceOauthWebAppRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Web App",
-			},
-			"template_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Template name of the Web App",
-			},
-			"application_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the Web App",
-			},
-			"oauth_profile": getOAuthProfileSchema(),
-			"script": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Script to customize JWT token creation for this application",
-			},
-			"oidc_script": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
+		Schema: getDSOauthWebAppSchema(),
+	}
+}
+
+func getDSOauthWebAppSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Web App",
+		},
+		"template_name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Template name of the Web App",
+		},
+		"application_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the Web App",
+		},
+		"oauth_profile": getOAuthProfileSchema(),
+		"script": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Script to customize JWT token creation for this application",
+		},
+		"oidc_script": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
 		},
 	}
 }

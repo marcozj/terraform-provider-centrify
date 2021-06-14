@@ -4,19 +4,19 @@ subcategory: "Common Attribute"
 
 # Zone role attribute
 
-assigned_zonerole is a common attribute for `centrifyvault_vaultsystem` and `centrifyvault_vaultdomain` resources.
+assigned_zonerole is a common attribute for `centrify_system` and `centrify_domain` resources.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_vaultsystem" "windows" {
+resource "centrify_system" "windows" {
     name = "demo_windows"
     fqdn = "192.168.18.30"
     computer_class = "Windows"
     session_type = "Rdp"
     description = "Demo Windows system 1"
 
-    domain_id = data.centrifyvault_vaultdomain.example_com.id
+    domain_id = data.centrify_domain.example_com.id
     use_domainadmin_for_zonerole_workflow = true
     enable_zonerole_workflow = true
     
@@ -30,14 +30,14 @@ resource "centrifyvault_vaultsystem" "windows" {
 
     use_domain_assignment_for_zonerole_approvers = false
     assigned_zonerole_approver {
-        guid = data.centrifyvault_user.approver.id
-        name = data.centrifyvault_user.approver.username
+        guid = data.centrify_user.approver.id
+        name = data.centrify_user.approver.username
         type = "User"
         options_selector = true
     }
     assigned_zonerole_approver {
-        guid = data.centrifyvault_role.system_admin.id
-        name = data.centrifyvault_role.system_admin.name
+        guid = data.centrify_role.system_admin.id
+        name = data.centrify_role.system_admin.name
         type = "Role"
     }
 }

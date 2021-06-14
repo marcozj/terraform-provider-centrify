@@ -2,21 +2,21 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_service (Resource)
+# centrify_service (Resource)
 
 This resource allows you to create/update/delete service.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_service" "testservice" {
+resource "centrify_service" "testservice" {
     service_name = "TestWindowsService"
     description = "Test Windows Service in member1"
-    system_id = data.centrifyvault_vaultsystem.member1.id
+    system_id = data.centrify_system.member1.id
     service_type = "WindowsService"
     enable_management = true
-    admin_account_id = data.centrifyvault_vaultaccount.ad_admin.id
-    multiplexed_account_id = centrifyvault_multiplexedaccount.testmultiplex.id
+    admin_account_id = data.centrify_account.ad_admin.id
+    multiplexed_account_id = centrify_multiplexedaccount.testmultiplex.id
     restart_service = true
     restart_time_restriction = true
     days_of_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -26,7 +26,7 @@ resource "centrifyvault_service" "testservice" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_service)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_service)
 
 ### Required
 
@@ -54,7 +54,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Service can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_service.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_service.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `set` aren't support in import process.

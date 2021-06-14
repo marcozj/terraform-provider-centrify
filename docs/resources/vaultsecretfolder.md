@@ -2,26 +2,26 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultsecretfolder (Resource)
+# centrify_secretfolder (Resource)
 
 This resource allows you to create/update/delete secret folder.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_vaultsecretfolder" "level1_folder" {
+resource "centrify_secretfolder" "level1_folder" {
     name = "Level 1 Folder"
     description = "Level 1 Folder"
 }
 
-resource "centrifyvault_vaultsecretfolder" "level2_folder" {
+resource "centrify_secretfolder" "level2_folder" {
     name = "Level 2 Folder"
     description = "Level 2 Folder"
-    parent_id = centrifyvault_vaultsecretfolder.level1_folder.id
+    parent_id = centrify_secretfolder.level1_folder.id
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsecret)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_secret)
 
 ## Argument Reference
 
@@ -43,7 +43,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Secret Folder can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_vaultsecretfolder.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_secretfolder.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `member_permission` aren't support in import process.

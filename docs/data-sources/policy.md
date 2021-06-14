@@ -2,19 +2,19 @@
 subcategory: "Access"
 ---
 
-# centrifyvault_policy (Data Source)
+# centrify_policy (Data Source)
 
 This data source gets information of policy.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_policy" "Default_Policy" {
+data "centrify_policy" "Default_Policy" {
     name = "Default Policy"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policyorder.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policyorder.tf)
 
 ## Search Attributes
 

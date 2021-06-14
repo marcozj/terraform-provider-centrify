@@ -2,14 +2,14 @@
 subcategory: "Access"
 ---
 
-# centrifyvault_role (Resource)
+# centrify_role (Resource)
 
 This resource allows you to create/update/delete role.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_role" "test_role" {
+resource "centrify_role" "test_role" {
     name = "Test Role"
     description = "Test role with basic admin right"
     adminrights = [
@@ -18,7 +18,7 @@ resource "centrifyvault_role" "test_role" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_role)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_role)
 
 ## Argument Reference
 
@@ -44,5 +44,5 @@ Required:
 Role can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_role.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_role.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```

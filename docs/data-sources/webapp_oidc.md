@@ -2,24 +2,24 @@
 subcategory: "Applications"
 ---
 
-# centrifyvault_webapp_oidc (Data Source)
+# centrify_webapp_oidc (Data Source)
 
 This data source gets information of OpenID Connect web application.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_webapp_oidc" "oidc_webapp" {
+data "centrify_webapp_oidc" "oidc_webapp" {
   name = "OpenID App"
   application_id = "OpenID pp"
 }
 
 output "oidcapp_clienid" {
-  value = data.centrifyvault_webapp_oidc.oidc_webapp.oauth_profile[0].client_id
+  value = data.centrify_webapp_oidc.oidc_webapp.oauth_profile[0].client_id
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_webapp_oidc)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_oidc)
 
 ## Search Attributes
 

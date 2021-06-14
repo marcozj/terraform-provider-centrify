@@ -2,14 +2,14 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_cloudprovider (Resource)
+# centrify_cloudprovider (Resource)
 
 This resource allows you to create/update/delete cloud provider.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_cloudprovider" "demo_aws" {
+resource "centrify_cloudprovider" "demo_aws" {
     type = "Aws"
     name = "Demo AWS"
     cloud_account_id = "xxxxxxxxxx"
@@ -21,7 +21,7 @@ resource "centrifyvault_cloudprovider" "demo_aws" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_cloudprovider)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_cloudprovider)
 
 ## Argument Reference
 
@@ -48,7 +48,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Cloud Provider can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_cloudprovider.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_cloudprovider.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `sets` aren't support in import process.

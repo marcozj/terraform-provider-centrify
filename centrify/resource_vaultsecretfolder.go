@@ -10,53 +10,73 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
-func resourceVaultSecretFolder() *schema.Resource {
+func resourceSecretFolder_deprecated() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVaultSecretFolderCreate,
-		Read:   resourceVaultSecretFolderRead,
-		Update: resourceVaultSecretFolderUpdate,
-		Delete: resourceVaultSecretFolderDelete,
-		Exists: resourceVaultSecretFolderExists,
+		Create: resourceSecretFolderCreate,
+		Read:   resourceSecretFolderRead,
+		Update: resourceSecretFolderUpdate,
+		Delete: resourceSecretFolderDelete,
+		Exists: resourceSecretFolderExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the secret folder",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of an secret folder",
-			},
-			"parent_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Parent folder ID of an secret folder",
-			},
-			"parent_path": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Parent folder path of an secret folder",
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Default Secret Challenge Profile (used if no conditions matched)",
-			},
-			"permission":        getPermissionSchema(),
-			"member_permission": getPermissionSchema(),
-			"challenge_rule":    getChallengeRulesSchema(),
-		},
+		Schema:             getSecretFolderSchema(),
+		DeprecationMessage: "resource centrifyvault_vaultsecretfolder is deprecated will be removed in the future, use centrify_secretfolder instead",
 	}
 }
 
-func resourceVaultSecretFolderExists(d *schema.ResourceData, m interface{}) (bool, error) {
-	logger.Infof("Checking VaultSecretFolder exist: %s", ResourceIDString(d))
+func resourceSecretFolder() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceSecretFolderCreate,
+		Read:   resourceSecretFolderRead,
+		Update: resourceSecretFolderUpdate,
+		Delete: resourceSecretFolderDelete,
+		Exists: resourceSecretFolderExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema: getSecretFolderSchema(),
+	}
+}
+
+func getSecretFolderSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the secret folder",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of an secret folder",
+		},
+		"parent_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Parent folder ID of an secret folder",
+		},
+		"parent_path": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Parent folder path of an secret folder",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Default Secret Challenge Profile (used if no conditions matched)",
+		},
+		"permission":        getPermissionSchema(),
+		"member_permission": getPermissionSchema(),
+		"challenge_rule":    getChallengeRulesSchema(),
+	}
+}
+
+func resourceSecretFolderExists(d *schema.ResourceData, m interface{}) (bool, error) {
+	logger.Infof("Checking SecretFolder exist: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
 	object := vault.NewSecretFolder(client)
@@ -70,12 +90,12 @@ func resourceVaultSecretFolderExists(d *schema.ResourceData, m interface{}) (boo
 		return false, err
 	}
 
-	logger.Infof("VaultSecretFolder exists in tenant: %s", object.ID)
+	logger.Infof("SecretFolder exists in tenant: %s", object.ID)
 	return true, nil
 }
 
-func resourceVaultSecretFolderRead(d *schema.ResourceData, m interface{}) error {
-	logger.Infof("Reading VaultSecretFolder: %s", ResourceIDString(d))
+func resourceSecretFolderRead(d *schema.ResourceData, m interface{}) error {
+	logger.Infof("Reading SecretFolder: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
 	// Create a NewSecretFolder object and populate ID attribute
@@ -87,24 +107,24 @@ func resourceVaultSecretFolderRead(d *schema.ResourceData, m interface{}) error 
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading VaultSecretFolder: %v", err)
+		return fmt.Errorf("error reading SecretFolder: %v", err)
 	}
-	//logger.Debugf("VaultSecretFolder from tenant: %+v", object)
+	//logger.Debugf("SecretFolder from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
 	if err != nil {
 		return err
 	}
-	logger.Debugf("Generated Map for resourceVaultSecretFolderRead(): %+v", schemamap)
+	logger.Debugf("Generated Map for resourceSecretFolderRead(): %+v", schemamap)
 	for k, v := range schemamap {
 		d.Set(k, v)
 	}
 
-	logger.Infof("Completed reading VaultSecretFolder: %s", object.Name)
+	logger.Infof("Completed reading SecretFolder: %s", object.Name)
 	return nil
 }
 
-func resourceVaultSecretFolderCreate(d *schema.ResourceData, m interface{}) error {
-	logger.Infof("Beginning VaultSecretFolder creation: %s", ResourceIDString(d))
+func resourceSecretFolderCreate(d *schema.ResourceData, m interface{}) error {
+	logger.Infof("Beginning SecretFolder creation: %s", ResourceIDString(d))
 
 	// Enable partial state mode
 	d.Partial(true)
@@ -119,12 +139,12 @@ func resourceVaultSecretFolderCreate(d *schema.ResourceData, m interface{}) erro
 	}
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating VaultSecretFolder: %v", err)
+		return fmt.Errorf("error creating SecretFolder: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("VaultSecretFolder ID is not set")
+		return fmt.Errorf("SecretFolder ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -134,8 +154,8 @@ func resourceVaultSecretFolderCreate(d *schema.ResourceData, m interface{}) erro
 	d.SetPartial("description")
 	d.SetPartial("parent_id")
 
-	// 2nd step to update VaultSecretFolder login profile
-	// Create API call doesn't set VaultSecretFolder login profile so need to run update again
+	// 2nd step to update SecretFolder login profile
+	// Create API call doesn't set SecretFolder login profile so need to run update again
 	err = getUpdateSecretFolderData(d, object)
 	if err != nil {
 		return err
@@ -144,7 +164,7 @@ func resourceVaultSecretFolderCreate(d *schema.ResourceData, m interface{}) erro
 	if object.CollectionMembersDefaultProfile != "" || object.ChallengeRules != nil {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating VaultSecretFolder attribute: %v", err)
+			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
 		}
 		d.SetPartial("default_profile_id")
 		d.SetPartial("challenge_rule")
@@ -154,7 +174,7 @@ func resourceVaultSecretFolderCreate(d *schema.ResourceData, m interface{}) erro
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting VaultSecretFolder permissions: %v", err)
+			return fmt.Errorf("error setting SecretFolder permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -163,19 +183,19 @@ func resourceVaultSecretFolderCreate(d *schema.ResourceData, m interface{}) erro
 	if _, ok := d.GetOk("member_permission"); ok {
 		_, err = object.SetMemberPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting VaultSecretFolder member permissions: %v", err)
+			return fmt.Errorf("error setting SecretFolder member permissions: %v", err)
 		}
 		d.SetPartial("member_permission")
 	}
 
 	// Creation completed
 	d.Partial(false)
-	logger.Infof("Creation of VaultSecretFolder completed: %s", object.Name)
-	return resourceVaultSecretFolderRead(d, m)
+	logger.Infof("Creation of SecretFolder completed: %s", object.Name)
+	return resourceSecretFolderRead(d, m)
 }
 
-func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
-	logger.Infof("Beginning VaultSecretFolder update: %s", ResourceIDString(d))
+func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
+	logger.Infof("Beginning SecretFolder update: %s", ResourceIDString(d))
 
 	// Enable partial state mode
 	d.Partial(true)
@@ -192,7 +212,7 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 	if d.HasChanges("name", "description", "default_profile_id", "challenge_rule") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating VaultSecret attribute: %v", err)
+			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
 		d.SetPartial("name")
@@ -206,7 +226,7 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 		object.ParentID = new.(string)
 		resp, err := object.MoveFolder()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating VaultSecretFolder attribute: %v", err)
+			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
 		}
 		d.SetPartial("parent_id")
 	}
@@ -225,7 +245,7 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing VaultSecretFolder permissions: %v", err)
+				return fmt.Errorf("error removing SecretFolder permissions: %v", err)
 			}
 		}
 
@@ -236,7 +256,7 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding VaultSecretFolder permissions: %v", err)
+				return fmt.Errorf("error adding SecretFolder permissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -255,7 +275,7 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 			}
 			_, err = object.SetMemberPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing VaultSecretFolder member permissions: %v", err)
+				return fmt.Errorf("error removing SecretFolder member permissions: %v", err)
 			}
 		}
 
@@ -267,7 +287,7 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 			}
 			_, err = object.SetMemberPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding VaultSecretFolder member permissions: %v", err)
+				return fmt.Errorf("error adding SecretFolder member permissions: %v", err)
 			}
 		}
 		d.SetPartial("member_permission")
@@ -275,12 +295,12 @@ func resourceVaultSecretFolderUpdate(d *schema.ResourceData, m interface{}) erro
 
 	// We succeeded, disable partial mode. This causes Terraform to save all fields again.
 	d.Partial(false)
-	logger.Infof("Updating of VaultSecretFolder completed: %s", object.Name)
-	return resourceVaultSecretFolderRead(d, m)
+	logger.Infof("Updating of SecretFolder completed: %s", object.Name)
+	return resourceSecretFolderRead(d, m)
 }
 
-func resourceVaultSecretFolderDelete(d *schema.ResourceData, m interface{}) error {
-	logger.Infof("Beginning deletion of VaultSecretFolder: %s", ResourceIDString(d))
+func resourceSecretFolderDelete(d *schema.ResourceData, m interface{}) error {
+	logger.Infof("Beginning deletion of SecretFolder: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
 	object := vault.NewSecretFolder(client)
@@ -296,7 +316,7 @@ func resourceVaultSecretFolderDelete(d *schema.ResourceData, m interface{}) erro
 		object.ChallengeRules = nil
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating VaultSecretFolder attribute: %v", err)
+			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
 		}
 	}
 
@@ -305,14 +325,14 @@ func resourceVaultSecretFolderDelete(d *schema.ResourceData, m interface{}) erro
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting VaultSecretFolder: %v", err)
+		return fmt.Errorf("error deleting SecretFolder: %v", err)
 	}
 
 	if resp.Success {
 		d.SetId("")
 	}
 
-	logger.Infof("Deletion of VaultSecretFolder completed: %s", ResourceIDString(d))
+	logger.Infof("Deletion of SecretFolder completed: %s", ResourceIDString(d))
 	return nil
 }
 
@@ -353,7 +373,7 @@ func getUpdateSecretFolderData(d *schema.ResourceData, object *vault.SecretFolde
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
-			return fmt.Errorf("Schema setting error: %s", err)
+			return fmt.Errorf(" Schema setting error: %s", err)
 		}
 	}
 

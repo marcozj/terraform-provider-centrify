@@ -12,6 +12,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceRole_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceRoleCreate,
+		Read:   resourceRoleRead,
+		Update: resourceRoleUpdate,
+		Delete: resourceRoleDelete,
+		Exists: resourceRoleExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getRoleSchema(),
+		DeprecationMessage: "resource centrifyvault_role is deprecated will be removed in the future, use centrify_role instead",
+	}
+}
+
 func resourceRole() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceRoleCreate,
@@ -23,58 +39,61 @@ func resourceRole() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the role",
+		Schema: getRoleSchema(),
+	}
+}
+
+func getRoleSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the role",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of an role",
+		},
+		"adminrights": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of an role",
-			},
-			"adminrights": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"member": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      customRoleMemberHash,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "ID of the member",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "Name of the member",
-						},
-						"type": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Type of the member",
-							ValidateFunc: validation.StringInSlice([]string{
-								"User",
-								"Group",
-								"Role",
-							}, false),
-						},
+		},
+		"member": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      customRoleMemberHash,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"id": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "ID of the member",
+					},
+					"name": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Computed:    true,
+						Description: "Name of the member",
+					},
+					"type": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Type of the member",
+						ValidateFunc: validation.StringInSlice([]string{
+							"User",
+							"Group",
+							"Role",
+						}, false),
 					},
 				},
 			},
 		},
 	}
 }
-
 func resourceRoleExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	logger.Infof("Checking role exist: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)

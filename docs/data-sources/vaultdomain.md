@@ -2,19 +2,19 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultdomain (Data Source)
+# centrify_domain (Data Source)
 
 This data source gets information of domain.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_vaultdomain" "example.com" {
+data "centrify_domain" "example.com" {
     name = "example.com"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdomain)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_domain)
 
 ## Search Attributes
 

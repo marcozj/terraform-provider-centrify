@@ -2,14 +2,14 @@
 subcategory: "Settings"
 ---
 
-# centrifyvault_globalgroupmappings (Resource)
+# centrify_globalgroupmappings (Resource)
 
 This resource allows you to create/update/delete global federated group mapping.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_globalgroupmappings" "group_mappings" {
+resource "centrify_globalgroupmappings" "group_mappings" {
     bulkupdate = true
     mapping {
         attribute_value = "Idp Group 1"
@@ -22,7 +22,7 @@ resource "centrifyvault_globalgroupmappings" "group_mappings" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_globalgroupmappings)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_globalgroupmappings)
 
 ## Argument Reference
 

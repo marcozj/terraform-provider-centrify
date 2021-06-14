@@ -10,81 +10,94 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceConnector_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceConnectorRead,
+
+		Schema:             getDSConnectorSchema(),
+		DeprecationMessage: "dataresource centrifyvault_connector is deprecated will be removed in the future, use centrify_connector instead",
+	}
+}
+
 func dataSourceConnector() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceConnectorRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Connector",
-			},
-			"machine_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"dns_host_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"forest": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"ssh_service": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"rdp_service": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"ad_proxy": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"app_gateway": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"http_api_service": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"ldap_proxy": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"radius_service": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"radius_external_service": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"version": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"status": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.StringInSlice([]string{"Active", "Inactive"}, false),
-			},
-			"online": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"vpc_identifier": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"vm_identifier": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
+		Schema: getDSConnectorSchema(),
+	}
+}
+
+func getDSConnectorSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Connector",
+		},
+		"machine_name": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"dns_host_name": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"forest": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"ssh_service": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"rdp_service": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"ad_proxy": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"app_gateway": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"http_api_service": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"ldap_proxy": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"radius_service": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"radius_external_service": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"version": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"status": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice([]string{"Active", "Inactive"}, false),
+		},
+		"online": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"vpc_identifier": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"vm_identifier": {
+			Type:     schema.TypeString,
+			Optional: true,
 		},
 	}
 }
@@ -105,7 +118,7 @@ func dataSourceConnectorRead(d *schema.ResourceData, m interface{}) error {
 	// We can't use simple Query method because it doesn't return all attributes
 	err := object.GetByName()
 	if err != nil {
-		return fmt.Errorf("error retrieving Oauth webapp with name '%s': %s", object.Name, err)
+		return fmt.Errorf("error retrieving Connector with name '%s': %s", object.Name, err)
 	}
 	d.SetId(object.ID)
 

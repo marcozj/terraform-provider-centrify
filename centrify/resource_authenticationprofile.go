@@ -11,6 +11,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceAuthenticationProfile_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceAuthenticationProfileCreate,
+		Read:   resourceAuthenticationProfileRead,
+		Update: resourceAuthenticationProfileUpdate,
+		Delete: resourceAuthenticationProfileDelete,
+		Exists: resourceAuthenticationProfileExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getAuthenticationProfileSchema(),
+		DeprecationMessage: "resource centrifyvault_authenticationprofile is deprecated will be removed in the future, use centrify_authenticationprofile instead",
+	}
+}
+
 func resourceAuthenticationProfile() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceAuthenticationProfileCreate,
@@ -22,48 +38,52 @@ func resourceAuthenticationProfile() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"uuid": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The UUID of the authenticaiton profile",
+		Schema: getAuthenticationProfileSchema(),
+	}
+}
+
+func getAuthenticationProfileSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"uuid": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The UUID of the authenticaiton profile",
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the authenticaiton profile",
+		},
+		"challenges": {
+			Type:     schema.TypeList,
+			Required: true,
+			MaxItems: 2,
+			MinItems: 1,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the authenticaiton profile",
-			},
-			"challenges": {
-				Type:     schema.TypeList,
-				Required: true,
-				MaxItems: 2,
-				MinItems: 1,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Authentication mechanisms for challenges",
-			},
-			"additional_data": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"number_of_questions": {
-							Type:         schema.TypeInt,
-							Optional:     true,
-							Description:  "Number of questions user must answer",
-							ValidateFunc: validation.IntBetween(0, 10),
-						},
+			Description: "Authentication mechanisms for challenges",
+		},
+		"additional_data": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"number_of_questions": {
+						Type:         schema.TypeInt,
+						Optional:     true,
+						Description:  "Number of questions user must answer",
+						ValidateFunc: validation.IntBetween(0, 10),
 					},
 				},
 			},
-			"pass_through_duration": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     30,
-				Description: "Challenge Pass-Through Duration",
-			},
+		},
+		"pass_through_duration": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Default:     30,
+			Description: "Challenge Pass-Through Duration",
 		},
 	}
 }

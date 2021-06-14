@@ -11,48 +11,61 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceManualSet_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceManualSetRead,
+
+		Schema:             getDSManualSetSchema(),
+		DeprecationMessage: "dataresource centrifyvault_manualset is deprecated will be removed in the future, use centrify_manualset instead",
+	}
+}
+
 func dataSourceManualSet() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceManualSetRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the manual set",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Type of set",
-				ValidateFunc: validation.StringInSlice([]string{
-					settype.System.String(),
-					settype.Account.String(),
-					settype.Database.String(),
-					settype.Domain.String(),
-					settype.Secret.String(),
-					settype.SSHKey.String(),
-					settype.Service.String(),
-					settype.Application.String(),
-					settype.ResourceProfile.String(),
-					settype.CloudProvider.String(),
-				}, false),
-			},
-			"subtype": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "SubObjectType for application.",
-				ValidateFunc: validation.StringInSlice([]string{
-					"Web",
-					"Desktop",
-				}, false),
-			},
-			// computed attributes
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of an manual set",
-			},
+		Schema: getDSManualSetSchema(),
+	}
+}
+
+func getDSManualSetSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the manual set",
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Type of set",
+			ValidateFunc: validation.StringInSlice([]string{
+				settype.System.String(),
+				settype.Account.String(),
+				settype.Database.String(),
+				settype.Domain.String(),
+				settype.Secret.String(),
+				settype.SSHKey.String(),
+				settype.Service.String(),
+				settype.Application.String(),
+				settype.ResourceProfile.String(),
+				settype.CloudProvider.String(),
+			}, false),
+		},
+		"subtype": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "SubObjectType for application.",
+			ValidateFunc: validation.StringInSlice([]string{
+				"Web",
+				"Desktop",
+			}, false),
+		},
+		// computed attributes
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of an manual set",
 		},
 	}
 }
