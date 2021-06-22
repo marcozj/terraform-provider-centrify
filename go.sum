@@ -280,6 +280,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/marcozj/golang-sdk v0.1.6 h1:B1KMKOsxBw6oNNyjPh/Gr2895pnAsUo7RdbM6yJzatc=
 github.com/marcozj/golang-sdk v0.1.6/go.mod h1:06D4BOzvM0jjXuCy6VmPsVkLBo8Ypx8RqQfAz0gGA7k=
+github.com/marcozj/golang-sdk v0.1.7 h1:XMd0ZzW0GV4I2DzuyEo4J6L3EslPlsVLxdmaGACaRx4=
+github.com/marcozj/golang-sdk v0.1.7/go.mod h1:06D4BOzvM0jjXuCy6VmPsVkLBo8Ypx8RqQfAz0gGA7k=
 github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
 github.com/mattn/go-colorable v0.1.1 h1:G1f5SKeVxmagw/IyvzvtZE4Gybcc4Tr1tf7I8z0XgOg=
 github.com/mattn/go-colorable v0.1.1/go.mod h1:FuOcm+DKB9mbwrcAfNl7/TZVBZ6rcnceauSikq3lYCQ=
