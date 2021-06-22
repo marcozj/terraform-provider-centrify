@@ -9,6 +9,21 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourcePolicyLinks_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourcePolicyLinksCreate,
+		Read:   resourcePolicyLinksRead,
+		Update: resourcePolicyLinksUpdate,
+		Delete: resourcePolicyLinksDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getPolicyLinksSchema(),
+		DeprecationMessage: "resource centrifyvault_policyorder is deprecated will be removed in the future, use centrify_policyorder instead",
+	}
+}
+
 func resourcePolicyLinks() *schema.Resource {
 	return &schema.Resource{
 		Create: resourcePolicyLinksCreate,
@@ -19,13 +34,17 @@ func resourcePolicyLinks() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"policy_order": {
-				Type:     schema.TypeList,
-				Required: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+		Schema: getPolicyLinksSchema(),
+	}
+}
+
+func getPolicyLinksSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"policy_order": {
+			Type:     schema.TypeList,
+			Required: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
 		},
 	}

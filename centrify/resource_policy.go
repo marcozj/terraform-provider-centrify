@@ -11,6 +11,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourcePolicy_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourcePolicyCreate,
+		Read:   resourcePolicyRead,
+		Update: resourcePolicyUpdate,
+		Delete: resourcePolicyDelete,
+		Exists: resourcePolicyExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getPolicySchema(),
+		DeprecationMessage: "resource centrifyvault_policy is deprecated will be removed in the future, use centrify_policy instead",
+	}
+}
+
 func resourcePolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourcePolicyCreate,
@@ -22,68 +38,72 @@ func resourcePolicy() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "The name of the policy",
+		Schema: getPolicySchema(),
+	}
+}
+
+func getPolicySchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "The name of the policy",
+		},
+		"path": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Path of the policy",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the policy",
+		},
+		"link_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Link type of the policy",
+			ValidateFunc: validation.StringInSlice([]string{
+				"Global",
+				"Role",
+				"Collection",
+				"Inactive",
+			}, false),
+		},
+		"policy_assignment": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"path": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Path of the policy",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the policy",
-			},
-			"link_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Link type of the policy",
-				ValidateFunc: validation.StringInSlice([]string{
-					"Global",
-					"Role",
-					"Collection",
-					"Inactive",
-				}, false),
-			},
-			"policy_assignment": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "List of roles or sets assigned to the policy",
-			},
-			"settings": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"centrify_services":        getCentrifyServicesSchema(),
-						"centrify_client":          getCentrifyClientSchema(),
-						"centrify_css_server":      getCentrifyCSSServerSchema(),
-						"centrify_css_workstation": getCentrifyCSSWorkstationSchema(),
-						"centrify_css_elevation":   getCentrifyCSSElevationSchema(),
-						"self_service":             getSelfServiceSchema(),
-						"password_settings":        getPasswordSettingsSchema(),
-						"oath_otp":                 getOATHOTPSchema(),
-						"radius":                   getRadiusSchema(),
-						"user_account":             getUserAccountSchema(),
-						"system_set":               getSystemSetSchema(),
-						"database_set":             getDatabaseAndDomainSetSchema(),
-						"domain_set":               getDatabaseAndDomainSetSchema(),
-						"account_set":              getAccountSetSchema(),
-						"secret_set":               getSecretSetSchema(),
-						"sshkey_set":               getSSHKeySetSchema(),
-						"cloudproviders_set":       getCloudProvidersSchema(),
-						"mobile_device":            getMobileDeviceSchema(),
-					},
+			Description: "List of roles or sets assigned to the policy",
+		},
+		"settings": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"centrify_services":        getCentrifyServicesSchema(),
+					"centrify_client":          getCentrifyClientSchema(),
+					"centrify_css_server":      getCentrifyCSSServerSchema(),
+					"centrify_css_workstation": getCentrifyCSSWorkstationSchema(),
+					"centrify_css_elevation":   getCentrifyCSSElevationSchema(),
+					"self_service":             getSelfServiceSchema(),
+					"password_settings":        getPasswordSettingsSchema(),
+					"oath_otp":                 getOATHOTPSchema(),
+					"radius":                   getRadiusSchema(),
+					"user_account":             getUserAccountSchema(),
+					"system_set":               getSystemSetSchema(),
+					"database_set":             getDatabaseAndDomainSetSchema(),
+					"domain_set":               getDatabaseAndDomainSetSchema(),
+					"account_set":              getAccountSetSchema(),
+					"secret_set":               getSecretSetSchema(),
+					"sshkey_set":               getSSHKeySetSchema(),
+					"cloudproviders_set":       getCloudProvidersSchema(),
+					"mobile_device":            getMobileDeviceSchema(),
 				},
 			},
 		},
@@ -122,7 +142,7 @@ func resourcePolicyRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading policy: %v", err)
+		return fmt.Errorf("error reading policy: %v", err)
 	}
 	//logger.Debugf("Policy from tenant: %v", object)
 
@@ -184,7 +204,7 @@ func resourcePolicyDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting policy: %v", err)
+		return fmt.Errorf("error deleting policy: %v", err)
 	}
 
 	if resp.Success {
@@ -204,18 +224,18 @@ func resourcePolicyCreate(d *schema.ResourceData, m interface{}) error {
 	object := vault.NewPolicy(client)
 	err := createUpateGetPolicyData(d, object)
 	if err != nil {
-		return fmt.Errorf("Error constructing policy data: %v", err)
+		return fmt.Errorf("error constructing policy data: %v", err)
 	}
 
 	_, err = object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating policy: %v", err)
+		return fmt.Errorf("error creating policy: %v", err)
 	}
 
 	// Creation API call doesn't return ID. ID isn't in UUID format but in "/Policy/<name>" format. So, set it manaully instead.
 	id := "/Policy/" + object.Name
 	if id == "" {
-		return fmt.Errorf("Policy ID is not set")
+		return fmt.Errorf(" Policy ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -236,14 +256,14 @@ func resourcePolicyUpdate(d *schema.ResourceData, m interface{}) error {
 	object.Plink.ID = d.Id()
 	err := createUpateGetPolicyData(d, object)
 	if err != nil {
-		return fmt.Errorf("Error constructing policy data: %v", err)
+		return fmt.Errorf("error constructing policy data: %v", err)
 	}
 
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "description", "link_type", "policy_assignment", "settings") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating policy attribute: %v", err)
+			return fmt.Errorf("error updating policy attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 	}
@@ -267,11 +287,11 @@ func createUpateGetPolicyData(d *schema.ResourceData, object *vault.Policy) erro
 			var err error
 			object.Settings, err = expandSettingsData(v)
 			if err != nil {
-				return fmt.Errorf("Schema setting error: %s", err)
+				return fmt.Errorf(" Schema setting error: %s", err)
 			}
 			// Perform validations
 			if err := object.ValidateSettings(); err != nil {
-				return fmt.Errorf("Schema setting error: %s", err)
+				return fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 	}
@@ -373,7 +393,7 @@ func expendCentrifyServicesData(v interface{}) (*vault.PolicyCentrifyServices, e
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -394,7 +414,7 @@ func expandCentrifyClientData(v interface{}) (*vault.PolicyCentrifyClient, error
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -415,7 +435,7 @@ func expandCentrifyCSSServerData(v interface{}) (*vault.PolicyCentrifyCSSServer,
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -435,7 +455,7 @@ func expandCentrifyCSSWorkstationData(v interface{}) (*vault.PolicyCentrifyCSSWo
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -455,7 +475,7 @@ func expandCentrifyCSSElevationData(v interface{}) (*vault.PolicyCentrifyCSSElev
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -639,14 +659,14 @@ func expandSystemSetData(v interface{}) (*vault.PolicySystemSet, error) {
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		if v, ok := d["privilege_elevation_rule"]; ok {
 			data.PrivilegeElevationRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.PrivilegeElevationRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -711,14 +731,14 @@ func expandAccountSetData(v interface{}) (*vault.PolicyAccountSet, error) {
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		if v, ok := d["access_secret_checkout_rule"]; ok {
 			data.AccessSecretCheckoutRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.AccessSecretCheckoutRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -737,7 +757,7 @@ func expandSecretSetData(v interface{}) (*vault.PolicySecretSet, error) {
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -756,7 +776,7 @@ func expandSSHKeySetData(v interface{}) (*vault.PolicySshKeySet, error) {
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil
@@ -779,7 +799,7 @@ func expandCloudProvidersSetData(v interface{}) (*vault.PolicyCloudProvidersSet,
 			data.ChallengeRules = expandChallengeRules(v.([]interface{}))
 			// Perform validations
 			if err := validateChallengeRules(data.ChallengeRules); err != nil {
-				return nil, fmt.Errorf("Schema setting error: %s", err)
+				return nil, fmt.Errorf(" Schema setting error: %s", err)
 			}
 		}
 		return data, nil

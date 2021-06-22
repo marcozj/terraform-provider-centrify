@@ -4,17 +4,17 @@ subcategory: "Policy Configuration"
 
 # cloudproviders_set attribute
 
-**cloudproviders_set** is a sub attribute in settings attribute within **centrifyvault_policy** Resource.
+**cloudproviders_set** is a sub attribute in settings attribute within **centrify_policy** Resource.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_policy" "test_policy" {
+resource "centrify_policy" "test_policy" {
     name = "Test Policy"
     description = "Test Policy"
     link_type = "Collection"
     policy_assignment = [
-        format("CloudProviders|%s", data.centrifyvault_manualset.test_set.id),
+        format("CloudProviders|%s", data.centrify_manualset.test_set.id),
     ]
     
     settings {
@@ -28,7 +28,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_cloudproviders_set.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policy_cloudproviders_set.tf)
 
 ## Argument Reference
 

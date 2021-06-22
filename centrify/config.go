@@ -7,7 +7,7 @@ import (
 	"github.com/marcozj/golang-sdk/oauth"
 )
 
-// Config - Centrify Vault client struct
+// Config - Centrify Platform client struct
 type Config struct {
 	URL            string
 	AppID          string
@@ -24,19 +24,19 @@ type Config struct {
 // Valid - Validate provider configuration
 func (c *Config) Valid() error {
 	if c.URL == "" {
-		return fmt.Errorf("Tenant URL must be provided for the CentrifyVault provider")
+		return fmt.Errorf(" Tenant URL must be provided for the Centrify provider")
 	}
 	if c.Scope == "" {
-		return fmt.Errorf("Scope must be provided for the CentrifyVault provider")
+		return fmt.Errorf(" Scope must be provided for the Centrify provider")
 	}
 
 	if !c.UseDMC && c.Token == "" {
 		// If DMC isn't used and token isn't supplied, make sure appid user username is provided
 		if c.AppID == "" {
-			return fmt.Errorf("AppID must be provided for the CentrifyVault provider")
+			return fmt.Errorf(" AppID must be provided for the Centrify provider")
 		}
 		if c.Username == "" {
-			return fmt.Errorf("Username or token must be provided for the CentrifyVault provider")
+			return fmt.Errorf(" Username or token must be provided for the Centrify provider")
 		}
 	}
 

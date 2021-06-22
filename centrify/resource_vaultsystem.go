@@ -13,318 +13,338 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
-func resourceVaultSystem() *schema.Resource {
+func resourceSystem_deprecated() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVaultSystemCreate,
-		Read:   resourceVaultSystemRead,
-		Update: resourceVaultSystemUpdate,
-		Delete: resourceVaultSystemDelete,
-		Exists: resourceVaultSystemExists,
+		Create: resourceSystemCreate,
+		Read:   resourceSystemRead,
+		Update: resourceSystemUpdate,
+		Delete: resourceSystemDelete,
+		Exists: resourceSystemExists,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			// System -> Settings menu related settings
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the system",
-			},
-			"fqdn": {
-				Type:         schema.TypeString,
-				Required:     true,
-				Description:  "Hostname or IP address of the system",
-				ValidateFunc: validation.NoZeroValues,
-			},
-			"computer_class": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Type of the system",
-				ValidateFunc: validation.StringInSlice([]string{
-					computerclass.Windows.String(),
-					computerclass.Unix.String(),
-					computerclass.CiscoAsyncOS.String(),
-					computerclass.CiscoIOS.String(),
-					computerclass.CiscoNXOS.String(),
-					computerclass.JuniperJunos.String(),
-					computerclass.HPNonStop.String(),
-					computerclass.IBMi.String(),
-					computerclass.CheckPointGaia.String(),
-					computerclass.PaloAltoPANOS.String(),
-					computerclass.F5BIGIP.String(),
-					computerclass.VMwareVMkernel.String(),
-					computerclass.GenericSSH.String(),
-					computerclass.CustomSSH.String(),
-				}, false),
-			},
-			"session_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Login session type that the system supports",
-				ValidateFunc: validation.StringInSlice([]string{
-					"Rdp",
-					"Ssh",
-				}, false),
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the system",
-			},
-			"port": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Port that used to connect to the system",
-				ValidateFunc: validation.IsPortNumber,
-			},
-			"use_my_account": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable Use My Account",
-			},
-			"management_mode": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Management mode of the system. For Windows only",
-				ValidateFunc: validation.StringInSlice([]string{
-					managementmode.Unknown.String(),
-					managementmode.RPCOverTCP.String(),
-					managementmode.SMB.String(),
-					managementmode.WinRMOverHTTP.String(),
-					managementmode.WinRMOverHTTPS.String(),
-					managementmode.Disabled.String(),
-				}, false),
-			},
-			"management_port": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Management port for account management. For Windows, F5, PAN-OS and VMKernel only",
-				ValidateFunc: validation.IsPortNumber,
-			},
-			"system_timezone": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true, // Set it to computed as once it is set it can't be unset. It causes TF always think there is change
-				Description: "System time zone",
-			},
-			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"proxyuser": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"proxyuser_password": {
-				Type:      schema.TypeString,
-				Optional:  true,
-				Sensitive: true,
-			},
-			"proxyuser_managed": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			// System -> Policy menu related settings
-			"checkout_lifetime": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Specifies the number of minutes that a checked out password is valid.",
-				ValidateFunc: validation.IntBetween(15, 2147483647),
-			},
-			"allow_remote_access": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Allow access from a public network (web client only)",
-			},
-			"allow_rdp_clipboard": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Allow RDP client to sync local clipboard with remote session",
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Default System Login Profile (used if no conditions matched)",
-			},
-			"privilege_elevation_default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Default Privilege Elevation Profile (used if no conditions matched)",
-			},
-			// System -> Advanced menu related settings
-			"local_account_automatic_maintenance": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Local Account Automatic Maintenance",
-			},
-			"local_account_manual_unlock": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Local Account Manual Unlock",
-			},
-			"domain_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "AD domain that this system belongs to",
-			},
-			"remove_user_on_session_end": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Remove local accounts upon session termination - Windows only ",
-			},
-			"allow_multiple_checkouts": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Allow multiple password checkouts for this system",
-			},
-			"enable_password_rotation": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable periodic password rotation",
-			},
-			"password_rotate_interval": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Password rotation interval (days)",
-				ValidateFunc: validation.IntBetween(1, 2147483647),
-			},
-			"enable_password_rotation_after_checkin": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable password rotation after checkin",
-			},
-			"minimum_password_age": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Minimum Password Age (days)",
-				ValidateFunc: validation.IntBetween(0, 2147483647),
-			},
-			"password_profile_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				//Computed:    true, // we want to remove this setting if it is not set so do not set to computed
-				Description: "Password complexity profile id",
-			},
-			"enable_password_history_cleanup": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable periodic password history cleanup",
-			},
-			"password_historycleanup_duration": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Password history cleanup (days)",
-				ValidateFunc: validation.IntBetween(90, 2147483647),
-			},
-			"enable_sshkey_rotation": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable periodic SSH key rotation",
-			},
-			"sshkey_rotate_interval": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "SSH key rotation interval (days)",
-				ValidateFunc: validation.IntBetween(1, 2147483647),
-			},
-			"minimum_sshkey_age": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Minimum SSH Key Age (days)",
-				ValidateFunc: validation.IntBetween(0, 2147483647),
-			},
-			"sshkey_algorithm": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "SSH Key Generation Algorithm",
-				ValidateFunc: validation.StringInSlice([]string{
-					"RSA_1024",
-					"RSA_2048",
-					"ECDSA_P256",
-					"ECDSA_P384",
-					"ECDSA_P521",
-					"EdDSA_Ed448",
-					"EdDSA_Ed25519",
-				}, false),
-			},
-			"enable_sshkey_history_cleanup": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable periodic SSH key history cleanup",
-			},
-			"sshkey_historycleanup_duration": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "SSH key history cleanup (days)",
-				ValidateFunc: validation.IntBetween(90, 2147483647),
-			},
-			// Workflow - Agent Auth and Privilege Elevation
-			"agent_auth_workflow_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"agent_auth_workflow_approver": getWorkflowApproversSchema(),
-			"privilege_elevation_workflow_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"privilege_elevation_workflow_approver": getWorkflowApproversSchema(),
-			// System -> Zone Role Workflow menu related settings
-			"use_domainadmin_for_zonerole_workflow": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Use Domain Administrator Account for Zone Role Workflow operations",
-			},
-			"enable_zonerole_workflow": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable zone role requests for this system",
-			},
-			"use_domain_assignment_for_zoneroles": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Assignable Zone Roles - Use domain assignments",
-			},
-			"assigned_zonerole": getZoneRoleSchema(),
-			"use_domain_assignment_for_zonerole_approvers": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Approver list - Use domain assignments",
-			},
-			"assigned_zonerole_approver": getWorkflowApproversSchema(),
-			// System -> Connectors menu related settings
-			"connector_list": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "List of Connectors",
-			},
-			// Add to Sets
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				//Computed: true,
-				Set: schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission":               getPermissionSchema(),
-			"challenge_rule":           getChallengeRulesSchema(),
-			"privilege_elevation_rule": getChallengeRulesSchema(),
-		},
+		Schema:             getSystemSchema(),
+		DeprecationMessage: "resource centrifyvault_vaultsystem is deprecated will be removed in the future, use centrify_system instead",
 	}
 }
 
-func resourceVaultSystemExists(d *schema.ResourceData, m interface{}) (bool, error) {
+func resourceSystem() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceSystemCreate,
+		Read:   resourceSystemRead,
+		Update: resourceSystemUpdate,
+		Delete: resourceSystemDelete,
+		Exists: resourceSystemExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema: getSystemSchema(),
+	}
+}
+
+func getSystemSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		// System -> Settings menu related settings
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the system",
+		},
+		"fqdn": {
+			Type:         schema.TypeString,
+			Required:     true,
+			Description:  "Hostname or IP address of the system",
+			ValidateFunc: validation.NoZeroValues,
+		},
+		"computer_class": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Type of the system",
+			ValidateFunc: validation.StringInSlice([]string{
+				computerclass.Windows.String(),
+				computerclass.Unix.String(),
+				computerclass.CiscoAsyncOS.String(),
+				computerclass.CiscoIOS.String(),
+				computerclass.CiscoNXOS.String(),
+				computerclass.JuniperJunos.String(),
+				computerclass.HPNonStop.String(),
+				computerclass.IBMi.String(),
+				computerclass.CheckPointGaia.String(),
+				computerclass.PaloAltoPANOS.String(),
+				computerclass.F5BIGIP.String(),
+				computerclass.VMwareVMkernel.String(),
+				computerclass.GenericSSH.String(),
+				computerclass.CustomSSH.String(),
+			}, false),
+		},
+		"session_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Login session type that the system supports",
+			ValidateFunc: validation.StringInSlice([]string{
+				"Rdp",
+				"Ssh",
+			}, false),
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the system",
+		},
+		"port": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Port that used to connect to the system",
+			ValidateFunc: validation.IsPortNumber,
+		},
+		"use_my_account": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable Use My Account",
+		},
+		"management_mode": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Management mode of the system. For Windows only",
+			ValidateFunc: validation.StringInSlice([]string{
+				managementmode.Unknown.String(),
+				managementmode.RPCOverTCP.String(),
+				managementmode.SMB.String(),
+				managementmode.WinRMOverHTTP.String(),
+				managementmode.WinRMOverHTTPS.String(),
+				managementmode.Disabled.String(),
+			}, false),
+		},
+		"management_port": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Management port for account management. For Windows, F5, PAN-OS and VMKernel only",
+			ValidateFunc: validation.IsPortNumber,
+		},
+		"system_timezone": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true, // Set it to computed as once it is set it can't be unset. It causes TF always think there is change
+			Description: "System time zone",
+		},
+		"status": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"proxyuser": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"proxyuser_password": {
+			Type:      schema.TypeString,
+			Optional:  true,
+			Sensitive: true,
+		},
+		"proxyuser_managed": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		// System -> Policy menu related settings
+		"checkout_lifetime": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Specifies the number of minutes that a checked out password is valid.",
+			ValidateFunc: validation.IntBetween(15, 2147483647),
+		},
+		"allow_remote_access": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Allow access from a public network (web client only)",
+		},
+		"allow_rdp_clipboard": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Allow RDP client to sync local clipboard with remote session",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Default System Login Profile (used if no conditions matched)",
+		},
+		"privilege_elevation_default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Default Privilege Elevation Profile (used if no conditions matched)",
+		},
+		// System -> Advanced menu related settings
+		"local_account_automatic_maintenance": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Local Account Automatic Maintenance",
+		},
+		"local_account_manual_unlock": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Local Account Manual Unlock",
+		},
+		"domain_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "AD domain that this system belongs to",
+		},
+		"remove_user_on_session_end": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Remove local accounts upon session termination - Windows only ",
+		},
+		"allow_multiple_checkouts": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Allow multiple password checkouts for this system",
+		},
+		"enable_password_rotation": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable periodic password rotation",
+		},
+		"password_rotate_interval": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Password rotation interval (days)",
+			ValidateFunc: validation.IntBetween(1, 2147483647),
+		},
+		"enable_password_rotation_after_checkin": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable password rotation after checkin",
+		},
+		"minimum_password_age": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Minimum Password Age (days)",
+			ValidateFunc: validation.IntBetween(0, 2147483647),
+		},
+		"password_profile_id": {
+			Type:     schema.TypeString,
+			Optional: true,
+			//Computed:    true, // we want to remove this setting if it is not set so do not set to computed
+			Description: "Password complexity profile id",
+		},
+		"enable_password_history_cleanup": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable periodic password history cleanup",
+		},
+		"password_historycleanup_duration": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Password history cleanup (days)",
+			ValidateFunc: validation.IntBetween(90, 2147483647),
+		},
+		"enable_sshkey_rotation": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable periodic SSH key rotation",
+		},
+		"sshkey_rotate_interval": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "SSH key rotation interval (days)",
+			ValidateFunc: validation.IntBetween(1, 2147483647),
+		},
+		"minimum_sshkey_age": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Minimum SSH Key Age (days)",
+			ValidateFunc: validation.IntBetween(0, 2147483647),
+		},
+		"sshkey_algorithm": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "SSH Key Generation Algorithm",
+			ValidateFunc: validation.StringInSlice([]string{
+				"RSA_1024",
+				"RSA_2048",
+				"ECDSA_P256",
+				"ECDSA_P384",
+				"ECDSA_P521",
+				"EdDSA_Ed448",
+				"EdDSA_Ed25519",
+			}, false),
+		},
+		"enable_sshkey_history_cleanup": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable periodic SSH key history cleanup",
+		},
+		"sshkey_historycleanup_duration": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "SSH key history cleanup (days)",
+			ValidateFunc: validation.IntBetween(90, 2147483647),
+		},
+		// Workflow - Agent Auth and Privilege Elevation
+		"agent_auth_workflow_enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"agent_auth_workflow_approver": getWorkflowApproversSchema(),
+		"privilege_elevation_workflow_enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"privilege_elevation_workflow_approver": getWorkflowApproversSchema(),
+		// System -> Zone Role Workflow menu related settings
+		"use_domainadmin_for_zonerole_workflow": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Use Domain Administrator Account for Zone Role Workflow operations",
+		},
+		"enable_zonerole_workflow": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable zone role requests for this system",
+		},
+		"use_domain_assignment_for_zoneroles": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "Assignable Zone Roles - Use domain assignments",
+		},
+		"assigned_zonerole": getZoneRoleSchema(),
+		"use_domain_assignment_for_zonerole_approvers": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "Approver list - Use domain assignments",
+		},
+		"assigned_zonerole_approver": getWorkflowApproversSchema(),
+		// System -> Connectors menu related settings
+		"connector_list": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "List of Connectors",
+		},
+		// Add to Sets
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			//Computed: true,
+			Set: schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "Add to list of Sets",
+		},
+		"permission":               getPermissionSchema(),
+		"challenge_rule":           getChallengeRulesSchema(),
+		"privilege_elevation_rule": getChallengeRulesSchema(),
+	}
+}
+
+func resourceSystemExists(d *schema.ResourceData, m interface{}) (bool, error) {
 	logger.Infof("Checking System exist: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
@@ -343,7 +363,7 @@ func resourceVaultSystemExists(d *schema.ResourceData, m interface{}) (bool, err
 	return true, nil
 }
 
-func resourceVaultSystemRead(d *schema.ResourceData, m interface{}) error {
+func resourceSystemRead(d *schema.ResourceData, m interface{}) error {
 	logger.Infof("Reading System: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
@@ -356,7 +376,7 @@ func resourceVaultSystemRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading System: %v", err)
+		return fmt.Errorf("error reading System: %v", err)
 	}
 	//logger.Debugf("System from tenant: %v", object)
 
@@ -399,7 +419,7 @@ func resourceVaultSystemRead(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func resourceVaultSystemCreate(d *schema.ResourceData, m interface{}) error {
+func resourceSystemCreate(d *schema.ResourceData, m interface{}) error {
 	logger.Infof("Beginning System creation: %s", ResourceIDString(d))
 
 	// Enable partial state mode
@@ -416,12 +436,12 @@ func resourceVaultSystemCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating System: %v", err)
+		return fmt.Errorf("error creating System: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("System ID is not set")
+		return fmt.Errorf(" System ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -439,7 +459,7 @@ func resourceVaultSystemCreate(d *schema.ResourceData, m interface{}) error {
 		logger.Debugf("Update login profile and connector for System creation: %s", ResourceIDString(d))
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating System attribute: %v", err)
+			return fmt.Errorf("error updating System attribute: %v", err)
 		}
 		d.SetPartial("default_profile_id")
 		d.SetPartial("connector_list")
@@ -458,7 +478,7 @@ func resourceVaultSystemCreate(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting System permissions: %v", err)
+			return fmt.Errorf("error setting System permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -466,10 +486,10 @@ func resourceVaultSystemCreate(d *schema.ResourceData, m interface{}) error {
 	// Creation completed
 	d.Partial(false)
 	logger.Infof("Creation of System completed: %s", object.Name)
-	return resourceVaultSystemRead(d, m)
+	return resourceSystemRead(d, m)
 }
 
-func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceSystemUpdate(d *schema.ResourceData, m interface{}) error {
 	logger.Infof("Beginning System update: %s", ResourceIDString(d))
 
 	// Enable partial state mode
@@ -496,7 +516,7 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 		"privilege_elevation_workflow_enabled", "privilege_elevation_workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating System attribute: %v", err)
+			return fmt.Errorf("error updating System attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 		d.SetPartial("name")
@@ -518,7 +538,7 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error removing System from Set: %v", err)
+				return fmt.Errorf("error removing System from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -528,7 +548,7 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error adding System to Set: %v", err)
+				return fmt.Errorf("error adding System to Set: %v", err)
 			}
 		}
 		d.SetPartial("sets")
@@ -548,7 +568,7 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing System permissions: %v", err)
+				return fmt.Errorf("error removing System permissions: %v", err)
 			}
 		}
 
@@ -559,7 +579,7 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding System permissions: %v", err)
+				return fmt.Errorf("error adding System permissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -567,10 +587,10 @@ func resourceVaultSystemUpdate(d *schema.ResourceData, m interface{}) error {
 
 	d.Partial(false)
 	logger.Infof("Updating of System completed: %s", object.Name)
-	return resourceVaultSystemRead(d, m)
+	return resourceSystemRead(d, m)
 }
 
-func resourceVaultSystemDelete(d *schema.ResourceData, m interface{}) error {
+func resourceSystemDelete(d *schema.ResourceData, m interface{}) error {
 	logger.Infof("Beginning deletion of System: %s", ResourceIDString(d))
 	client := m.(*restapi.RestClient)
 
@@ -581,7 +601,7 @@ func resourceVaultSystemDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting System: %v", err)
+		return fmt.Errorf("error deleting System: %v", err)
 	}
 
 	if resp.Success {
@@ -751,7 +771,7 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
-			return fmt.Errorf("Schema setting error: %s", err)
+			return fmt.Errorf(" Schema setting error: %s", err)
 		}
 	}
 	// Privilege Elevation Challenge rules
@@ -759,13 +779,13 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 		object.PrivilegeElevationRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
-			return fmt.Errorf("Schema setting error: %s", err)
+			return fmt.Errorf(" Schema setting error: %s", err)
 		}
 	}
 
 	// Perform validations
 	if err := object.ValidateZoneWorkflow(); err != nil {
-		return fmt.Errorf("Schema setting error: %s", err)
+		return fmt.Errorf(" Schema setting error: %s", err)
 	}
 	return nil
 }

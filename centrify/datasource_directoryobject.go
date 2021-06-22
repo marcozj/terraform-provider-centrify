@@ -10,57 +10,70 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceDirectoryObject_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceDirectoryObjectRead,
+
+		Schema:             getDSDirectoryObjectSchema(),
+		DeprecationMessage: "dataresource centrifyvault_directoryobject is deprecated will be removed in the future, use centrify_directoryobject instead",
+	}
+}
+
 func dataSourceDirectoryObject() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceDirectoryObjectRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the directory object",
+		Schema: getDSDirectoryObjectSchema(),
+	}
+}
+
+func getDSDirectoryObjectSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the directory object",
+		},
+		"object_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Type of the directory object",
+			ValidateFunc: validation.StringInSlice([]string{
+				"User",
+				"Group",
+			}, false),
+		},
+		"system_name": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "UPN of the directory object",
+		},
+		"display_name": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Display name of the directory object",
+		},
+		"distinguished_name": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Distinguished name of the directory object",
+		},
+		"forest": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Forest name of the directory object",
+		},
+		"directory_services": {
+			Type:     schema.TypeSet,
+			Required: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"object_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Type of the directory object",
-				ValidateFunc: validation.StringInSlice([]string{
-					"User",
-					"Group",
-				}, false),
-			},
-			"system_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "UPN of the directory object",
-			},
-			"display_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Display name of the directory object",
-			},
-			"distinguished_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Distinguished name of the directory object",
-			},
-			"forest": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Forest name of the directory object",
-			},
-			"directory_services": {
-				Type:     schema.TypeSet,
-				Required: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "List of UUID of directory services",
-			},
+			Description: "List of UUID of directory services",
 		},
 	}
 }

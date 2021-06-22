@@ -11,6 +11,21 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceGlobalWorkflow_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceGlobalWorkflowCreate,
+		Read:   resourceGlobalWorkflowRead,
+		Update: resourceGlobalWorkflowUpdate,
+		Delete: resourceGlobalWorkflowDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getGlobalWorkflowSchema(),
+		DeprecationMessage: "resource centrifyvault_globalworkflow is deprecated will be removed in the future, use centrify_globalworkflow instead",
+	}
+}
+
 func resourceGlobalWorkflow() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceGlobalWorkflowCreate,
@@ -21,34 +36,38 @@ func resourceGlobalWorkflow() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ValidateFunc: validation.StringInSlice([]string{
-					workflowtype.AccountWorkflow.String(),
-					workflowtype.AgentAuthWorkflow.String(),
-					workflowtype.SecretsWorkflow.String(),
-					workflowtype.PrivilegeElevationWorkflow.String(),
-				}, false),
-			},
-			"settings": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"enabled": {
-							Type:        schema.TypeBool,
-							Optional:    true,
-							Description: "Enable workflow for all accounts/systems/secrets",
-						},
-						"default_options": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"approver": getWorkflowApproversSchema(),
+		Schema: getGlobalWorkflowSchema(),
+	}
+}
+
+func getGlobalWorkflowSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"type": {
+			Type:     schema.TypeString,
+			Required: true,
+			ValidateFunc: validation.StringInSlice([]string{
+				workflowtype.AccountWorkflow.String(),
+				workflowtype.AgentAuthWorkflow.String(),
+				workflowtype.SecretsWorkflow.String(),
+				workflowtype.PrivilegeElevationWorkflow.String(),
+			}, false),
+		},
+		"settings": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"enabled": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Enable workflow for all accounts/systems/secrets",
 					},
+					"default_options": {
+						Type:     schema.TypeString,
+						Optional: true,
+					},
+					"approver": getWorkflowApproversSchema(),
 				},
 			},
 		},

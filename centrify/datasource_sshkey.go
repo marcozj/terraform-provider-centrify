@@ -11,65 +11,78 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceSSHKey_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceSSHKeyRead,
+
+		Schema:             getDSSSHKeySchema(),
+		DeprecationMessage: "dataresource centrifyvault_sshkey is deprecated will be removed in the future, use centrify_sshkey instead",
+	}
+}
+
 func dataSourceSSHKey() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceSSHKeyRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the ssh key",
-			},
-			"key_pair_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Which key to retrieve from the pair, must be either PublicKey, PrivateKey, or PPK",
-				ValidateFunc: validation.StringInSlice([]string{
-					keypairtype.PublicKey.String(),
-					keypairtype.PrivateKey.String(),
-					keypairtype.PuTTY.String(),
-				}, false),
-			},
-			"key_format": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "PEM",
-				Description: "KeyFormat to retrieve the key in - only works for PublicKey",
-			},
-			"passphrase": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Passphrase to use for decrypting the PrivateKey",
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"key_type": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional: true,
-			},
-			"checkout": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Whether to retrieve SSH Key",
-			},
-			"ssh_key": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Content of the SSH Key",
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Default SSH Key Challenge Profile",
-			},
-			"challenge_rule": getChallengeRulesSchema(),
+		Schema: getDSSSHKeySchema(),
+	}
+}
+
+func getDSSSHKeySchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the ssh key",
 		},
+		"key_pair_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Which key to retrieve from the pair, must be either PublicKey, PrivateKey, or PPK",
+			ValidateFunc: validation.StringInSlice([]string{
+				keypairtype.PublicKey.String(),
+				keypairtype.PrivateKey.String(),
+				keypairtype.PuTTY.String(),
+			}, false),
+		},
+		"key_format": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "PEM",
+			Description: "KeyFormat to retrieve the key in - only works for PublicKey",
+		},
+		"passphrase": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Sensitive:   true,
+			Description: "Passphrase to use for decrypting the PrivateKey",
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"key_type": {
+			Type:     schema.TypeString,
+			Computed: true,
+			Optional: true,
+		},
+		"checkout": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Whether to retrieve SSH Key",
+		},
+		"ssh_key": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Sensitive:   true,
+			Description: "Content of the SSH Key",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Default SSH Key Challenge Profile",
+		},
+		"challenge_rule": getChallengeRulesSchema(),
 	}
 }
 

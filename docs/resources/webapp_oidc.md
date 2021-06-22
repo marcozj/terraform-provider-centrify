@@ -2,14 +2,14 @@
 subcategory: "Applications"
 ---
 
-# centrifyvault_webapp_oidc (Resource)
+# centrify_webapp_oidc (Resource)
 
 This resource allows you to create/update/delete OpenID Connect web application.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_webapp_oidc" "oidcapp" {
+resource "centrify_webapp_oidc" "oidcapp" {
     name = "Test OIDC App"
     template_name = "Generic OpenID Connect"
     application_id = "TestOIDCApp" // No space
@@ -26,7 +26,7 @@ resource "centrifyvault_webapp_oidc" "oidcapp" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_webapp_oidc)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_oidc)
 
 ## Argument Reference
 
@@ -72,7 +72,7 @@ Optional:
 OpenID Connect Application can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_webapp_oidc.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_webapp_oidc.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `sets` aren't support in import process.

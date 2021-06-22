@@ -1,5 +1,70 @@
 # RELEASE NOTES
 
+## 0.1.7 (June 15, 2021)
+
+IMPROVEMENTS:
+
+- Change provider name from `centrifyvault` to `centrify`
+- Rename all resources from `centrifyvault_*` to `centrify_*`. To keep backwards compatibility, existing `centrifyvault_*` can still be used but will be removed in the future.
+  - `centrifyvault_user` -> `centrify_user`
+  - `centrifyvault_role` -> `centrify_role`
+  - `centrifyvault_policy` -> `centrify_policy`
+  - `centrifyvault_manualset` -> `centrify_manualset`
+  - `centrifyvault_passwordprofile` -> `centrify_passwordprofile`
+  - `centrifyvault_authenticationprofile` -> `centrify_authenticationprofile`
+  - `centrifyvault_connector` -> `centrify_connector`
+  - `centrifyvault_vaultdomain` -> `centrify_domain`
+  - `centrifyvault_vaultsystem` -> `centrify_system`
+  - `centrifyvault_vaultdatabase` -> `centrify_database`
+  - `centrifyvault_vaultaccount` -> `centrify_account`
+  - `centrifyvault_vaultsecret` -> `centrify_secret`
+  - `centrifyvault_vaultsecretfolder` -> `centrify_secretfolder`
+  - `centrifyvault_sshkey` -> `centrify_sshkey`
+  - `centrifyvault_desktopapp` -> `centrify_desktopapp`
+  - `centrifyvault_directoryservice` -> `centrify_directoryservice`
+  - `centrifyvault_directoryobject` -> `centrify_directoryobject`
+  - `centrifyvault_multiplexedaccount` -> `centrify_multiplexedaccount`
+  - `centrifyvault_service` -> `centrify_service`
+  - `centrifyvault_cloudprovider` -> `centrify_cloudprovider`
+  - `centrifyvault_webapp_saml` -> `centrify_webapp_saml`
+  - `centrifyvault_webapp_oauth` -> `centrify_webapp_oauth`
+  - `centrifyvault_webapp_oidc` -> `centrify_webapp_oidc`
+  - `centrifyvault_webapp_generic` -> `centrify_webapp_generic`
+- Rename all data resources from `centrifyvault_*` to `centrify_*`. To keep backwards compatibility, existing `centrifyvault_*` can still be used but will be removed in the future.
+  - `centrifyvault_user` -> `centrify_user`
+  - `centrifyvault_role` -> `centrify_role`
+  - `centrifyvault_policy` -> `centrify_policy`
+  - `centrifyvault_policyorder` -> `centrify_policyorder`
+  - `centrifyvault_manualset` -> `centrify_manualset`
+  - `centrifyvault_passwordprofile` -> `centrify_passwordprofile`
+  - `centrifyvault_authenticationprofile` -> `centrify_authenticationprofile`
+  - `centrifyvault_connector` -> `centrify_connector`
+  - `centrifyvault_vaultdomain` -> `centrify_domain`
+  - `centrifyvault_vaultdomainreconciliation` -> `centrify_domainreconciliation`
+  - `centrifyvault_vaultdomainconfiguration` -> `centrify_domainconfiguration`
+  - `centrifyvault_vaultsystem` -> `centrify_system`
+  - `centrifyvault_vaultdatabase` -> `centrify_database`
+  - `centrifyvault_vaultaccount` -> `centrify_account`
+  - `centrifyvault_vaultsecret` -> `centrify_secret`
+  - `centrifyvault_vaultsecretfolder` -> `centrify_secretfolder`
+  - `centrifyvault_sshkey` -> `centrify_sshkey`
+  - `centrifyvault_desktopapp` -> `centrify_desktopapp`
+  - `centrifyvault_directoryservice` -> `centrify_directoryservice`
+  - `centrifyvault_directoryobject` -> `centrify_directoryobject`
+  - `centrifyvault_multiplexedaccount` -> `centrify_multiplexedaccount`
+  - `centrifyvault_service` -> `centrify_service`
+  - `centrifyvault_cloudprovider` -> `centrify_cloudprovider`
+  - `centrifyvault_globalgroupmappings` -> `centrify_globalgroupmappings`
+  - `centrifyvault_globalworkflow` -> `centrify_globalworkflow`
+  - `centrifyvault_webapp_saml` -> `centrify_webapp_saml`
+  - `centrifyvault_webapp_oauth` -> `centrify_webapp_oauth`
+  - `centrifyvault_webapp_oidc` -> `centrify_webapp_oidc`
+  - `centrifyvault_webapp_generic` -> `centrify_webapp_generic`
+
+BUG FIXES:
+
+- `centrifyvault_connector` data source can properly query Connector with status='Active' parameter
+
 ## 0.1.6 (May 15, 2021)
 
 IMPROVEMENTS:

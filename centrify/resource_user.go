@@ -10,6 +10,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceUser_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceUserCreate,
+		Read:   resourceUserRead,
+		Update: resourceUserUpdate,
+		Delete: resourceUserDelete,
+		Exists: resourceUserExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getUserSchema(),
+		DeprecationMessage: "resource centrifyvault_user is deprecated will be removed in the future, use centrify_user instead",
+	}
+}
+
 func resourceUser() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceUserCreate,
@@ -21,97 +37,101 @@ func resourceUser() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"username": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The username in loginid@suffix format",
+		Schema: getUserSchema(),
+	}
+}
+
+func getUserSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"username": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The username in loginid@suffix format",
+		},
+		"email": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Email address",
+		},
+		"displayname": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Display name",
+		},
+		"password": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Sensitive:   true,
+			Description: "Password of the user",
+		},
+		"confirm_password": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Sensitive:   true,
+			Description: "Password of the user",
+		},
+		"password_never_expire": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Password never expires",
+		},
+		"force_password_change_next": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "Require password change at next login",
+		},
+		"oauth_client": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Is OAuth confidential client",
+		},
+		"send_email_invite": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			//Default:     true,
+			Description: "Send email invite for user profile setup",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the user",
+		},
+		"office_number": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"home_number": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"mobile_number": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"redirect_mfa_user_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Redirect multi factor authentication to a different user account (UUID value)",
+		},
+		"manager_username": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "Unassigned",
+			Description: "Username of the manager",
+		},
+		// Add to roles
+		"roles": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			//Computed: true,
+			Set: schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"email": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Email address",
-			},
-			"displayname": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Display name",
-			},
-			"password": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Password of the user",
-			},
-			"confirm_password": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Password of the user",
-			},
-			"password_never_expire": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				Description: "Password never expires",
-			},
-			"force_password_change_next": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Require password change at next login",
-			},
-			"oauth_client": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				Description: "Is OAuth confidential client",
-			},
-			"send_email_invite": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				//Default:     true,
-				Description: "Send email invite for user profile setup",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the user",
-			},
-			"office_number": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"home_number": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"mobile_number": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"redirect_mfa_user_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Redirect multi factor authentication to a different user account (UUID value)",
-			},
-			"manager_username": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "Unassigned",
-				Description: "Username of the manager",
-			},
-			// Add to roles
-			"roles": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				//Computed: true,
-				Set: schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Roles",
-			},
+			Description: "Add to list of Roles",
 		},
 	}
 }
@@ -235,7 +255,7 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 		"description", "office_number", "home_number", "mobile_number", "redirect_mfa_user_id", "manager_username") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating VaultAccount attribute: %v", err)
+			return fmt.Errorf("error updating user attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 		d.SetPartial("name")

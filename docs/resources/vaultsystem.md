@@ -2,14 +2,14 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultsystem
+# centrify_system
 
 This resource allows you to create/update/delete system.
 
 ## Example Usage (Resource)
 
 ```terraform
-resource "centrifyvault_vaultsystem" "windows1" {
+resource "centrify_system" "windows1" {
     name = "Demo Windows 1"
     fqdn = "192.168.2.3"
     computer_class = "Windows"
@@ -25,7 +25,7 @@ resource "centrifyvault_vaultsystem" "windows1" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultsystem)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_system)
 
 ## Argument Reference
 
@@ -97,7 +97,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 System can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_vaultsystem.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_system.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `sets` aren't support in import process.

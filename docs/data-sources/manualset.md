@@ -2,20 +2,20 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_manualset (Data Source)
+# centrify_manualset (Data Source)
 
 This data source gets information of manual Set. Only works for user created Set but not built-in Set.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_manualset" "lab_systems" {
+data "centrify_manualset" "lab_systems" {
     type = "Server"
     name = "LAB Systems"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_manualset)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_manualset)
 
 ## Search Attributes
 

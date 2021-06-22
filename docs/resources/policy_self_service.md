@@ -4,17 +4,17 @@ subcategory: "Policy Configuration"
 
 # self_service attribute
 
-**self_service** is a sub attribute in settings attribute within **centrifyvault_policy** Resource.
+**self_service** is a sub attribute in settings attribute within **centrify_policy** Resource.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_policy" "test_policy" {
+resource "centrify_policy" "test_policy" {
     name = "Test Policy"
     description = "Test Policy"
     link_type = "Role"
     policy_assignment = [
-        data.centrifyvault_role.system_admin.id,
+        data.centrify_role.system_admin.id,
     ]
     
     settings {
@@ -25,14 +25,14 @@ resource "centrifyvault_policy" "test_policy" {
             pwreset_allow_for_aduser = true
             pwreset_with_cookie_only = true
             login_after_reset = true
-            pwreset_auth_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id
+            pwreset_auth_profile_id = data.centrify_authenticationprofile.newdevice_auth_pf.id
             max_reset_attempts = 5
             // Account Unlock
             account_unlock_enabled = true
             unlock_allow_for_aduser = true
             unlock_with_cookie_only = true
             show_locked_message = true
-            unlock_auth_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id
+            unlock_auth_profile_id = data.centrify_authenticationprofile.newdevice_auth_pf.id
             // Active Directory Self Service Settings
             use_ad_admin = false
             // Additional Policy Parameters
@@ -43,7 +43,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_self_service.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policy_self_service.tf)
 
 ## Argument Reference
 

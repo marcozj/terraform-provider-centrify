@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/biter777/countries"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vault "github.com/marcozj/golang-sdk/platform"
+	"github.com/marcozj/terraform-provider-centrifyvault/centrify/internal/hashcode"
 )
 
 func contains(a interface{}, e interface{}) bool {
@@ -92,60 +92,60 @@ func validateChallengeRules(input *vault.ChallengeRules) error {
 				switch v.Filter {
 				case "IpAddress":
 					if v.Condition != "OpInCorpIpRange" && v.Condition != "OpNotInCorpIpRange" {
-						return fmt.Errorf("In %+v: IpAddress must have condition: OpInCorpIpRange or OpNotInCorpIpRange", v)
+						return fmt.Errorf("in %+v: IpAddress must have condition: OpInCorpIpRange or OpNotInCorpIpRange", v)
 					}
 				case "IdentityCookie":
 					if v.Condition != "OpExists" && v.Condition != "OpNotExists" {
-						return fmt.Errorf("In %+v: IdentityCookie must have condition: OpExists or OpNotExists", v)
+						return fmt.Errorf("in %+v: IdentityCookie must have condition: OpExists or OpNotExists", v)
 					}
 				case "DayOfWeek":
 					if v.Condition != "OpIsDayOfWeek" {
-						return fmt.Errorf("In %+v: DayOfWeek must have condition: OpIsDayOfWeek", v)
+						return fmt.Errorf("in %+v: DayOfWeek must have condition: OpIsDayOfWeek", v)
 					}
 				case "Date":
 					if v.Condition != "OpLessThan" && v.Condition != "OpGreaterThan" {
-						return fmt.Errorf("In %+v: Date must have condition: OpLessThan or OpGreaterThan", v)
+						return fmt.Errorf("in %+v: Date must have condition: OpLessThan or OpGreaterThan", v)
 					}
 				case "DateRange":
 					if v.Condition != "OpBetween" {
-						return fmt.Errorf("In %+v: DateRange must have condition: OpBetween", v)
+						return fmt.Errorf("in %+v: DateRange must have condition: OpBetween", v)
 					}
 				case "Time":
 					if v.Condition != "OpBetween" {
-						return fmt.Errorf("In %+v: Time must have condition: OpBetween", v)
+						return fmt.Errorf("in %+v: Time must have condition: OpBetween", v)
 					}
 				case "DeviceOs":
 					if v.Condition != "OpEqual" && v.Condition != "OpNotEqual" {
-						return fmt.Errorf("In %+v: DeviceOs must have condition: OpEqual or OpNotEqual", v)
+						return fmt.Errorf("in %+v: DeviceOs must have condition: OpEqual or OpNotEqual", v)
 					}
 					// Validate device value
 					devices := []string{"iOS", "Android", "WindowsMobile", "Mac", "Windows", "Linux"}
 					if !contains(devices, v.Value) {
-						return fmt.Errorf("In %+v: DeviceOs must have value: %+v", v, devices)
+						return fmt.Errorf("in %+v: DeviceOs must have value: %+v", v, devices)
 					}
 				case "Browser":
 					if v.Condition != "OpEqual" && v.Condition != "OpNotEqual" {
-						return fmt.Errorf("In %+v: Browser must have condition: OpEqual or OpNotEqual", v)
+						return fmt.Errorf("in %+v: Browser must have condition: OpEqual or OpNotEqual", v)
 					}
 					// Validate browser value
 					browser := []string{"Other", "Chrome", "Firefox", "IE", "Safari", "MicrosoftEdge"}
 					if !contains(browser, v.Value) {
-						return fmt.Errorf("In %+v: Browser must have value: %+v", v, browser)
+						return fmt.Errorf("in %+v: Browser must have value: %+v", v, browser)
 					}
 				case "CountryCode":
 					if v.Condition != "OpEqual" && v.Condition != "OpNotEqual" {
-						return fmt.Errorf("In %+v: CountryCode must have condition: OpEqual or OpNotEqual", v)
+						return fmt.Errorf("in %+v: CountryCode must have condition: OpEqual or OpNotEqual", v)
 					}
 					if len(v.Value) != 2 {
-						return fmt.Errorf("In %+v: CountryCode must be valid 2 digit country code", v)
+						return fmt.Errorf("in %+v: CountryCode must be valid 2 digit country code", v)
 					}
 					country := countries.ByName(v.Value)
 					if country == countries.Unknown {
-						return fmt.Errorf("In %+v: %s is not a valid country code", v, v.Value)
+						return fmt.Errorf("in %+v: %s is not a valid country code", v, v.Value)
 					}
 				case "Zso":
 					if v.Condition != "OpIs" && v.Condition != "OpIsNot" {
-						return fmt.Errorf("In %+v: Zso must have condition: OpIs or OpIsNot", v)
+						return fmt.Errorf("in %+v: Zso must have condition: OpIs or OpIsNot", v)
 					}
 				} // end of switch
 

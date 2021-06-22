@@ -2,39 +2,39 @@
 subcategory: "Access"
 ---
 
-# centrifyvault_policy & centrifyvault_policyorder (Resource)
+# centrify_policy & centrify_policyorder (Resource)
 
 These resources allows you to create/update/delete policy.
-When creates a policy using `centrifyvault_policy`, it must be added to `centrifyvault_policyorder` together with existing policies and place it at desired order.
+When creates a policy using `centrify_policy`, it must be added to `centrify_policyorder` together with existing policies and place it at desired order.
 
 ## Example Usage
 
 This example creates a policy named "Test Policy" and place it before existing "Default Policy".
 
 ```terraform
-data "centrifyvault_policy" "Default_Policy" {
+data "centrify_policy" "Default_Policy" {
     name = "Default Policy"
 }
 
-resource "centrifyvault_policyorder" "policy_order" {
+resource "centrify_policyorder" "policy_order" {
     policy_order = [
-        centrifyvault_policy.test_policy.id,
-        data.centrifyvault_policy.Default_Policy.id,
+        centrify_policy.test_policy.id,
+        data.centrify_policy.Default_Policy.id,
     ]
 }
 
-resource "centrifyvault_policy" "test_policy" {
+resource "centrify_policy" "test_policy" {
     name = "Test Policy"
     description = "Test Policy"
     link_type = "Role"
     policy_assignment = [
-        data.centrifyvault_role.system_admin.id,
+        data.centrify_role.system_admin.id,
     ]
     
     settings {
         centrify_services {
             authentication_enabled = true
-            default_profile_id = data.centrifyvault_authenticationprofile.newdevice_auth_pf.id
+            default_profile_id = data.centrify_authenticationprofile.newdevice_auth_pf.id
             session_lifespan = 23
             allow_session_persist = true
             default_session_persist = true
@@ -49,23 +49,23 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples for `centrifyvault_policyorder` can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policyorder.tf)
-More examples for `centrifyvault_policy` can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/)
+More examples for `centrify_policyorder` can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policyorder.tf)
+More examples for `centrify_policy` can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/)
 
-## Argument Reference for centrifyvault_policyorder
+## Argument Reference for centrify_policyorder
 
-### Required (centrifyvault_policyorder)
+### Required (centrify_policyorder)
 
 - `policy_order` - (List of String) List of policy IDs.
 
-## Argument Reference for centrifyvault_policy
+## Argument Reference for centrify_policy
 
-### Required (centrifyvault_policy)
+### Required (centrify_policy)
 
 - `name` - (String) The name of the policy.
 - `link_type` - (String) Policy assignment type. Can be set to `Global`, `Role`, `Collection` or `Inactive`.
 
-### Optional (centrifyvault_policy)
+### Optional (centrify_policy)
 
 - `description` - (String) Description of the policy.
 - `policy_assignment` - (Set of String) Policy assignment. List of role Is or set IDs assigned to the policy. For role, it is simply list of IDs. For set, it follows following format.
@@ -141,14 +141,14 @@ More examples for `centrifyvault_policy` can be found [here](https://github.com/
 
 ## Import
 
-Policy Order can be imported using `centrifyvault_policy_links`, e.g.
+Policy Order can be imported using `centrify_policy_links`, e.g.
 
 ```shell
-terraform import centrifyvault_policyorder.example centrifyvault_policy_links
+terraform import centrify_policyorder.example centrify_policy_links
 ```
 
 Policy can be imported using policy path name `/Policy/<Policy Name>`, e.g.
 
 ```shell
-terraform import centrifyvault_policy.example "/Policy/Example Policy"
+terraform import centrify_policy.example "/Policy/Example Policy"
 ```

@@ -12,6 +12,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceCloudProvider_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceCloudProviderCreate,
+		Read:   resourceCloudProviderRead,
+		Update: resourceCloudProviderUpdate,
+		Delete: resourceCloudProviderDelete,
+		Exists: resourceCloudProviderExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getCloudProviderSchema(),
+		DeprecationMessage: "resource centrifyvault_cloudprovider is deprecated will be removed in the future, use centrify_cloudprovider instead",
+	}
+}
+
 func resourceCloudProvider() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceCloudProviderCreate,
@@ -23,70 +39,74 @@ func resourceCloudProvider() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"cloud_account_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Account ID of the cloud provider",
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the cloud provider",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the cloud provider",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Type of the cloud provider",
-				ValidateFunc: validation.StringInSlice([]string{
-					cloudprovidertype.AWS.String(),
-				}, false),
-			},
-			"enable_interactive_password_rotation": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable interactive password rotation",
-			},
-			"prompt_change_root_password": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Prompt to change root password every login and password checkin",
-			},
-			"enable_password_rotation_reminders": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable password rotation reminders",
-			},
-			"password_rotation_reminder_duration": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Minimum number of days since last rotation to trigger a reminder",
-				ValidateFunc: validation.IntBetween(1, 2147483647),
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Default Root Account Login Profile (used if no conditions matched)",
-			},
-			// Add to Sets
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				//Computed: true,
-				Set: schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission":     getPermissionSchema(),
-			"challenge_rule": getChallengeRulesSchema(),
+		Schema: getCloudProviderSchema(),
+	}
+}
+
+func getCloudProviderSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"cloud_account_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Account ID of the cloud provider",
 		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the cloud provider",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the cloud provider",
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Type of the cloud provider",
+			ValidateFunc: validation.StringInSlice([]string{
+				cloudprovidertype.AWS.String(),
+			}, false),
+		},
+		"enable_interactive_password_rotation": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable interactive password rotation",
+		},
+		"prompt_change_root_password": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Prompt to change root password every login and password checkin",
+		},
+		"enable_password_rotation_reminders": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable password rotation reminders",
+		},
+		"password_rotation_reminder_duration": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Minimum number of days since last rotation to trigger a reminder",
+			ValidateFunc: validation.IntBetween(1, 2147483647),
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Default Root Account Login Profile (used if no conditions matched)",
+		},
+		// Add to Sets
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			//Computed: true,
+			Set: schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "Add to list of Sets",
+		},
+		"permission":     getPermissionSchema(),
+		"challenge_rule": getChallengeRulesSchema(),
 	}
 }
 
@@ -122,7 +142,7 @@ func resourceCloudProviderRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading System: %v", err)
+		return fmt.Errorf("error reading System: %v", err)
 	}
 	//logger.Debugf("System from tenant: %v", object)
 
@@ -161,7 +181,7 @@ func resourceCloudProviderCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating CloudProvider: %v", err)
+		return fmt.Errorf("error creating CloudProvider: %v", err)
 	}
 
 	id := resp.Result
@@ -182,7 +202,7 @@ func resourceCloudProviderCreate(d *schema.ResourceData, m interface{}) error {
 		logger.Debugf("Update login profile for CloudProvider creation: %s", ResourceIDString(d))
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating System attribute: %v", err)
+			return fmt.Errorf("error updating System attribute: %v", err)
 		}
 		d.SetPartial("default_profile_id")
 	}
@@ -200,7 +220,7 @@ func resourceCloudProviderCreate(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting CloudProvider permissions: %v", err)
+			return fmt.Errorf("error setting CloudProvider permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -231,7 +251,7 @@ func resourceCloudProviderUpdate(d *schema.ResourceData, m interface{}) error {
 		"enable_password_rotation_reminders", "password_rotation_reminder_duration", "default_profile_id", "challenge_rule") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating CloudProvider attribute: %v", err)
+			return fmt.Errorf("error updating CloudProvider attribute: %v", err)
 		}
 		//logger.Debugf("Updated attributes to: %+v", object)
 		d.SetPartial("name")
@@ -255,7 +275,7 @@ func resourceCloudProviderUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error removing CloudProvider from Set: %v", err)
+				return fmt.Errorf("error removing CloudProvider from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -265,7 +285,7 @@ func resourceCloudProviderUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error adding CloudProvider to Set: %v", err)
+				return fmt.Errorf("error adding CloudProvider to Set: %v", err)
 			}
 		}
 		d.SetPartial("sets")
@@ -285,7 +305,7 @@ func resourceCloudProviderUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing CloudProvider permissions: %v", err)
+				return fmt.Errorf("error removing CloudProvider permissions: %v", err)
 			}
 		}
 
@@ -296,7 +316,7 @@ func resourceCloudProviderUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding CloudProvider permissions: %v", err)
+				return fmt.Errorf("error adding CloudProvider permissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -318,7 +338,7 @@ func resourceCloudProviderDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting CloudProvider: %v", err)
+		return fmt.Errorf("error deleting CloudProvider: %v", err)
 	}
 
 	if resp.Success {
@@ -369,7 +389,7 @@ func createUpateGetCloudProviderData(d *schema.ResourceData, object *vault.Cloud
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
-			return fmt.Errorf("Schema setting error: %s", err)
+			return fmt.Errorf(" Schema setting error: %s", err)
 		}
 	}
 

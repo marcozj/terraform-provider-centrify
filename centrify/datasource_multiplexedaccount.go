@@ -9,51 +9,64 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceMultiplexedAccount_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceMultiplexedAccountRead,
+
+		Schema:             getDSMultiplexedAccountSchema(),
+		DeprecationMessage: "dataresource centrifyvault_multiplexedaccount is deprecated will be removed in the future, use centrify_multiplexedaccount instead",
+	}
+}
+
 func dataSourceMultiplexedAccount() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceMultiplexedAccountRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the multiplexed account",
+		Schema: getDSMultiplexedAccountSchema(),
+	}
+}
+
+func getDSMultiplexedAccountSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the multiplexed account",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the multiplexed account",
+		},
+		"account1_id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"account2_id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"account1": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"account2": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"accounts": {
+			Type:     schema.TypeSet,
+			Computed: true,
+			MinItems: 2,
+			MaxItems: 2,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the multiplexed account",
-			},
-			"account1_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"account2_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"account1": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"account2": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"accounts": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				MinItems: 2,
-				MaxItems: 2,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"active_account": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
+		},
+		"active_account": {
+			Type:     schema.TypeString,
+			Computed: true,
 		},
 	}
 }

@@ -11,34 +11,47 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceDirectoryService_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceDirectoryServiceRead,
+
+		Schema:             getDSDirectoryServiceSchema(),
+		DeprecationMessage: "dataresource centrifyvault_directoryservice is deprecated will be removed in the future, use centrify_directoryservice instead",
+	}
+}
+
 func dataSourceDirectoryService() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceDirectoryServiceRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Directory Service",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Type of the Directory Service",
-				ValidateFunc: validation.StringInSlice([]string{
-					directoryservice.CentrifyDirectory.String(),
-					directoryservice.ActiveDirectory.String(),
-					directoryservice.FederatedDirectory.String(),
-					directoryservice.GoogleDirectory.String(),
-					directoryservice.LDAPDirectory.String(),
-				}, false),
-			},
-			"status": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Status of the Directory Service",
-			},
+		Schema: getDSDirectoryServiceSchema(),
+	}
+}
+
+func getDSDirectoryServiceSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Directory Service",
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Type of the Directory Service",
+			ValidateFunc: validation.StringInSlice([]string{
+				directoryservice.CentrifyDirectory.String(),
+				directoryservice.ActiveDirectory.String(),
+				directoryservice.FederatedDirectory.String(),
+				directoryservice.GoogleDirectory.String(),
+				directoryservice.LDAPDirectory.String(),
+			}, false),
+		},
+		"status": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Status of the Directory Service",
 		},
 	}
 }

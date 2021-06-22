@@ -9,96 +9,109 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceDesktopApp_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceDesktopAppRead,
+
+		Schema:             getDSDesktopAppSchema(),
+		DeprecationMessage: "dataresource centrifyvault_desktopapp is deprecated will be removed in the future, use centrify_desktopapp instead",
+	}
+}
+
 func dataSourceDesktopApp() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceDesktopAppRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Desktop App",
-			},
-			"template_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Template name of the Desktop App",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the Web App",
-			},
-			"application_host_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Application host",
-			},
-			"login_credential_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Host login credential type",
-			},
-			"application_account_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Host login credential account",
-			},
-			"application_alias": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The alias name of the published RemoteApp program",
-			},
-			"command_line": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Command line",
-			},
-			"command_parameter": {
-				Type:     schema.TypeSet,
-				Computed: true,
-				Set:      customCommandParamHash,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Name of the parameter",
-						},
-						"type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Type of the parameter",
-						},
-						"target_object_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "ID of selected parameter value",
-						},
-						"value": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
+		Schema: getDSDesktopAppSchema(),
+	}
+}
+
+func getDSDesktopAppSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Desktop App",
+		},
+		"template_name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Template name of the Desktop App",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the Web App",
+		},
+		"application_host_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Application host",
+		},
+		"login_credential_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Host login credential type",
+		},
+		"application_account_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Host login credential account",
+		},
+		"application_alias": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The alias name of the published RemoteApp program",
+		},
+		"command_line": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Command line",
+		},
+		"command_parameter": {
+			Type:     schema.TypeSet,
+			Computed: true,
+			Set:      customCommandParamHash,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"name": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Name of the parameter",
+					},
+					"type": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Type of the parameter",
+					},
+					"target_object_id": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "ID of selected parameter value",
+					},
+					"value": {
+						Type:     schema.TypeString,
+						Computed: true,
 					},
 				},
 			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Default authentication profile ID",
-			},
-			// Workflow
-			"workflow_enabled": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"workflow_approver": getWorkflowApproversSchema(),
-			"challenge_rule":    getChallengeRulesSchema(),
-			"policy_script": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Use script to specify authentication rules (configured rules are ignored)",
-			},
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Default authentication profile ID",
+		},
+		// Workflow
+		"workflow_enabled": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"workflow_approver": getWorkflowApproversSchema(),
+		"challenge_rule":    getChallengeRulesSchema(),
+		"policy_script": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Use script to specify authentication rules (configured rules are ignored)",
 		},
 	}
 }

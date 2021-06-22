@@ -12,6 +12,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceService_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceServiceCreate,
+		Read:   resourceServiceRead,
+		Update: resourceServiceUpdate,
+		Delete: resourceServiceDelete,
+		Exists: resourceServiceExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getServiceSchema(),
+		DeprecationMessage: "resource centrifyvault_service is deprecated will be removed in the future, use centrify_service instead",
+	}
+}
+
 func resourceService() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceServiceCreate,
@@ -23,92 +39,96 @@ func resourceService() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"system_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The target system id where the service runs",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the service",
-			},
-			"service_type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ValidateFunc: validation.StringInSlice([]string{
-					servicetype.WindowsService.String(),
-					servicetype.ScheduledTask.String(),
-					servicetype.IISApplicationPool.String(),
-				}, false),
-			},
-			"service_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the service to be managed.",
-			},
-			"enable_management": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable management of this service password",
-			},
-			"admin_account_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Administrative account id that used to manage the password for the service",
-			},
-			"multiplexed_account_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The multiplexed account id to run the service",
-			},
-			"restart_service": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Restart Service when password is rotated",
-			},
-			"restart_time_restriction": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enforce restart time restrictions",
-			},
-			"days_of_week": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Day of the week restart allowed",
-			},
-			"restart_start_time": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Start time of the time range restart is allowed",
-			},
-			"restart_end_time": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "End time of the time range restart is allowed",
-			},
-			"use_utc_time": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Whether to use UTC time",
-			},
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				//Computed: true,
-				Set: schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission": getPermissionSchema(),
+		Schema: getServiceSchema(),
+	}
+}
+
+func getServiceSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"system_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The target system id where the service runs",
 		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the service",
+		},
+		"service_type": {
+			Type:     schema.TypeString,
+			Required: true,
+			ValidateFunc: validation.StringInSlice([]string{
+				servicetype.WindowsService.String(),
+				servicetype.ScheduledTask.String(),
+				servicetype.IISApplicationPool.String(),
+			}, false),
+		},
+		"service_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the service to be managed.",
+		},
+		"enable_management": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enable management of this service password",
+		},
+		"admin_account_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Administrative account id that used to manage the password for the service",
+		},
+		"multiplexed_account_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The multiplexed account id to run the service",
+		},
+		"restart_service": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Restart Service when password is rotated",
+		},
+		"restart_time_restriction": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Enforce restart time restrictions",
+		},
+		"days_of_week": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "Day of the week restart allowed",
+		},
+		"restart_start_time": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Start time of the time range restart is allowed",
+		},
+		"restart_end_time": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "End time of the time range restart is allowed",
+		},
+		"use_utc_time": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Whether to use UTC time",
+		},
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			//Computed: true,
+			Set: schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "Add to list of Sets",
+		},
+		"permission": getPermissionSchema(),
 	}
 }
 
@@ -144,7 +164,7 @@ func resourceServiceRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading service: %v", err)
+		return fmt.Errorf("error reading service: %v", err)
 	}
 	//logger.Debugf("Service from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -182,12 +202,12 @@ func resourceServiceCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating service: %v", err)
+		return fmt.Errorf("error creating service: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("Service ID is not set")
+		return fmt.Errorf(" Service ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -221,7 +241,7 @@ func resourceServiceCreate(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting service permissions: %v", err)
+			return fmt.Errorf("error setting service permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -251,7 +271,7 @@ func resourceServiceUpdate(d *schema.ResourceData, m interface{}) error {
 		"restart_service", "restart_time_restriction", "days_of_week", "restart_start_time", "restart_end_time", "use_utc_time") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating service attribute: %v", err)
+			return fmt.Errorf("error updating service attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
 		d.SetPartial("description")
@@ -279,7 +299,7 @@ func resourceServiceUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error removing Service from Set: %v", err)
+				return fmt.Errorf("error removing Service from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -289,7 +309,7 @@ func resourceServiceUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error adding Service to Set: %v", err)
+				return fmt.Errorf("error adding Service to Set: %v", err)
 			}
 		}
 		d.SetPartial("sets")
@@ -309,7 +329,7 @@ func resourceServiceUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing service permissions: %v", err)
+				return fmt.Errorf("error removing service permissions: %v", err)
 			}
 		}
 
@@ -320,7 +340,7 @@ func resourceServiceUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding servicepermissions: %v", err)
+				return fmt.Errorf("error adding servicepermissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -344,7 +364,7 @@ func resourceServiceDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting service: %v", err)
+		return fmt.Errorf("error deleting service: %v", err)
 	}
 
 	if resp.Success {

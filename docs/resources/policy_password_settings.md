@@ -4,17 +4,17 @@ subcategory: "Policy Configuration"
 
 # password_settings attribute
 
-**password_settings** is a sub attribute in settings attribute within **centrifyvault_policy** Resource.
+**password_settings** is a sub attribute in settings attribute within **centrify_policy** Resource.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_policy" "test_policy" {
+resource "centrify_policy" "test_policy" {
     name = "Test Policy"
     description = "Test Policy"
     link_type = "Role"
     policy_assignment = [
-        data.centrifyvault_role.system_admin.id,
+        data.centrify_role.system_admin.id,
     ]
     
     settings {
@@ -50,7 +50,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_password_settings.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policy_password_settings.tf)
 
 ## Argument Reference
 

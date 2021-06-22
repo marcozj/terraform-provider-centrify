@@ -2,14 +2,14 @@
 subcategory: "Applications"
 ---
 
-# centrifyvault_webapp_generic (Resource)
+# centrify_webapp_generic (Resource)
 
 This resource allows you to create/update/delete Bookmark, Browser Extension, NTLM and Basic, User-Password web applications.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_webapp_generic" "browserextapp" {
+resource "centrify_webapp_generic" "browserextapp" {
     name = "Test Browser Extension App"
     template_name = "Generic Browser Extension"
     description = "Test Browser Extension Application"
@@ -34,7 +34,7 @@ resource "centrifyvault_webapp_generic" "browserextapp" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_webapp_generic)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_generic)
 
 ## Argument Reference
 
@@ -76,7 +76,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Generic Web Application can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_webapp_generic.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_webapp_generic.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` and `sets` aren't support in import process.

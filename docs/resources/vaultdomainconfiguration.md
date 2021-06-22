@@ -2,7 +2,7 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultdomainconfiguration (Resource)
+# centrify_domainconfiguration (Resource)
 
 Certain domain configurations can only be done when domain administrative account is available. But domain administrative account can only be created after domain creation. Therefore, we need a resource type take care of post domain creation configuration.
 This resource allows you to create/update/delete domain reconciliation and Zone Role workflow configurations.
@@ -10,15 +10,15 @@ This resource allows you to create/update/delete domain reconciliation and Zone 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_vaultdomainconfiguration" "domain_config" {
-    domain_id = centrifyvault_vaultdomain.example_com.id
-    administrative_account_id = centrifyvault_vaultaccount.ad_admin_vaulted.id
+resource "centrify_domainconfiguration" "domain_config" {
+    domain_id = centrify_domain.example_com.id
+    administrative_account_id = centrify_account.ad_admin_vaulted.id
     auto_domain_account_maintenance = true
     manual_domain_account_unlock = true
     auto_local_account_maintenance = true
     manual_local_account_unlock = true
 
-    provisioning_admin_id = centrifyvault_vaultaccount.ad_admin_vaulted.id
+    provisioning_admin_id = centrify_account.ad_admin_vaulted.id
     reconciliation_account_name = "centrify_lapr"
 
     // Zone Role Workflow
@@ -27,14 +27,14 @@ resource "centrifyvault_vaultdomainconfiguration" "domain_config" {
       name = "Windows Login/Global" // name is in format of "<zone role name>/<zone name>"
     }
     assigned_zonerole_approver {
-        guid = data.centrifyvault_role.system_admin.id
-        name = data.centrifyvault_role.system_admin.name
+        guid = data.centrify_role.system_admin.id
+        name = data.centrify_role.system_admin.name
         type = "Role"
     }
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultdomainconfiguratoin)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_domainconfiguratoin)
 
 ## Argument Reference
 

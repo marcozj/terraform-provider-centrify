@@ -12,6 +12,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceManualSet_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceManualSetCreate,
+		Read:   resourceManualSetRead,
+		Update: resourceManualSetUpdate,
+		Delete: resourceManualSetDelete,
+		Exists: resourceManualSetExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getManualSetSchema(),
+		DeprecationMessage: "resource centrifyvault_manualset is deprecated will be removed in the future, use centrify_manualset instead",
+	}
+}
+
 func resourceManualSet() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceManualSetCreate,
@@ -23,49 +39,53 @@ func resourceManualSet() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the manual set",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of an manual set",
-			},
-			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				// Server -> Systems
-				// Subscriptions -> Services
-				// DataVault -> Secrets
-				Description: "Type of set. Valid values are: Server, VaultAccount, VaultDatabase, VaultDomain, DataVault, SshKeys, Subscriptions, Application, ResourceProfiles",
-				ValidateFunc: validation.StringInSlice([]string{
-					settype.System.String(),
-					settype.Account.String(),
-					settype.Database.String(),
-					settype.Domain.String(),
-					settype.Secret.String(),
-					settype.SSHKey.String(),
-					settype.Service.String(),
-					settype.Application.String(),
-					settype.ResourceProfile.String(),
-					settype.CloudProvider.String(),
-				}, false),
-			},
-			"subtype": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "SubObjectType for application. Valid values are: Web and Desktop",
-				ValidateFunc: validation.StringInSlice([]string{
-					"Web",
-					"Desktop",
-				}, false),
-			},
-			"permission":        getPermissionSchema(),
-			"member_permission": getPermissionSchema(),
+		Schema: getManualSetSchema(),
+	}
+}
+
+func getManualSetSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the manual set",
 		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of an manual set",
+		},
+		"type": {
+			Type:     schema.TypeString,
+			Required: true,
+			// Server -> Systems
+			// Subscriptions -> Services
+			// DataVault -> Secrets
+			Description: "Type of set. Valid values are: Server, VaultAccount, VaultDatabase, VaultDomain, DataVault, SshKeys, Subscriptions, Application, ResourceProfiles",
+			ValidateFunc: validation.StringInSlice([]string{
+				settype.System.String(),
+				settype.Account.String(),
+				settype.Database.String(),
+				settype.Domain.String(),
+				settype.Secret.String(),
+				settype.SSHKey.String(),
+				settype.Service.String(),
+				settype.Application.String(),
+				settype.ResourceProfile.String(),
+				settype.CloudProvider.String(),
+			}, false),
+		},
+		"subtype": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "SubObjectType for application. Valid values are: Web and Desktop",
+			ValidateFunc: validation.StringInSlice([]string{
+				"Web",
+				"Desktop",
+			}, false),
+		},
+		"permission":        getPermissionSchema(),
+		"member_permission": getPermissionSchema(),
 	}
 }
 

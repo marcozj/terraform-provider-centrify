@@ -10,6 +10,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceMultiplexedAccount_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceMultiplexedAccountCreate,
+		Read:   resourceMultiplexedAccountRead,
+		Update: resourceMultiplexedAccountUpdate,
+		Delete: resourceMultiplexedAccountDelete,
+		Exists: resourceMultiplexedAccountExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getMultiplexedAccountSchema(),
+		DeprecationMessage: "resource centrifyvault_multiplexedaccount is deprecated will be removed in the future, use centrify_multiplexedaccount instead",
+	}
+}
+
 func resourceMultiplexedAccount() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceMultiplexedAccountCreate,
@@ -21,54 +37,58 @@ func resourceMultiplexedAccount() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the multiplexed account",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the multiplexed account",
-			},
-			"account1_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"account2_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"account1": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"account2": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"accounts": {
-				Type:     schema.TypeSet,
-				Required: true,
-				MinItems: 2,
-				MaxItems: 2,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"active_account": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"permission": getPermissionSchema(),
+		Schema: getMultiplexedAccountSchema(),
+	}
+}
+
+func getMultiplexedAccountSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the multiplexed account",
 		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the multiplexed account",
+		},
+		"account1_id": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"account2_id": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"account1": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"account2": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"accounts": {
+			Type:     schema.TypeSet,
+			Required: true,
+			MinItems: 2,
+			MaxItems: 2,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
+		"active_account": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"permission": getPermissionSchema(),
 	}
 }
 
@@ -104,7 +124,7 @@ func resourceMultiplexedAccountRead(d *schema.ResourceData, m interface{}) error
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading multiplexed account: %v", err)
+		return fmt.Errorf("error reading multiplexed account: %v", err)
 	}
 	//logger.Debugf("Multiplexed account from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -137,12 +157,12 @@ func resourceMultiplexedAccountCreate(d *schema.ResourceData, m interface{}) err
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating multiplexed account: %v", err)
+		return fmt.Errorf("error creating multiplexed account: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("Multiplexed account ID is not set")
+		return fmt.Errorf(" Multiplexed account ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -156,7 +176,7 @@ func resourceMultiplexedAccountCreate(d *schema.ResourceData, m interface{}) err
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting multiplexed account permissions: %v", err)
+			return fmt.Errorf("error setting multiplexed account permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -185,7 +205,7 @@ func resourceMultiplexedAccountUpdate(d *schema.ResourceData, m interface{}) err
 	if d.HasChanges("name", "description", "accounts") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating multiplexed account attribute: %v", err)
+			return fmt.Errorf("error updating multiplexed account attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
 		d.SetPartial("name")
@@ -207,7 +227,7 @@ func resourceMultiplexedAccountUpdate(d *schema.ResourceData, m interface{}) err
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing multiplexed account permissions: %v", err)
+				return fmt.Errorf("error removing multiplexed account permissions: %v", err)
 			}
 		}
 
@@ -218,7 +238,7 @@ func resourceMultiplexedAccountUpdate(d *schema.ResourceData, m interface{}) err
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding multiplexed account permissions: %v", err)
+				return fmt.Errorf("error adding multiplexed account permissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -242,7 +262,7 @@ func resourceMultiplexedAccountDelete(d *schema.ResourceData, m interface{}) err
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting multiplexed account: %v", err)
+		return fmt.Errorf("error deleting multiplexed account: %v", err)
 	}
 
 	if resp.Success {

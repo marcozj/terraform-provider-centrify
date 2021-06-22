@@ -2,14 +2,14 @@
 subcategory: "Settings"
 ---
 
-# centrifyvault_passwordprofile (Resource)
+# centrify_passwordprofile (Resource)
 
 This resource allows you to create/update/delete password profile.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_passwordprofile" "test_pw_profile" {
+resource "centrify_passwordprofile" "test_pw_profile" {
     name = "Test Password Profile"
     description = "Test Password Profile"
     minimum_password_length = 8
@@ -28,7 +28,7 @@ resource "centrifyvault_passwordprofile" "test_pw_profile" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_passwordprofile)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_passwordprofile)
 
 ## Argument Reference
 
@@ -58,5 +58,5 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Password Profile can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_passwordprofile.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_passwordprofile.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```

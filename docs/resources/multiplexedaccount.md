@@ -2,24 +2,24 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_multiplexedaccount (Resource)
+# centrify_multiplexedaccount (Resource)
 
 This resource allows you to create/update/delete multiplexed account.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_multiplexedaccount" "testmultiplex" {
+resource "centrify_multiplexedaccount" "testmultiplex" {
     name = "Account for TestWindowsService"
     description = "Multiplexed account for TestWindowsService"
     accounts = [
-        centrifyvault_vaultaccount.test_svc1.id,
-        centrifyvault_vaultaccount.test_svc2.id,
+        centrify_account.test_svc1.id,
+        centrify_account.test_svc2.id,
     ]
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_service)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_service)
 
 ## Argument Reference
 
@@ -38,7 +38,7 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 Multiplexed Account can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_multiplexedaccount.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_multiplexedaccount.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 **Limitation:** `permission` isn't support in import process.

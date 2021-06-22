@@ -2,14 +2,14 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_sshkey (Data Source)
+# centrify_sshkey (Data Source)
 
 This data source gets information of ssh key.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_sshkey" "testkey" {
+data "centrify_sshkey" "testkey" {
     name = "testkey"
     key_pair_type = "PrivateKey"
     passphrase = ""
@@ -18,11 +18,11 @@ data "centrifyvault_sshkey" "testkey" {
 }
 
 output "testkey_sshkey" {
-  value = data.centrifyvault_sshkey.testkey.ssh_key
+  value = data.centrify_sshkey.testkey.ssh_key
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_sshkey)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_sshkey)
 
 ## Search Attributes
 

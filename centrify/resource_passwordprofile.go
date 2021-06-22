@@ -11,6 +11,23 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourcePasswordProfile_deprecated() *schema.Resource {
+	return &schema.Resource{
+
+		Create: resourcePasswordProfileCreate,
+		Read:   resourcePasswordProfileRead,
+		Update: resourcePasswordProfileUpdate,
+		Delete: resourcePasswordProfileDelete,
+		Exists: resourcePasswordProfileExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getPasswordProfileSchema(),
+		DeprecationMessage: "resource centrifyvault_passwordprofile is deprecated will be removed in the future, use centrify_passwordprofile instead",
+	}
+}
+
 func resourcePasswordProfile() *schema.Resource {
 	return &schema.Resource{
 
@@ -23,103 +40,107 @@ func resourcePasswordProfile() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the password profile",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Description of password profile",
-			},
-			"minimum_password_length": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Minimum password length",
-				ValidateFunc: validation.IntBetween(4, 128),
-			},
-			"maximum_password_length": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Maximum password length",
-				ValidateFunc: validation.IntBetween(8, 128),
-			},
-			"at_least_one_lowercase": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "At least one lower-case alpha character",
-			},
-			"at_least_one_uppercase": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "At least one upper-case alpha character",
-			},
-			"at_least_one_digit": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "At least one digit",
-			},
-			"no_consecutive_repeated_char": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "No consecutive repeated characters",
-			},
-			"at_least_one_special_char": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "At least one special character",
-			},
-			"maximum_char_occurrence_count": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Maximum character occurrence count",
-				ValidateFunc: validation.IntBetween(1, 128),
-			},
-			"special_charset": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Special Characters",
-			},
-			"first_character_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "AnyChar",
-				Description: "A leading alpha or alphanumeric character",
-				ValidateFunc: validation.StringInSlice([]string{
-					"AnyChar",
-					"AlphaOnly",
-					"AlphaNumericOnly",
-				}, false),
-			},
-			"last_character_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "AnyChar",
-				Description: "A trailing alpha or alphanumeric character",
-				ValidateFunc: validation.StringInSlice([]string{
-					"AnyChar",
-					"AlphaOnly",
-					"AlphaNumericOnly",
-				}, false),
-			},
-			"minimum_alphabetic_character_count": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Min number of alpha characters",
-				ValidateFunc: validation.IntBetween(1, 128),
-			},
-			"minimum_non_alphabetic_character_count": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Description:  "Min number of non-alpha characters",
-				ValidateFunc: validation.IntBetween(1, 128),
-			},
+		Schema: getPasswordProfileSchema(),
+	}
+}
+
+func getPasswordProfileSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the password profile",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Description of password profile",
+		},
+		"minimum_password_length": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			Description:  "Minimum password length",
+			ValidateFunc: validation.IntBetween(4, 128),
+		},
+		"maximum_password_length": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			Description:  "Maximum password length",
+			ValidateFunc: validation.IntBetween(8, 128),
+		},
+		"at_least_one_lowercase": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "At least one lower-case alpha character",
+		},
+		"at_least_one_uppercase": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "At least one upper-case alpha character",
+		},
+		"at_least_one_digit": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "At least one digit",
+		},
+		"no_consecutive_repeated_char": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "No consecutive repeated characters",
+		},
+		"at_least_one_special_char": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			Description: "At least one special character",
+		},
+		"maximum_char_occurrence_count": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Maximum character occurrence count",
+			ValidateFunc: validation.IntBetween(1, 128),
+		},
+		"special_charset": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Special Characters",
+		},
+		"first_character_type": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "AnyChar",
+			Description: "A leading alpha or alphanumeric character",
+			ValidateFunc: validation.StringInSlice([]string{
+				"AnyChar",
+				"AlphaOnly",
+				"AlphaNumericOnly",
+			}, false),
+		},
+		"last_character_type": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "AnyChar",
+			Description: "A trailing alpha or alphanumeric character",
+			ValidateFunc: validation.StringInSlice([]string{
+				"AnyChar",
+				"AlphaOnly",
+				"AlphaNumericOnly",
+			}, false),
+		},
+		"minimum_alphabetic_character_count": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Min number of alpha characters",
+			ValidateFunc: validation.IntBetween(1, 128),
+		},
+		"minimum_non_alphabetic_character_count": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			Description:  "Min number of non-alpha characters",
+			ValidateFunc: validation.IntBetween(1, 128),
 		},
 	}
 }
@@ -156,7 +177,7 @@ func resourcePasswordProfileRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading password profile: %v", err)
+		return fmt.Errorf("error reading password profile: %v", err)
 	}
 	//logger.Debugf("password profile from tenant: %v", object)
 
@@ -184,7 +205,7 @@ func resourcePasswordProfileDelete(d *schema.ResourceData, m interface{}) error 
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting password profile: %v", err)
+		return fmt.Errorf("error deleting password profile: %v", err)
 	}
 
 	if resp.Success {
@@ -206,12 +227,12 @@ func resourcePasswordProfileCreate(d *schema.ResourceData, m interface{}) error 
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating password profile: %v", err)
+		return fmt.Errorf("error creating password profile: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("Password profile ID is not set")
+		return fmt.Errorf(" Password profile ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
@@ -237,7 +258,7 @@ func resourcePasswordProfileUpdate(d *schema.ResourceData, m interface{}) error 
 		"first_character_type", "last_character_type", "minimum_alphabetic_character_count", "minimum_non_alphabetic_character_count") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating password profile attribute: %v", err)
+			return fmt.Errorf("error updating password profile attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 	}

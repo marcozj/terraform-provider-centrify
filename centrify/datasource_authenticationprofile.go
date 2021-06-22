@@ -9,50 +9,63 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceAuthenticationProfile_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceAuthenticationProfileRead,
+
+		Schema:             getDSAuthenticationProfileSchema(),
+		DeprecationMessage: "dataresource centrifyvault_authenticationprofile is deprecated will be removed in the future, use centrify_authenticationprofile instead",
+	}
+}
+
 func dataSourceAuthenticationProfile() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceAuthenticationProfileRead,
 
-		Schema: map[string]*schema.Schema{
-			"uuid": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "UUID of the authentication profile",
+		Schema: getDSAuthenticationProfileSchema(),
+	}
+}
+
+func getDSAuthenticationProfileSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"uuid": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "UUID of the authentication profile",
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the authentication profile",
+		},
+		"challenges": {
+			Type:     schema.TypeList,
+			MaxItems: 2,
+			MinItems: 1,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the authentication profile",
-			},
-			"challenges": {
-				Type:     schema.TypeList,
-				MaxItems: 2,
-				MinItems: 1,
-				Computed: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Authentication mechanisms for challenges",
-			},
-			"additional_data": {
-				Type:     schema.TypeList,
-				Computed: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"number_of_questions": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Number of questions user must answer",
-						},
+			Description: "Authentication mechanisms for challenges",
+		},
+		"additional_data": {
+			Type:     schema.TypeList,
+			Computed: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"number_of_questions": {
+						Type:        schema.TypeInt,
+						Computed:    true,
+						Description: "Number of questions user must answer",
 					},
 				},
 			},
-			"pass_through_duration": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Pass through duration of the authentication profile",
-			},
+		},
+		"pass_through_duration": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Pass through duration of the authentication profile",
 		},
 	}
 }

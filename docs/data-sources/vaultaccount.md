@@ -2,20 +2,20 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_vaultaccount (Data Source)
+# centrify_account (Data Source)
 
 This data source gets information of account.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_vaultaccount" "centos1_local_account" {
+data "centrify_account" "centos1_local_account" {
     name = "local_account"
-    host_id = centrifyvault_vaultsystem.centos1.id
+    host_id = centrify_system.centos1.id
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_vaultaccount)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_account)
 
 ## Search Attributes
 

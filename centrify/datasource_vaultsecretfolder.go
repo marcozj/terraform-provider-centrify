@@ -9,43 +9,56 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
-func dataSourceVaultSecretFolder() *schema.Resource {
+func dataSourceSecretFolder_deprecated() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceVaultSecretFolderRead,
+		Read: dataSourceSecretFolderRead,
 
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the secret folder",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of an secret folder",
-			},
-			"parent_path": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Parent folder path of an secret folder",
-			},
-			"parent_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Parent folder ID of an secret folder",
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Default Secret Challenge Profile (used if no conditions matched)",
-			},
-			"challenge_rule": getChallengeRulesSchema(),
-		},
+		Schema:             getDSSecretFolderSchema(),
+		DeprecationMessage: "dataresource centrifyvault_vaultsecretfolder is deprecated will be removed in the future, use centrify_secretfolder instead",
 	}
 }
 
-func dataSourceVaultSecretFolderRead(d *schema.ResourceData, m interface{}) error {
-	logger.Infof("Finding VaultSecretFolder")
+func dataSourceSecretFolder() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceSecretFolderRead,
+
+		Schema: getDSSecretFolderSchema(),
+	}
+}
+
+func getDSSecretFolderSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The name of the secret folder",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of an secret folder",
+		},
+		"parent_path": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Parent folder path of an secret folder",
+		},
+		"parent_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Parent folder ID of an secret folder",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Default Secret Challenge Profile (used if no conditions matched)",
+		},
+		"challenge_rule": getChallengeRulesSchema(),
+	}
+}
+
+func dataSourceSecretFolderRead(d *schema.ResourceData, m interface{}) error {
+	logger.Infof("Finding SecretFolder")
 	client := m.(*restapi.RestClient)
 	object := vault.NewSecretFolder(client)
 	object.Name = d.Get("name").(string)

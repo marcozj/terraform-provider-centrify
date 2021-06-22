@@ -2,19 +2,19 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_connector (Data Source)
+# centrify_connector (Data Source)
 
 This data source gets information of Centrify Connector.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_connector" "connector1" {
+data "centrify_connector" "connector1" {
     name = "connector_host1" // Connector name registered in Centrify
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_connector)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_connector)
 
 ## Search Attributes
 

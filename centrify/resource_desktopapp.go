@@ -14,6 +14,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceDesktopApp_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceDesktopAppCreate,
+		Read:   resourceDesktopAppRead,
+		Update: resourceDesktopAppUpdate,
+		Delete: resourceDesktopAppDelete,
+		Exists: resourceDesktopAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getDesktopAppSchema(),
+		DeprecationMessage: "resource centrifyvault_desktopapp is deprecated will be removed in the future, use centrify_desktopapp instead",
+	}
+}
+
 func resourceDesktopApp() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceDesktopAppCreate,
@@ -25,134 +41,138 @@ func resourceDesktopApp() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"template_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Template name of the Desktop App",
-				ValidateFunc: validation.StringInSlice([]string{
-					applicationtemplate.Generic.String(),
-					applicationtemplate.SQLServerManagementStudio.String(),
-					applicationtemplate.Toad.String(),
-					applicationtemplate.VSphereClient.String(),
-				}, false),
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Desktop App",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the Desktop App",
-			},
-			"application_host_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Application host",
-			},
-			"login_credential_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Host login credential type",
-				ValidateFunc: validation.StringInSlice([]string{
-					logincredential.UserADCredential.String(),
-					logincredential.PromptForCredential.String(),
-					logincredential.SelectAlternativeAccount.String(),
-					logincredential.SharedAccount.String(),
-				}, false),
-			},
-			"application_account_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Host login credential account",
-			},
-			"application_alias": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The alias name of the published RemoteApp program",
-			},
-			"command_line": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Command line",
-			},
-			"command_parameter": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      customCommandParamHash,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Name of the parameter",
-						},
-						"type": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Type of the parameter",
-							ValidateFunc: validation.StringInSlice([]string{
-								cmdparamtype.Integer.String(),
-								cmdparamtype.Date.String(),
-								cmdparamtype.String.String(),
-								cmdparamtype.Account.String(),
-								cmdparamtype.CloudProivder.String(),
-								cmdparamtype.Database.String(),
-								cmdparamtype.Device.String(),
-								cmdparamtype.Domain.String(),
-								cmdparamtype.ResourceProfile.String(),
-								cmdparamtype.Role.String(),
-								cmdparamtype.Secret.String(),
-								cmdparamtype.Service.String(),
-								cmdparamtype.SSHKey.String(),
-								cmdparamtype.System.String(),
-								cmdparamtype.User.String(),
-							}, false),
-						},
-						"target_object_id": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "ID of selected parameter value",
-						},
-						"value": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
+		Schema: getDesktopAppSchema(),
+	}
+}
+
+func getDesktopAppSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"template_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Template name of the Desktop App",
+			ValidateFunc: validation.StringInSlice([]string{
+				applicationtemplate.Generic.String(),
+				applicationtemplate.SQLServerManagementStudio.String(),
+				applicationtemplate.Toad.String(),
+				applicationtemplate.VSphereClient.String(),
+			}, false),
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Desktop App",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the Desktop App",
+		},
+		"application_host_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Application host",
+		},
+		"login_credential_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Host login credential type",
+			ValidateFunc: validation.StringInSlice([]string{
+				logincredential.UserADCredential.String(),
+				logincredential.PromptForCredential.String(),
+				logincredential.SelectAlternativeAccount.String(),
+				logincredential.SharedAccount.String(),
+			}, false),
+		},
+		"application_account_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Host login credential account",
+		},
+		"application_alias": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "The alias name of the published RemoteApp program",
+		},
+		"command_line": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Command line",
+		},
+		"command_parameter": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      customCommandParamHash,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Name of the parameter",
+					},
+					"type": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Type of the parameter",
+						ValidateFunc: validation.StringInSlice([]string{
+							cmdparamtype.Integer.String(),
+							cmdparamtype.Date.String(),
+							cmdparamtype.String.String(),
+							cmdparamtype.Account.String(),
+							cmdparamtype.CloudProivder.String(),
+							cmdparamtype.Database.String(),
+							cmdparamtype.Device.String(),
+							cmdparamtype.Domain.String(),
+							cmdparamtype.ResourceProfile.String(),
+							cmdparamtype.Role.String(),
+							cmdparamtype.Secret.String(),
+							cmdparamtype.Service.String(),
+							cmdparamtype.SSHKey.String(),
+							cmdparamtype.System.String(),
+							cmdparamtype.User.String(),
+						}, false),
+					},
+					"target_object_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "ID of selected parameter value",
+					},
+					"value": {
+						Type:     schema.TypeString,
+						Optional: true,
 					},
 				},
 			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
-				Description: "Default authentication profile ID",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
+			Description: "Default authentication profile ID",
+		},
+		// Workflow
+		"workflow_enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"workflow_approver": getWorkflowApproversSchema(),
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			// Workflow
-			"workflow_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"workflow_approver": getWorkflowApproversSchema(),
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission":     getPermissionSchema(),
-			"challenge_rule": getChallengeRulesSchema(),
-			"policy_script": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"challenge_rule"},
-				Description:   "Use script to specify authentication rules (configured rules are ignored)",
-			},
+			Description: "Add to list of Sets",
+		},
+		"permission":     getPermissionSchema(),
+		"challenge_rule": getChallengeRulesSchema(),
+		"policy_script": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			ConflictsWith: []string{"challenge_rule"},
+			Description:   "Use script to specify authentication rules (configured rules are ignored)",
 		},
 	}
 }
@@ -189,7 +209,7 @@ func resourceDesktopAppRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("Error reading DesktopApp: %v", err)
+		return fmt.Errorf("error reading DesktopApp: %v", err)
 	}
 	//logger.Debugf("DesktopApp from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -235,10 +255,10 @@ func resourceDesktopAppCreate(d *schema.ResourceData, m interface{}) error {
 	object.TemplateName = d.Get("template_name").(string)
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("Error creating DesktopApp: %v", err)
+		return fmt.Errorf("error creating DesktopApp: %v", err)
 	}
 	if len(resp.Result) <= 0 {
-		return fmt.Errorf("Import application template returns incorrect result")
+		return fmt.Errorf("import application template returns incorrect result")
 	}
 
 	id := resp.Result[0].(map[string]interface{})["_RowKey"].(string)
@@ -258,7 +278,7 @@ func resourceDesktopAppCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp2, err2 := object.Update()
 	if err2 != nil || !resp2.Success {
-		return fmt.Errorf("Error updating DesktopApp attribute: %v", err2)
+		return fmt.Errorf("error updating DesktopApp attribute: %v", err2)
 	}
 
 	d.SetPartial("name")
@@ -286,7 +306,7 @@ func resourceDesktopAppCreate(d *schema.ResourceData, m interface{}) error {
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("Error setting DesktopApp permissions: %v", err)
+			return fmt.Errorf("error setting DesktopApp permissions: %v", err)
 		}
 		d.SetPartial("permission")
 	}
@@ -316,7 +336,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 		"command_line", "command_parameter", "default_profile_id", "challenge_rule", "policy_script", "workflow_enabled", "workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("Error updating DesktopApp attribute: %v", err)
+			return fmt.Errorf("error updating DesktopApp attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
 		d.SetPartial("name")
@@ -344,7 +364,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error removing DesktopApp from Set: %v", err)
+				return fmt.Errorf("error removing DesktopApp from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -354,7 +374,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("Error adding DesktopApp to Set: %v", err)
+				return fmt.Errorf("error adding DesktopApp to Set: %v", err)
 			}
 		}
 		d.SetPartial("sets")
@@ -374,7 +394,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("Error removing DesktopApp permissions: %v", err)
+				return fmt.Errorf("error removing DesktopApp permissions: %v", err)
 			}
 		}
 
@@ -385,7 +405,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("Error adding DesktopApp permissions: %v", err)
+				return fmt.Errorf("error adding DesktopApp permissions: %v", err)
 			}
 		}
 		d.SetPartial("permission")
@@ -408,7 +428,7 @@ func resourceDesktopAppDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("Error deleting DesktopApp: %v", err)
+		return fmt.Errorf("error deleting DesktopApp: %v", err)
 	}
 
 	if resp.Success {
@@ -471,7 +491,7 @@ func getUpateGetDesktopAppData(d *schema.ResourceData, object *vault.DesktopApp)
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
-			return fmt.Errorf("Schema setting error: %s", err)
+			return fmt.Errorf("sehema setting error: %s", err)
 		}
 	}
 

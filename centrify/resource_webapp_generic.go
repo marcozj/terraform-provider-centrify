@@ -14,6 +14,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceGenericWebApp_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceGenericWebAppCreate,
+		Read:   resourceGenericWebAppRead,
+		Update: resourceGenericWebAppUpdate,
+		Delete: resourceGenericWebAppDelete,
+		Exists: resourceGenericWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getGenericWebAppSchema(),
+		DeprecationMessage: "resource centrifyvault_webapp_generic is deprecated will be removed in the future, use centrify_webapp_generic instead",
+	}
+}
+
 func resourceGenericWebApp() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceGenericWebAppCreate,
@@ -25,163 +41,167 @@ func resourceGenericWebApp() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"template_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Template name of the Web App",
-				ValidateFunc: validation.StringInSlice([]string{
-					applicationtemplate.Bookmark.String(),
-					applicationtemplate.BrowserExtension.String(),
-					applicationtemplate.BrowserExtensionAdvanced.String(),
-					applicationtemplate.NTLMBasic.String(),
-					applicationtemplate.UserPassword.String(),
-				}, false),
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Web App",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the Web App",
-			},
-			"url": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The URL of the application",
-			},
-			// For browser extension web app
-			"hostname_suffix": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The host name suffix for the url of the login form, for example, acme.com.",
-			},
-			"username_field": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The CSS Selector for the user name field in the login form, for example, input#login-username.",
-			},
-			"password_field": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The CSS Selector for the password field in the login form, for example, input#login-password.",
-			},
-			"submit_field": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The CSS Selector for the Submit button in the login form, for example, input#login-button. This entry is optional. It is required only if you cannot submit the form by pressing the enter key.",
-			},
-			"form_field": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The CSS Selector for the form field of the login form, for example, form#loginForm.",
-			},
-			"additional_login_field": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The CSS Selector for any Additional Login Field required to login besides username and password, such as Company name or Agency ID. For example, the selector could be input#login-company-id. This entry is required only if there is an additional login field besides username and password.",
-			},
-			"additional_login_field_value": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The value for the Additional Login Field. For example, if there is an additional login field for the company name, enter the company name here. This entry is required if Additional Login Field is set.",
-			},
-			"selector_timeout": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validation.IntBetween(0, 60000),
-				Description:  "Use this field to indicate the number of milliseconds to wait for the expected input selectors to load before timing out on failure. A zero or negative number means no timeout.",
-			},
-			"order": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Use this field to specify the order of login if it is not username, password and submit.",
-			},
-			"script": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Script to log the user in to this application",
-			},
-			// Policy menu
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
-				Description: "Default authentication profile ID",
-			},
-			// Account Mapping menu
-			"username_strategy": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "ADAttribute",
-				Description: "Account mapping",
-				ValidateFunc: validation.StringInSlice([]string{
-					accountmapping.ADAttribute.String(),
-					accountmapping.SharedAccount.String(),
-					accountmapping.UseScript.String(),
-					accountmapping.SetByUser.String(),
-				}, false),
-			},
-			"username": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "userprincipalname",
-				Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
-			},
-			"password": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				Description: "Password for all user share one name",
-			},
-			"use_ad_login_pw": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Use the login password supplied by the user (Active Directory users only)",
-			},
-			"use_ad_login_pw_by_script": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Use the login password supplied by the user for account mapping script (Active Directory users only)",
-			},
-			"user_map_script": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Account mapping script",
-			},
+		Schema: getGenericWebAppSchema(),
+	}
+}
 
-			// Workflow
-			"workflow_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
+func getGenericWebAppSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"template_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Template name of the Web App",
+			ValidateFunc: validation.StringInSlice([]string{
+				applicationtemplate.Bookmark.String(),
+				applicationtemplate.BrowserExtension.String(),
+				applicationtemplate.BrowserExtensionAdvanced.String(),
+				applicationtemplate.NTLMBasic.String(),
+				applicationtemplate.UserPassword.String(),
+			}, false),
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Web App",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the Web App",
+		},
+		"url": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The URL of the application",
+		},
+		// For browser extension web app
+		"hostname_suffix": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The host name suffix for the url of the login form, for example, acme.com.",
+		},
+		"username_field": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The CSS Selector for the user name field in the login form, for example, input#login-username.",
+		},
+		"password_field": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The CSS Selector for the password field in the login form, for example, input#login-password.",
+		},
+		"submit_field": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The CSS Selector for the Submit button in the login form, for example, input#login-button. This entry is optional. It is required only if you cannot submit the form by pressing the enter key.",
+		},
+		"form_field": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The CSS Selector for the form field of the login form, for example, form#loginForm.",
+		},
+		"additional_login_field": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The CSS Selector for any Additional Login Field required to login besides username and password, such as Company name or Agency ID. For example, the selector could be input#login-company-id. This entry is required only if there is an additional login field besides username and password.",
+		},
+		"additional_login_field_value": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "The value for the Additional Login Field. For example, if there is an additional login field for the company name, enter the company name here. This entry is required if Additional Login Field is set.",
+		},
+		"selector_timeout": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validation.IntBetween(0, 60000),
+			Description:  "Use this field to indicate the number of milliseconds to wait for the expected input selectors to load before timing out on failure. A zero or negative number means no timeout.",
+		},
+		"order": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Use this field to specify the order of login if it is not username, password and submit.",
+		},
+		"script": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Script to log the user in to this application",
+		},
+		// Policy menu
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
+			Description: "Default authentication profile ID",
+		},
+		// Account Mapping menu
+		"username_strategy": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "ADAttribute",
+			Description: "Account mapping",
+			ValidateFunc: validation.StringInSlice([]string{
+				accountmapping.ADAttribute.String(),
+				accountmapping.SharedAccount.String(),
+				accountmapping.UseScript.String(),
+				accountmapping.SetByUser.String(),
+			}, false),
+		},
+		"username": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "userprincipalname",
+			Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
+		},
+		"password": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Sensitive:   true,
+			Description: "Password for all user share one name",
+		},
+		"use_ad_login_pw": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Use the login password supplied by the user (Active Directory users only)",
+		},
+		"use_ad_login_pw_by_script": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Use the login password supplied by the user for account mapping script (Active Directory users only)",
+		},
+		"user_map_script": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Account mapping script",
+		},
+
+		// Workflow
+		"workflow_enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"workflow_approver": getWorkflowApproversSchema(),
+		"workflow_settings": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
 			},
-			"workflow_approver": getWorkflowApproversSchema(),
-			"workflow_settings": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission":     getPermissionSchema(),
-			"challenge_rule": getChallengeRulesSchema(),
-			"policy_script": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"challenge_rule"},
-				Description:   "Use script to specify authentication rules (configured rules are ignored)",
-			},
+			Description: "Add to list of Sets",
+		},
+		"permission":     getPermissionSchema(),
+		"challenge_rule": getChallengeRulesSchema(),
+		"policy_script": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			ConflictsWith: []string{"challenge_rule"},
+			Description:   "Use script to specify authentication rules (configured rules are ignored)",
 		},
 	}
 }

@@ -2,14 +2,14 @@
 subcategory: "Settings"
 ---
 
-# centrifyvault_authenticationprofile (Resource)
+# centrify_authenticationprofile (Resource)
 
 This resource allows you to create/update/delete Authentication Profile.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_authenticationprofile" "twofa" {
+resource "centrify_authenticationprofile" "twofa" {
     name = "2FA Authentication Profile"
     challenges = [
         "UP",
@@ -22,7 +22,7 @@ resource "centrifyvault_authenticationprofile" "twofa" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_authenticationprofile)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_authenticationprofile)
 
 ## Argument Reference
 
@@ -47,5 +47,5 @@ Optional:
 Authenticaiton Profile can be imported using the resource `id`, e.g.
 
 ```shell
-terraform import centrifyvault_authenticationprofile.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+terraform import centrify_authenticationprofile.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```

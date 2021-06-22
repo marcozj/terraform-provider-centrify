@@ -1,6 +1,6 @@
-# Terraform Provider for Centrify Vault
+# Terraform Provider for Centrify Platform
 
-The Terraform Provider for Centrify Vault is a Terraform plugin that allows other Terraform providers to retrieve vaulted password or secret from Centrify Vault. It also enables full configuration management of Centrify Vault.
+The Terraform Provider for Centrify Platform is a Terraform plugin that allows other Terraform providers to retrieve vaulted password or secret from Centrify Platform. It also enables full configuration management of Centrify Platform.
 
 ## Requirements
 
@@ -19,25 +19,25 @@ If you have not set GOPATH, you can substitute $HOME/go in those commands or els
 $ export GOPATH=$(go env GOPATH)
 ```
 
-Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-centrify`
+Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-centrifyvault`
 
 ```sh
 $ mkdir -p $GOPATH/src/github.com/terraform-providers
 $ cd $GOPATH/src/github.com/terraform-providers
-$ git clone https://github.com/marcozj/terraform-provider-centrify terraform-provider-centrify
+$ git clone https://github.com/marcozj/terraform-provider-centrifyvault terraform-provider-centrifyvault
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrify
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrifyvault
 $ make build
 ```
 
 To install the provider in your home directory
 
 ```sh
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrify
+$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-centrifyvault
 $ make install
 ```
 
@@ -51,4 +51,4 @@ You can use Centrify Terraform Provider to configure Centrify platform including
 
 Refer to **Supported Resources and Data Sources** section in [provider document](./docs/index.md) page for details of supported configurations and [example](./examples/) usage.
 
-For example, this is how to [create a Windows system](./examples/centrifyvault_vaultsystem/system_windows_basic.tf) in Centrify Vault. This is how to [retrieve vaulted credentials](./examples/centrifyvault_vaultaccount/datasource.tf).
+For example, this is how to [create a Windows system](./examples/centrify_system/system_windows_basic.tf) in Centrify Platform. This is how to [retrieve vaulted credentials](./examples/centrify_account/datasource_password.tf).

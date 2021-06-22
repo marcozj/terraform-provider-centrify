@@ -9,58 +9,71 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func dataSourceCloudProvider_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceCloudProviderRead,
+
+		Schema:             getDSCloudProviderSchema(),
+		DeprecationMessage: "dataresource centrifyvault_cloudprovider is deprecated will be removed in the future, use centrify_cloudprovider instead",
+	}
+}
+
 func dataSourceCloudProvider() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceCloudProviderRead,
 
-		Schema: map[string]*schema.Schema{
-			"cloud_account_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Account ID of the cloud provider",
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the cloud provider",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Description of the cloud provider",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Type of the cloud provider",
-			},
-			"enable_interactive_password_rotation": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Enable interactive password rotation",
-			},
-			"prompt_change_root_password": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Prompt to change root password every login and password checkin",
-			},
-			"enable_password_rotation_reminders": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Enable password rotation reminders",
-			},
-			"password_rotation_reminder_duration": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Minimum number of days since last rotation to trigger a reminder",
-			},
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Default Root Account Login Profile (used if no conditions matched)",
-			},
-			"challenge_rule": getChallengeRulesSchema(),
+		Schema: getDSCloudProviderSchema(),
+	}
+}
+
+func getDSCloudProviderSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"cloud_account_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Account ID of the cloud provider",
 		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the cloud provider",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the cloud provider",
+		},
+		"type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Type of the cloud provider",
+		},
+		"enable_interactive_password_rotation": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Enable interactive password rotation",
+		},
+		"prompt_change_root_password": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Prompt to change root password every login and password checkin",
+		},
+		"enable_password_rotation_reminders": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Enable password rotation reminders",
+		},
+		"password_rotation_reminder_duration": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Minimum number of days since last rotation to trigger a reminder",
+		},
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Default Root Account Login Profile (used if no conditions matched)",
+		},
+		"challenge_rule": getChallengeRulesSchema(),
 	}
 }
 

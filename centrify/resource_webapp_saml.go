@@ -15,6 +15,22 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceSamlWebApp_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceSamlWebAppCreate,
+		Read:   resourceSamlWebAppRead,
+		Update: resourceSamlWebAppUpdate,
+		Delete: resourceSamlWebAppDelete,
+		Exists: resourceSamlWebAppExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getSamlWebAppSchema(),
+		DeprecationMessage: "resource centrifyvault_webapp_saml is deprecated will be removed in the future, use centrify_webapp_saml instead",
+	}
+}
+
 func resourceSamlWebApp() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceSamlWebAppCreate,
@@ -26,241 +42,7 @@ func resourceSamlWebApp() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: map[string]*schema.Schema{
-			"template_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Template name of the Web App",
-				ValidateFunc: validation.StringInSlice([]string{
-					applicationtemplate.SAML.String(),
-					applicationtemplate.AWSConsole.String(),
-					applicationtemplate.Cloudera.String(),
-					applicationtemplate.CloudLock.String(),
-					applicationtemplate.ConfluenceServer.String(),
-					applicationtemplate.Dome9.String(),
-					applicationtemplate.GitHubEnterprise.String(),
-					applicationtemplate.JIRACloud.String(),
-					applicationtemplate.JIRAServer.String(),
-					applicationtemplate.PaloAltoNetworks.String(),
-					applicationtemplate.SplunkOnPrem.String(),
-					applicationtemplate.SumoLogic.String(),
-				}, false),
-			},
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name of the Web App",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the Web App",
-			},
-			"corp_identifier": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "AWS Account ID or Jira Cloud Subdomain",
-			},
-			"app_entity_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Cloudera Entity ID or JIRA Cloud SP Entity ID",
-			},
-			"application_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
-			},
-			"idp_metadata_url": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			// Trust menu
-			"sp_metadata_url": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"sp_config_method": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				Description:  "Service Provider configuration method: metadata or manual configuration",
-				ValidateFunc: validation.IntInSlice([]int{int(configurationmethod.Manual), int(configurationmethod.MetaData)}),
-			},
-			"sp_metadata_xml": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Service Provider metadata in XML format",
-				// When Service Provider Configuration is set to use metadata and sp_metadata_url is used, this attribute value
-				// is automatically filled. Therefore we want to ignore this attribute during update action.
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					suppress := false
-					if v, ok := d.GetOk("sp_config_method"); ok {
-						sp_metadata_url := d.Get("sp_metadata_url")
-						sp_config_method := v.(int)
-						if sp_config_method == 1 && sp_metadata_url != "" {
-							suppress = true
-						}
-					}
-					return suppress
-				},
-			},
-			"sp_entity_id": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Description:      "SP Entity ID, also known as SP Issuer, or Audience, is a value given by your Service Provider",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"acs_url": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Description:      "Assertion Consumer Service (ACS) URL",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"recipient_sameas_acs_url": {
-				Type:             schema.TypeBool,
-				Optional:         true,
-				Default:          true,
-				Description:      "Recipient is same as ACS URL",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"recipient": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Description:      "Service Provider recipient if it is different from ACS URL",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"sign_assertion": {
-				Type:             schema.TypeBool,
-				Optional:         true,
-				Default:          true,
-				Description:      "Sign assertion if true, otherwise sign response",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"name_id_format": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "unspecified",
-				Description: "This is the Format attribute value in the <NameID> element in SAML Response. Select the NameID Format that your Service Provider specifies to use. If SP does not specify one, select 'unspecified'.",
-				ValidateFunc: validation.StringInSlice([]string{
-					"unspecified",
-					"emailAddress",
-					"transient",
-					"persistent",
-					"entity",
-					"kerberos",
-					"WindowsDomainQualifiedName",
-					"X509SubjectName",
-				}, false),
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"sp_single_logout_url": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Description:      "Single Logout URL",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"relay_state": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Description:      "If your Service Provider specifies a Relay State value to use, specify it here.",
-				DiffSuppressFunc: samlAttributeSuppress,
-			},
-			"authn_context_class": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				Default:          "unspecified",
-				Description:      "Select the Authentication Context Class that your Service Provider specifies to use. If SP does not specify one, select 'unspecified'.",
-				DiffSuppressFunc: samlAttributeSuppress,
-				ValidateFunc: validation.StringInSlice([]string{
-					"unspecified",
-					"PasswordProtectedTransport",
-					"AuthenticatedTelephony",
-					"InternetProtocol",
-					"InternetProtocolPassword",
-					"Kerberos",
-					"MobileOneFactorContract",
-					"MobileOneFactorUnregistered",
-					"MobileTwoFactorContract",
-					"MobileTwoFactorUnregistered",
-					"NomadTelephony",
-					"Password",
-					"PersonalTelephony",
-					"PGP",
-					"PreviousSession",
-					"SecureRemotePassword",
-					"Smartcard",
-					"SmartcardPKI",
-					"SoftwarePKI",
-					"SPKI",
-					"Telephony",
-					"TimeSyncToken",
-					"TLSClient",
-					"X509",
-					"XMLDSig",
-				}, false),
-			},
-			// SAML Response menu
-			"saml_attribute": getSamlAttributeSchema(),
-			"saml_response_script": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Javascript used to produce custom logic for SAML response",
-			},
-			// Policy menu
-			"default_profile_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
-				Description: "Default authentication profile ID",
-			},
-			// Account Mapping menu
-			"username_strategy": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "ADAttribute",
-				Description: "Account mapping",
-				ValidateFunc: validation.StringInSlice([]string{
-					accountmapping.ADAttribute.String(),
-					accountmapping.SharedAccount.String(),
-					accountmapping.UseScript.String(),
-				}, false),
-			},
-			"username": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "userprincipalname",
-				Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
-			},
-			"user_map_script": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Account mapping script. Applicable if 'username_strategy' is 'UseScript'",
-			},
-			// Workflow
-			"workflow_enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"workflow_approver": getWorkflowApproversSchema(),
-			"sets": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Set:      schema.HashString,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Add to list of Sets",
-			},
-			"permission":     getPermissionSchema(),
-			"challenge_rule": getChallengeRulesSchema(),
-			"policy_script": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				ConflictsWith: []string{"challenge_rule"},
-				Description:   "Use script to specify authentication rules (configured rules are ignored)",
-			},
-		},
+		Schema: getSamlWebAppSchema(),
 	}
 }
 
@@ -281,6 +63,244 @@ func getSamlAttributeSchema() *schema.Schema {
 					Optional: true,
 				},
 			},
+		},
+	}
+}
+
+func getSamlWebAppSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"template_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Template name of the Web App",
+			ValidateFunc: validation.StringInSlice([]string{
+				applicationtemplate.SAML.String(),
+				applicationtemplate.AWSConsole.String(),
+				applicationtemplate.Cloudera.String(),
+				applicationtemplate.CloudLock.String(),
+				applicationtemplate.ConfluenceServer.String(),
+				applicationtemplate.Dome9.String(),
+				applicationtemplate.GitHubEnterprise.String(),
+				applicationtemplate.JIRACloud.String(),
+				applicationtemplate.JIRAServer.String(),
+				applicationtemplate.PaloAltoNetworks.String(),
+				applicationtemplate.SplunkOnPrem.String(),
+				applicationtemplate.SumoLogic.String(),
+			}, false),
+		},
+		"name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of the Web App",
+		},
+		"description": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Description of the Web App",
+		},
+		"corp_identifier": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "AWS Account ID or Jira Cloud Subdomain",
+		},
+		"app_entity_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Cloudera Entity ID or JIRA Cloud SP Entity ID",
+		},
+		"application_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Application ID. Specify the name or 'target' that the mobile application uses to find this application.",
+		},
+		"idp_metadata_url": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		// Trust menu
+		"sp_metadata_url": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"sp_config_method": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			Description:  "Service Provider configuration method: metadata or manual configuration",
+			ValidateFunc: validation.IntInSlice([]int{int(configurationmethod.Manual), int(configurationmethod.MetaData)}),
+		},
+		"sp_metadata_xml": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Service Provider metadata in XML format",
+			// When Service Provider Configuration is set to use metadata and sp_metadata_url is used, this attribute value
+			// is automatically filled. Therefore we want to ignore this attribute during update action.
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				suppress := false
+				if v, ok := d.GetOk("sp_config_method"); ok {
+					sp_metadata_url := d.Get("sp_metadata_url")
+					sp_config_method := v.(int)
+					if sp_config_method == 1 && sp_metadata_url != "" {
+						suppress = true
+					}
+				}
+				return suppress
+			},
+		},
+		"sp_entity_id": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "SP Entity ID, also known as SP Issuer, or Audience, is a value given by your Service Provider",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"acs_url": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "Assertion Consumer Service (ACS) URL",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"recipient_sameas_acs_url": {
+			Type:             schema.TypeBool,
+			Optional:         true,
+			Default:          true,
+			Description:      "Recipient is same as ACS URL",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"recipient": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "Service Provider recipient if it is different from ACS URL",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"sign_assertion": {
+			Type:             schema.TypeBool,
+			Optional:         true,
+			Default:          true,
+			Description:      "Sign assertion if true, otherwise sign response",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"name_id_format": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "unspecified",
+			Description: "This is the Format attribute value in the <NameID> element in SAML Response. Select the NameID Format that your Service Provider specifies to use. If SP does not specify one, select 'unspecified'.",
+			ValidateFunc: validation.StringInSlice([]string{
+				"unspecified",
+				"emailAddress",
+				"transient",
+				"persistent",
+				"entity",
+				"kerberos",
+				"WindowsDomainQualifiedName",
+				"X509SubjectName",
+			}, false),
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"sp_single_logout_url": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "Single Logout URL",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"relay_state": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Description:      "If your Service Provider specifies a Relay State value to use, specify it here.",
+			DiffSuppressFunc: samlAttributeSuppress,
+		},
+		"authn_context_class": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Default:          "unspecified",
+			Description:      "Select the Authentication Context Class that your Service Provider specifies to use. If SP does not specify one, select 'unspecified'.",
+			DiffSuppressFunc: samlAttributeSuppress,
+			ValidateFunc: validation.StringInSlice([]string{
+				"unspecified",
+				"PasswordProtectedTransport",
+				"AuthenticatedTelephony",
+				"InternetProtocol",
+				"InternetProtocolPassword",
+				"Kerberos",
+				"MobileOneFactorContract",
+				"MobileOneFactorUnregistered",
+				"MobileTwoFactorContract",
+				"MobileTwoFactorUnregistered",
+				"NomadTelephony",
+				"Password",
+				"PersonalTelephony",
+				"PGP",
+				"PreviousSession",
+				"SecureRemotePassword",
+				"Smartcard",
+				"SmartcardPKI",
+				"SoftwarePKI",
+				"SPKI",
+				"Telephony",
+				"TimeSyncToken",
+				"TLSClient",
+				"X509",
+				"XMLDSig",
+			}, false),
+		},
+		// SAML Response menu
+		"saml_attribute": getSamlAttributeSchema(),
+		"saml_response_script": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Javascript used to produce custom logic for SAML response",
+		},
+		// Policy menu
+		"default_profile_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "AlwaysAllowed", // It must to be "--", "AlwaysAllowed", "-1" or UUID of authen profile
+			Description: "Default authentication profile ID",
+		},
+		// Account Mapping menu
+		"username_strategy": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "ADAttribute",
+			Description: "Account mapping",
+			ValidateFunc: validation.StringInSlice([]string{
+				accountmapping.ADAttribute.String(),
+				accountmapping.SharedAccount.String(),
+				accountmapping.UseScript.String(),
+			}, false),
+		},
+		"username": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Default:     "userprincipalname",
+			Description: "All users share the user name. Applicable if 'username_strategy' is 'Fixed'",
+		},
+		"user_map_script": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Account mapping script. Applicable if 'username_strategy' is 'UseScript'",
+		},
+		// Workflow
+		"workflow_enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+		},
+		"workflow_approver": getWorkflowApproversSchema(),
+		"sets": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Set:      schema.HashString,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			Description: "Add to list of Sets",
+		},
+		"permission":     getPermissionSchema(),
+		"challenge_rule": getChallengeRulesSchema(),
+		"policy_script": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			ConflictsWith: []string{"challenge_rule"},
+			Description:   "Use script to specify authentication rules (configured rules are ignored)",
 		},
 	}
 }

@@ -4,17 +4,17 @@ subcategory: "Policy Configuration"
 
 # database_set attribute
 
-**database_set** is a sub attribute in settings attribute within **centrifyvault_policy** Resource.
+**database_set** is a sub attribute in settings attribute within **centrify_policy** Resource.
 
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_policy" "test_policy" {
+resource "centrify_policy" "test_policy" {
     name = "Test Policy"
     description = "Test Policy"
     link_type = "Collection"
     policy_assignment = [
-        format("VaultDatabase|%s", data.centrifyvault_manualset.test_set.id),
+        format("VaultDatabase|%s", data.centrify_manualset.test_set.id),
     ]
     
     settings {
@@ -35,7 +35,7 @@ resource "centrifyvault_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrifyvault_policy/policy_database_set.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policy_database_set.tf)
 
 ## Argument Reference
 

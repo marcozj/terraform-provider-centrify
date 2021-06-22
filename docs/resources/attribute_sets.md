@@ -9,18 +9,18 @@ Sets is a common attribute in various resources.
 ## Example Usage
 
 ```terraform
-resource "centrifyvault_manualset" "my_systems" {
+resource "centrify_manualset" "my_systems" {
     name = "My Systems"
     type = "Server"
     description = "This Set contains my systems."
 }
 
-data "centrifyvault_manualset" "lab_systems" {
+data "centrify_manualset" "lab_systems" {
     type = "Server"
     name = "LAB Systems"
 }
 
-resource "centrifyvault_vaultsystem" "linuxsystem" {
+resource "centrify_system" "linuxsystem" {
     name = "Test Linux"
     fqdn = "192.168.2.1"
     computer_class = "Unix"
@@ -29,8 +29,8 @@ resource "centrifyvault_vaultsystem" "linuxsystem" {
     port = 22
 
     sets = [
-        centrifyvault_manualset.my_systems.id,
-        data.centrifyvault_manualset.lab_systems.id
+        centrify_manualset.my_systems.id,
+        data.centrify_manualset.lab_systems.id
     ]
 }
 ```

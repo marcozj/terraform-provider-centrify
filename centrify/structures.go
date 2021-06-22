@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	logger "github.com/marcozj/golang-sdk/logging"
 	vault "github.com/marcozj/golang-sdk/platform"
+	"github.com/marcozj/terraform-provider-centrifyvault/centrify/internal/hashcode"
 )
 
 // ResourceIDStringInterface - Generic interface for resource ID
@@ -300,7 +300,7 @@ func expandPermissions(v interface{}, valid map[string]string, validate bool) ([
 					converted = append(converted, valid[r.(string)])
 				} else {
 					if validate {
-						return nil, fmt.Errorf("For %s, %v can only contain %v", v.(map[string]interface{})["principal_name"].(string), existing.List(), valid)
+						return nil, fmt.Errorf("for %s, %v can only contain %v", v.(map[string]interface{})["principal_name"].(string), existing.List(), valid)
 					}
 				}
 			}

@@ -2,19 +2,19 @@
 subcategory: "Resources"
 ---
 
-# centrifyvault_cloudprovider (Data Source)
+# centrify_cloudprovider (Data Source)
 
 This data source gets information of authentication cloud provider.
 
 ## Example Usage
 
 ```terraform
-data "centrifyvault_cloudprovider" "my_aws" {
+data "centrify_cloudprovider" "my_aws" {
     name = "My AWS"
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrifyvault_cloudprovider)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_cloudprovider)
 
 ## Search Attributes
 
