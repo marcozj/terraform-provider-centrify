@@ -18,7 +18,7 @@ output "idp_metadata_url" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_saml)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_webapp_saml)
 
 ## Search Attributes
 

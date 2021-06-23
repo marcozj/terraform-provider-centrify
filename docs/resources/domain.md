@@ -32,7 +32,7 @@ resource "centrify_domain" "example_lab" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_domain)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_domain)
 
 ## Argument Reference
 

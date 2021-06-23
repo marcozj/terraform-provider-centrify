@@ -34,7 +34,7 @@ resource "centrify_domainconfiguration" "domain_config" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_domainconfiguratoin)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_domainconfiguratoin)
 
 ## Argument Reference
 

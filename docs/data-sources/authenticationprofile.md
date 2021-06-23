@@ -14,7 +14,7 @@ data "centrify_authenticationprofile" "new_device" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_authenticationprofile)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_authenticationprofile)
 
 ## Search Attributes
 

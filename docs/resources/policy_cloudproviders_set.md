@@ -28,7 +28,7 @@ resource "centrify_policy" "test_policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policy_cloudproviders_set.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/blob/main/examples/centrify_policy/policy_cloudproviders_set.tf)
 
 ## Argument Reference
 

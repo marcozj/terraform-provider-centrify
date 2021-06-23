@@ -22,7 +22,7 @@ data "centrify_directoryservice" "federated_dir" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_role/role_member_with_federatedgroup.tf) and [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_role/role_member_with_adgroup.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_role/role_member_with_federatedgroup.tf) and [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_role/role_member_with_adgroup.tf)
 
 ## Search Attributes
 

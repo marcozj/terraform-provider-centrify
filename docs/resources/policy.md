@@ -49,8 +49,8 @@ resource "centrify_policy" "test_policy" {
 }
 ```
 
-More examples for `centrify_policyorder` can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policyorder.tf)
-More examples for `centrify_policy` can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/)
+More examples for `centrify_policyorder` can be found [here](https://github.com/marcozj/terraform-provider-centrify/blob/main/examples/centrify_policy/policyorder.tf)
+More examples for `centrify_policy` can be found [here](https://github.com/marcozj/terraform-provider-centrify/blob/main/examples/centrify_policy/)
 
 ## Argument Reference for centrify_policyorder
 

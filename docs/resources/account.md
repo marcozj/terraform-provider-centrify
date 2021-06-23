@@ -21,13 +21,13 @@ resource "centrify_account" "unix_account" {
 }
 ```
 
-Examples of system account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_system)
+Examples of system account can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_system)
 
-Examples of database account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_database)
+Examples of database account can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_database)
 
-Examples of domain account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_domain)
+Examples of domain account can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_domain)
 
-Examples of cloud provider account can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_cloudprovider)
+Examples of cloud provider account can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_cloudprovider)
 
 ## Argument Reference
 

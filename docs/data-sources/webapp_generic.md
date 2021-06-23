@@ -18,7 +18,7 @@ output "generic_webapp_url" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_generic)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_webapp_generic)
 
 ## Search Attributes
 

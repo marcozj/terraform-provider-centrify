@@ -14,7 +14,7 @@ data "centrify_policy" "Default_Policy" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/blob/main/examples/centrify_policy/policyorder.tf)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/blob/main/examples/centrify_policy/policyorder.tf)
 
 ## Search Attributes
 

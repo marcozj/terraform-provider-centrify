@@ -1,5 +1,12 @@
 # RELEASE NOTES
 
+## 0.2.0 (June 23, 2021)
+
+IMPROVEMENTS:
+
+- Port from terraform-provider-centrifyvault to terraform-provider-centrify
+- Maintain backwoards compatibility to `centrifyvault_*` resources and data sources
+
 ## 0.1.7 (June 15, 2021)
 
 IMPROVEMENTS:

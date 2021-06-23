@@ -36,7 +36,7 @@ func TestAccResourceUserCreation(t *testing.T) {
 
 func testAccBasicValExists(rName string) string {
 
-	return fmt.Sprintf(`resource "centrifyvault_user" "testuser" {
+	return fmt.Sprintf(`resource "centrify_user" "testuser" {
 		username = %[1]q
 		email = "test@example.com"
 		displayname = "Test User"

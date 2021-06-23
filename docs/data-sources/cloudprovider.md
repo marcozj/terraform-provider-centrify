@@ -14,7 +14,7 @@ data "centrify_cloudprovider" "my_aws" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_cloudprovider)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_cloudprovider)
 
 ## Search Attributes
 

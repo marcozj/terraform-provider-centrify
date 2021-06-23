@@ -25,7 +25,7 @@ resource "centrify_system" "windows1" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_system)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_system)
 
 ## Argument Reference
 

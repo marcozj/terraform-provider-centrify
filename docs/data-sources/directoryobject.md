@@ -25,7 +25,7 @@ data "centrify_directoryobject" "ad_user" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_role)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_role)
 
 ## Search Attributes
 
