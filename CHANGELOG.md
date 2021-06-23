@@ -5,12 +5,6 @@
 IMPROVEMENTS:
 
 - Port from terraform-provider-centrifyvault to terraform-provider-centrify
-- Maintain backwoards compatibility to `centrifyvault_*` resources and data sources
-
-## 0.1.7 (June 15, 2021)
-
-IMPROVEMENTS:
-
 - Change provider name from `centrifyvault` to `centrify`
 - Rename all resources from `centrifyvault_*` to `centrify_*`. To keep backwards compatibility, existing `centrifyvault_*` can still be used but will be removed in the future.
   - `centrifyvault_user` -> `centrify_user`
