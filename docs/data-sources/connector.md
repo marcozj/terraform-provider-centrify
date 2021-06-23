@@ -14,7 +14,7 @@ data "centrify_connector" "connector1" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_connector)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_connector)
 
 ## Search Attributes
 

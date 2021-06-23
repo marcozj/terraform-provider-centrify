@@ -22,7 +22,7 @@ resource "centrify_globalgroupmappings" "group_mappings" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_globalgroupmappings)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_globalgroupmappings)
 
 ## Argument Reference
 

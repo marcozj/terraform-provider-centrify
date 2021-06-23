@@ -21,7 +21,7 @@ resource "centrify_cloudprovider" "demo_aws" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_cloudprovider)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_cloudprovider)
 
 ## Argument Reference
 

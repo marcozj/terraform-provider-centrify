@@ -1,4 +1,4 @@
-module github.com/marcozj/terraform-provider-centrifyvault
+module github.com/marcozj/terraform-provider-centrify
 
 go 1.13
 

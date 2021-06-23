@@ -14,7 +14,7 @@ data "centrify_desktopapp" "test_desktopapp" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_desktopapp)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_desktopapp)
 
 ## Search Attributes
 

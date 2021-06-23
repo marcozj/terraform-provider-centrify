@@ -15,7 +15,7 @@ data "centrify_account" "centos1_local_account" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_account)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_account)
 
 ## Search Attributes
 

@@ -19,7 +19,7 @@ data "centrify_secretfolder" "level2_folder" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_secret)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_secret)
 
 ## Search Attributes
 

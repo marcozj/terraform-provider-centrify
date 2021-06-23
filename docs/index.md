@@ -14,7 +14,7 @@ Use special `terraform` configuration block type to configure some behaviors of 
 terraform {
   required_providers {
     centrify = {
-      source  = "marcozj/centrifyvault"
+      source  = "marcozj/centrify"
     }
   }
 }
@@ -88,15 +88,15 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Authentication Profile | [`centrify_authenticationprofile`](./resources/authenticationprofile.md) | [`centrify_authenticationprofile`](./data-sources/authenticationprofile.md) |
 | Password Profile | [`centrify_passwordprofile`](./resources/passwordprofile.md) | [`centrify_passwordprofile`](./data-sources/passwordprofile.md) |
 | Connector | | [`centrify_connector`](./data-sources/connector.md) |
-| System | [`centrify_system`](./resources/vaultsystem.md) | [`centrify_system`](./data-sources/vaultsystem.md) |
-| Database | [`centrify_database`](./resources/vaultdatabase.md) | [`centrify_database`](./data-sources/vaultdatabase.md) |
-| Domain | [`centrify_domain`](./resources/vaultdomain.md) | [`centrify_domain`](./data-sources/vaultdomain.md) |
-| Domain Configuration | [`centrify_domainconfiguration`](./resources/vaultdomainconfiguration.md) | |
+| System | [`centrify_system`](./resources/system.md) | [`centrify_system`](./data-sources/system.md) |
+| Database | [`centrify_database`](./resources/database.md) | [`centrify_database`](./data-sources/database.md) |
+| Domain | [`centrify_domain`](./resources/domain.md) | [`centrify_domain`](./data-sources/domain.md) |
+| Domain Configuration | [`centrify_domainconfiguration`](./resources/domainconfiguration.md) | |
 | Cloud Provider | [`centrify_cloudprovider`](./resources/cloudprovider.md) | [`centrify_cloudprovider`](./data-sources/cloudprovider.md) |
-| Account | [`centrify_account`](./resources/vaultaccount.md) | [`centrify_account`](./data-sources/vaultaccount.md) |
+| Account | [`centrify_account`](./resources/account.md) | [`centrify_account`](./data-sources/account.md) |
 | Multiplexed Account | [`centrify_multiplexedaccount`](./resources/multiplexedaccount.md) | [`centrify_multiplexedaccount`](./data-sources/multiplexedaccount.md) |
-| Secret | [`centrify_secret`](./resources/vaultsecret.md) | [`centrify_secret`](./data-sources/vaultsecret.md) |
-| Secret Folder | [`centrify_secretfolder`](./resources/vaultsecretfolder.md) | [`centrify_secretfolder`](./data-sources/vaultsecretfolder.md) |
+| Secret | [`centrify_secret`](./resources/secret.md) | [`centrify_secret`](./data-sources/secret.md) |
+| Secret Folder | [`centrify_secretfolder`](./resources/secretfolder.md) | [`centrify_secretfolder`](./data-sources/secretfolder.md) |
 | SSH Key | [`centrify_sshkey`](./resources/sshkey.md) | [`centrify_sshkey`](./data-sources/sshkey.md) |
 | Windows Service | [`centrify_service`](./resources/service.md) | [`centrify_service`](./data-sources/service.md) |
 | Generic Web App | [`centrify_webapp_generic`](./resources/webapp_generic.md) | [`centrify_webapp_generic`](./data-sources/webapp_generic.md) |

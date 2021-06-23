@@ -40,7 +40,7 @@ resource "centrify_webapp_oauth" "oauthclient" {
 }
 ```
 
-More examples can be found [here](https://github.com/marcozj/terraform-provider-centrifyvault/tree/main/examples/centrify_webapp_oauth)
+More examples can be found [here](https://github.com/marcozj/terraform-provider-centrify/tree/main/examples/centrify_webapp_oauth)
 
 ## Argument Reference
 

@@ -1,6 +1,6 @@
 # testing and custom build code
 .terraform/
-terraform-provider-centrifyvault
+terraform-provider-centrify
 terraform.tfstate
 terraform.tfstate.backup
 
