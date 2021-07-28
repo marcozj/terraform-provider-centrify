@@ -54,7 +54,7 @@ func getOidcProfileSchema() *schema.Schema {
 			Schema: map[string]*schema.Schema{
 				"client_secret": {
 					Type:        schema.TypeString,
-					Required:    true,
+					Optional:    true,
 					Description: "The OpenID Client Secret for this Identity Provider",
 				},
 				"application_url": {
