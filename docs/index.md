@@ -83,6 +83,7 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Directory Service | | [`centrify_directoryservice`](./data-sources/directoryservice.md) |
 | Directory Object | | [`centrify_directoryobject`](./data-sources/directoryobject.md) |
 | Global Group Mapping | [`centrify_globalgroupmappings`](./resources/globalgroupmappings.md) | |
+| Federated Group | [`centrify_federatedgroup`](./resources/federatedgroup.md) | [`centrify_federatedgroup`](./data-sources/federatedgroup.md) |
 | Centrify Directory User | [`centrify_user`](./resources/user.md) | [`centrify_user`](./data-sources/user.md) |
 | Role | [`centrify_role`](./resources/role.md) | [`centrify_role`](./data-sources/role.md) |
 | Authentication Profile | [`centrify_authenticationprofile`](./resources/authenticationprofile.md) | [`centrify_authenticationprofile`](./data-sources/authenticationprofile.md) |
