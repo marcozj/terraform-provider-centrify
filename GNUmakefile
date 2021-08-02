@@ -4,11 +4,12 @@ WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=centrify
 
 # Local provider install parameter
-version = 0.2.0
+version = 0.2.2
 registry_name = registry.terraform.io
 namespace = marcozj
 bin_name = terraform-provider-$(PKG_NAME)
-build_dir = $(GOPATH)/bin
+#build_dir = $(GOPATH)/bin
+build_dir = /tmp/
 TF_PLUGIN_DIR ?= ~/.terraform.d/plugins
 install_path = $(TF_PLUGIN_DIR)/$(registry_name)/$(namespace)/$(PKG_NAME)/$(version)/$$(go env GOOS)_$$(go env GOARCH)
 install_path_pre13 = $(TF_PLUGIN_DIR)/$$(go env GOOS)_$$(go env GOARCH)
