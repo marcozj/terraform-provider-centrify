@@ -6,35 +6,23 @@ data "centrify_directoryservice" "federated_dir" {
     type = "Federated Directory"
 }
 
-// data source for existing federated group
-data "centrify_directoryobject" "federated_group" {
-    directory_services = [
-        data.centrify_directoryservice.federated_dir.id
-    ]
-    name = "Azure PAS Users"
-    object_type = "Group"
-}
-
 // Create new federated group with globalgroupmappings
-resource "centrify_globalgroupmappings" "group_mapping" {
-  mapping {
-    attribute_value = "IdP Group"
-    group_name      = "IdP PAS Admin" // Assuming "IdP PAS Admin" doesn't exist yet
-  }
+resource "centrify_globalgroupmappings" "group_mappings" {
+    bulkupdate = true
+    mapping = {
+        "Idp Group 1" = "Okta Infra Admins"
+        "Idp Group 2" = "Azure PAS Users" // Assuming "Azure PAS Users" doesn't exist yet and will be created by this resource
+    }
 }
 
-// data source for newly created federated group
-data "centrify_directoryobject" "idp_pas_admin" {
-    directory_services = [
-        data.centrify_directoryservice.federated_dir.id
-    ]
-    name = "IdP PAS Admin"
-    object_type = "Group"
+// New federated group created by centrify_globalgroupmappings
+resource "centrify_federatedgroup" "fedgroup2" {
+    name = centrify_globalgroupmappings.group_mappings.mapping["Idp Group 2"] // Reference to "Idp Group 2" map which returns "Azure PAS Users"
+}
 
-    // Need to wait for "IdP PAS Admin" created first
-    depends_on = [
-        centrify_globalgroupmappings.group_mapping,
-    ]
+// Existing federated (virtual) group
+data "centrify_federatedgroup" "fedgroup1" {
+  name = "Okta Infra Admins"
 }
 
 resource "centrify_role" "test_role" {
@@ -43,13 +31,13 @@ resource "centrify_role" "test_role" {
 
     // Existing federated (virtual) group
     member {
-        id = data.centrify_directoryobject.federated_group.id
+        id = data.centrify_federatedgroup.fedgroup1.id
         type = "Group"
     }
 
     // New federated (virtual) group
     member {
-        id = data.centrify_directoryobject.idp_pas_admin.id
+        id = centrify_federatedgroup.fedgroup2.id
         type = "Group"
     }
 }

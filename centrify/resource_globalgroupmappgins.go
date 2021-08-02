@@ -37,11 +37,22 @@ func getGroupMappingSchema() map[string]*schema.Schema {
 		"bulkupdate": {
 			Type:     schema.TypeBool,
 			Optional: true,
+			Default:  true,
 		},
 		"mapping": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeMap,
 			Optional: true,
-			Set:      customGroupMappingHash,
+			//ConflictsWith: []string{"mapping"},
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+		},
+		/*"mapping": {
+			Type:          schema.TypeSet,
+			Optional:      true,
+			Set:           customGroupMappingHash,
+			ConflictsWith: []string{"attribute_group"},
+			Deprecated:    "use attribute_group instead",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"attribute_value": {
@@ -56,7 +67,7 @@ func getGroupMappingSchema() map[string]*schema.Schema {
 					},
 				},
 			},
-		},
+		},*/
 	}
 }
 
@@ -73,15 +84,34 @@ func resourceGroupMappingRead(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return fmt.Errorf("error reading global group mappings: %v", err)
 	}
-	//logger.Debugf("Manual Set from tenant: %v", object)
+	//logger.Debugf("Global group mapping from tenant: %v", object)
 
 	schemamap, err := vault.GenerateSchemaMap(object)
 	if err != nil {
 		return err
 	}
-	logger.Debugf("Generated Map for resourceRoleRead(): %+v", schemamap)
+	logger.Debugf("Generated Map for resourceGroupMappingRead(): %+v", schemamap)
 	for k, v := range schemamap {
-		d.Set(k, v)
+		switch k {
+		case "attribute_group":
+			mappings := make(map[string]interface{})
+			for _, m := range v.([]interface{}) {
+				var mapkey, mapvalue string
+				for mk, mv := range m.(map[string]interface{}) {
+					if mk == "attribute_value" {
+						mapkey = mv.(string)
+					}
+					if mk == "group_name" {
+						mapvalue = mv.(string)
+					}
+				}
+				mappings[mapkey] = mapvalue
+			}
+
+			d.Set(k, mappings)
+		default:
+			d.Set(k, v)
+		}
 	}
 
 	//d.Set("mapping", object.Mappings)
@@ -126,7 +156,7 @@ func resourceGroupMappingUpdate(d *schema.ResourceData, m interface{}) error {
 	createUpateGroupMappingsData(d, object)
 
 	// If there is change, delete all then add
-	if d.HasChanges("mapping") {
+	if d.HasChanges("mapping", "attribute_group") {
 		if object.BulkUpdate {
 			err := object.Update()
 			if err != nil {
@@ -180,7 +210,7 @@ func createUpateGroupMappingsData(d *schema.ResourceData, object *vault.GroupMap
 		object.BulkUpdate = v.(bool)
 	}
 	if v, ok := d.GetOk("mapping"); ok {
-		object.Mappings = expandGroupMappings(v)
+		object.Mappings = expandAttributeGroup(v)
 	}
 }
 
@@ -194,6 +224,20 @@ func expandGroupMappings(v interface{}) []vault.GroupMapping {
 		mappings = append(mappings, mapping)
 	}
 	logger.Debugf("Group mappings: %+v", mappings)
+
+	return mappings
+}
+
+func expandAttributeGroup(v interface{}) []vault.GroupMapping {
+	mappings := []vault.GroupMapping{}
+
+	for k, v := range v.(map[string]interface{}) {
+		mapping := vault.GroupMapping{}
+		mapping.AttributeValue = k
+		mapping.GroupName = v.(string)
+		mappings = append(mappings, mapping)
+	}
+	logger.Debugf("Attribute group mappings: %+v", mappings)
 
 	return mappings
 }
