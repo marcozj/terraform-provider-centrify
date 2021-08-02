@@ -1,5 +1,19 @@
 # RELEASE NOTES
 
+## 0.2.2 (Aug 2, 2021)
+
+IMPROVEMENTS:
+
+- **New Resource:** `centrify_federatedgroup`
+- **New Data Resource:** `centrify_federatedgroup`
+
+BUG FIXES:
+
+- `mapping` argument is updated from block to map. Refer to document and example for details.
+- Updated example for `centrify_globalgroupmappings`
+- `bulkupdate` argument for `centrify_globalgroupmappings` resource is defaulted to true now
+- `client_secret` argument for `centrify_webapp_oidc` resource is optional and sensitive now
+
 ## 0.2.0 (June 23, 2021)
 
 IMPROVEMENTS:
