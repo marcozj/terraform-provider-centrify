@@ -56,13 +56,13 @@ More examples can be found [here](https://github.com/marcozj/terraform-provider-
 
 Required:
 
-- `client_secret` - (String) The OpenID Client Secret for this Identity Provider.
 - `application_url` - (String) Resource application URL. The OpenID Connect Service Provider URL.
 - `redirects` - (Set of String) List of allowed redirects.
 - `token_lifetime` - (String) Token lifetime. It is "d.hh:mm:ss" format. For example, "5:00:00" means 5 hours.
 
 Optional:
 
+- `client_secret` - (String) The OpenID Client Secret for this Identity Provider.
 - `allow_refresh` - (Boolean) Issue refresh tokens.
 - `refresh_lifetime` - (String) Refresh token lifetime. It is "d.hh:mm:ss" format. For example, "365.00:00:00" means 365 days.
 - `script` - (String) Script to generate OpenID Connect Authorization and UserInfo responses for this application.
