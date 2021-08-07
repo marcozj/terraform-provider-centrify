@@ -14,7 +14,7 @@ resource "centrify_system" "windows2" {
     proxyuser = "admin@example.com"
     proxyuser_password = "xxxxxxxxxx"
     proxyuser_managed = false // When this is set to true, Centrify Platform tries to change the password immediately and may result in error if password change fails
-    management_mode = "WinRMOverHttp"
+    management_mode = "Smb"
     management_port = 5985
     system_timezone = "UTC"
 
