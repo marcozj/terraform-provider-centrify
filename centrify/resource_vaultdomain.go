@@ -245,7 +245,7 @@ func resourceDomainRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading Domain: %v", err)
+		return fmt.Errorf(" Error reading Domain: %v", err)
 	}
 	//logger.Debugf("Domain from tenant: %v", object)
 
@@ -287,19 +287,16 @@ func resourceDomainCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating Domain: %v", err)
+		return fmt.Errorf(" Error creating Domain: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("Domain ID is not set")
+		return fmt.Errorf(" Domain ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
 	object.ID = id
-
-	d.SetPartial("name")
-	d.SetPartial("description")
 
 	// Get the rest of attributes
 	err = createUpateGetDomainData(d, object)
@@ -311,14 +308,14 @@ func resourceDomainCreate(d *schema.ResourceData, m interface{}) error {
 		if object.AdminAccountID != "" {
 			err := object.SetAdminAccount()
 			if err != nil {
-				return fmt.Errorf("error setting Domain administrative account: %v", err)
+				return fmt.Errorf(" Error setting Domain administrative account: %v", err)
 			}
 		}
 	*/
 	// 3nd step, update domain after creation
 	_, err = object.Update()
 	if err != nil {
-		return fmt.Errorf("error updating Domain: %v", err)
+		return fmt.Errorf(" Error updating Domain: %v", err)
 	}
 
 	// 4rd step to add system to Sets
@@ -327,16 +324,14 @@ func resourceDomainCreate(d *schema.ResourceData, m interface{}) error {
 		if err != nil {
 			return err
 		}
-		d.SetPartial("sets")
 	}
 
 	// 5th step to add permissions
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting Domain permissions: %v", err)
+			return fmt.Errorf(" Error setting Domain permissions: %v", err)
 		}
-		d.SetPartial("permission")
 	}
 
 	// Creation completed
@@ -374,7 +369,7 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing Domain permissions: %v", err)
+				return fmt.Errorf(" Error removing Domain permissions: %v", err)
 			}
 		}
 
@@ -385,17 +380,16 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding Domain permissions: %v", err)
+				return fmt.Errorf(" Error adding Domain permissions: %v", err)
 			}
 		}
-		d.SetPartial("permission")
 	}
 	/*
 		// Deal with administative account change first otherwise account maintenace options can't be set
 		if d.HasChange("administrative_account_id") {
 			err := object.SetAdminAccount()
 			if err != nil {
-				return fmt.Errorf("error updating Domain administrative account: %v", err)
+				return fmt.Errorf(" Error updating Domain administrative account: %v", err)
 			}
 			d.SetPartial("administrative_account_id")
 		}
@@ -407,25 +401,9 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
 		"zonerole_cleanup_interval", "connector_list") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating Domain attribute: %v", err)
+			return fmt.Errorf(" Error updating Domain attribute: %v", err)
 		}
 		//logger.Debugf("Updated attributes to: %+v", object)
-		d.SetPartial("name")
-		d.SetPartial("description")
-		d.SetPartial("checkout_lifetime")
-		d.SetPartial("allow_multiple_checkouts")
-		d.SetPartial("enable_password_rotation")
-		d.SetPartial("password_rotate_interval")
-		d.SetPartial("enable_password_rotation_after_checkin")
-		d.SetPartial("minimum_password_age")
-		d.SetPartial("password_profile_id")
-		d.SetPartial("enable_password_history_cleanup")
-		d.SetPartial("password_historycleanup_duration")
-		d.SetPartial("enable_zone_joined_check")
-		d.SetPartial("zone_joined_check_interval")
-		d.SetPartial("enable_zonerole_cleanup")
-		d.SetPartial("zonerole_cleanup_interval")
-		d.SetPartial("connector_list")
 	}
 
 	// Deal with Set member
@@ -438,7 +416,7 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error removing System from Set: %v", err)
+				return fmt.Errorf(" Error removing Domain from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -448,10 +426,9 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error adding System to Set: %v", err)
+				return fmt.Errorf(" Error adding Domain to Set: %v", err)
 			}
 		}
-		d.SetPartial("sets")
 	}
 
 	d.Partial(false)
@@ -470,7 +447,7 @@ func resourceDomainDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting Domain: %v", err)
+		return fmt.Errorf(" Error deleting Domain: %v", err)
 	}
 
 	if resp != nil && resp.Success {
@@ -493,7 +470,7 @@ func createUpateGetDomainData(d *schema.ResourceData, object *vault.Domain) erro
 	if object.ForestID == "" {
 		object.ForestID = object.ID
 	}
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	// Policy menu related settings
@@ -545,7 +522,7 @@ func createUpateGetDomainData(d *schema.ResourceData, object *vault.Domain) erro
 	if v, ok := d.GetOk("minimum_password_age"); ok {
 		object.MinimumPasswordAge = v.(int)
 	}
-	if v, ok := d.GetOk("password_profile_id"); ok {
+	if v, ok := d.GetOk("password_profile_id"); ok && d.HasChange("password_profile_id") {
 		object.PasswordProfileID = v.(string)
 	}
 	// Advanced -> Maintenance Settings

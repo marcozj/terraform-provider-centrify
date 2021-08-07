@@ -550,78 +550,78 @@ func resourceSamlWebAppDelete(d *schema.ResourceData, m interface{}) error {
 func createUpateGetSamlWebAppData(d *schema.ResourceData, object *vault.SamlWebApp) error {
 	object.Name = d.Get("name").(string)
 	object.TemplateName = d.Get("template_name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
-	if v, ok := d.GetOk("corp_identifier"); ok {
+	if v, ok := d.GetOk("corp_identifier"); ok && d.HasChange("corp_identifier") {
 		object.CorpIdentifier = v.(string)
 	}
-	if v, ok := d.GetOk("app_entity_id"); ok {
+	if v, ok := d.GetOk("app_entity_id"); ok && d.HasChange("app_entity_id") {
 		object.AdditionalField1 = v.(string)
 	}
 
-	if v, ok := d.GetOk("application_id"); ok {
+	if v, ok := d.GetOk("application_id"); ok && d.HasChange("application_id") {
 		object.ServiceName = v.(string)
 	}
 	if v, ok := d.GetOk("sp_config_method"); ok {
 		object.SpConfigMethod = v.(int)
 	}
-	if v, ok := d.GetOk("sp_metadata_url"); ok {
+	if v, ok := d.GetOk("sp_metadata_url"); ok && d.HasChange("sp_metadata_url") {
 		object.SpMetadataUrl = v.(string)
 	}
-	if v, ok := d.GetOk("sp_metadata_xml"); ok {
+	if v, ok := d.GetOk("sp_metadata_xml"); ok && d.HasChange("sp_metadata_xml") {
 		object.SpMetadataXml = v.(string)
 	}
-	if v, ok := d.GetOk("sp_entity_id"); ok {
+	if v, ok := d.GetOk("sp_entity_id"); ok && d.HasChange("sp_entity_id") {
 		object.Audience = v.(string)
 	}
-	if v, ok := d.GetOk("acs_url"); ok {
+	if v, ok := d.GetOk("acs_url"); ok && d.HasChange("acs_url") {
 		object.ACS_Url = v.(string)
 	}
 	if v, ok := d.GetOk("recipient_sameas_acs_url"); ok {
 		object.RecipientSameAsAcsUrl = v.(bool)
 	}
-	if v, ok := d.GetOk("recipient"); ok {
+	if v, ok := d.GetOk("recipient"); ok && d.HasChange("recipient") {
 		object.Recipient = v.(string)
 	}
 	if v, ok := d.GetOk("sign_assertion"); ok {
 		object.WantAssertionsSigned = v.(bool)
 	}
-	if v, ok := d.GetOk("name_id_format"); ok {
+	if v, ok := d.GetOk("name_id_format"); ok && d.HasChange("name_id_format") {
 		object.NameIDFormat = v.(string)
 	}
-	if v, ok := d.GetOk("sp_single_logout_url"); ok {
+	if v, ok := d.GetOk("sp_single_logout_url"); ok && d.HasChange("sp_single_logout_url") {
 		object.SpSingleLogoutUrl = v.(string)
 	}
-	if v, ok := d.GetOk("relay_state"); ok {
+	if v, ok := d.GetOk("relay_state"); ok && d.HasChange("relay_state") {
 		object.RelayState = v.(string)
 	}
-	if v, ok := d.GetOk("authn_context_class"); ok {
+	if v, ok := d.GetOk("authn_context_class"); ok && d.HasChange("authn_context_class") {
 		object.AuthnContextClass = v.(string)
 	}
-	if v, ok := d.GetOk("saml_response_script"); ok {
+	if v, ok := d.GetOk("saml_response_script"); ok && d.HasChange("saml_response_script") {
 		object.SamlResponseScript = v.(string)
 	}
-	if v, ok := d.GetOk("saml_attribute"); ok {
+	if v, ok := d.GetOk("saml_attribute"); ok && d.HasChange("saml_attribute") {
 		object.SamlAttributes = expandSamlAttributes(v)
 	}
-	if v, ok := d.GetOk("username_strategy"); ok {
+	if v, ok := d.GetOk("username_strategy"); ok && d.HasChange("username_strategy") {
 		object.UserNameStrategy = v.(string)
 	}
 	//if v, ok := d.GetOk("ad_attribute"); ok {
 	//	object.ADAttribute = v.(string)
 	//}
-	if v, ok := d.GetOk("username"); ok {
+	if v, ok := d.GetOk("username"); ok && d.HasChange("username") {
 		object.Username = v.(string)
 	}
-	if v, ok := d.GetOk("user_map_script"); ok {
+	if v, ok := d.GetOk("user_map_script"); ok && d.HasChange("user_map_script") {
 		object.UserMapScript = v.(string)
 	}
 
-	if v, ok := d.GetOk("default_profile_id"); ok {
+	if v, ok := d.GetOk("default_profile_id"); ok && d.HasChange("default_profile_id") {
 		object.DefaultAuthProfile = v.(string)
 	}
-	if v, ok := d.GetOk("policy_script"); ok {
+	if v, ok := d.GetOk("policy_script"); ok && d.HasChange("policy_script") {
 		object.PolicyScript = v.(string)
 	}
 	if v, ok := d.GetOk("sets"); ok {
@@ -643,7 +643,7 @@ func createUpateGetSamlWebAppData(d *schema.ResourceData, object *vault.SamlWebA
 		}
 	}
 	// Challenge rules
-	if v, ok := d.GetOk("challenge_rule"); ok {
+	if v, ok := d.GetOk("challenge_rule"); ok && d.HasChange("challenge_rule") {
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {

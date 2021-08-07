@@ -124,7 +124,7 @@ func resourceMultiplexedAccountRead(d *schema.ResourceData, m interface{}) error
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading multiplexed account: %v", err)
+		return fmt.Errorf(" Error reading multiplexed account: %v", err)
 	}
 	//logger.Debugf("Multiplexed account from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -157,7 +157,7 @@ func resourceMultiplexedAccountCreate(d *schema.ResourceData, m interface{}) err
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating multiplexed account: %v", err)
+		return fmt.Errorf(" Error creating multiplexed account: %v", err)
 	}
 
 	id := resp.Result
@@ -168,17 +168,12 @@ func resourceMultiplexedAccountCreate(d *schema.ResourceData, m interface{}) err
 	// Need to populate ID attribute for subsequence processes
 	object.ID = id
 
-	d.SetPartial("name")
-	d.SetPartial("description")
-	d.SetPartial("accounts")
-
 	// add permissions
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting multiplexed account permissions: %v", err)
+			return fmt.Errorf(" Error setting multiplexed account permissions: %v", err)
 		}
-		d.SetPartial("permission")
 	}
 
 	// Creation completed
@@ -205,12 +200,9 @@ func resourceMultiplexedAccountUpdate(d *schema.ResourceData, m interface{}) err
 	if d.HasChanges("name", "description", "accounts") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating multiplexed account attribute: %v", err)
+			return fmt.Errorf(" Error updating multiplexed account attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
-		d.SetPartial("name")
-		d.SetPartial("description")
-		d.SetPartial("accounts")
 	}
 
 	// Deal with Permissions
@@ -227,7 +219,7 @@ func resourceMultiplexedAccountUpdate(d *schema.ResourceData, m interface{}) err
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing multiplexed account permissions: %v", err)
+				return fmt.Errorf(" Error removing multiplexed account permissions: %v", err)
 			}
 		}
 
@@ -238,10 +230,9 @@ func resourceMultiplexedAccountUpdate(d *schema.ResourceData, m interface{}) err
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding multiplexed account permissions: %v", err)
+				return fmt.Errorf(" Error adding multiplexed account permissions: %v", err)
 			}
 		}
-		d.SetPartial("permission")
 	}
 
 	// We succeeded, disable partial mode. This causes Terraform to save all fields again.
@@ -262,7 +253,7 @@ func resourceMultiplexedAccountDelete(d *schema.ResourceData, m interface{}) err
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting multiplexed account: %v", err)
+		return fmt.Errorf(" Error deleting multiplexed account: %v", err)
 	}
 
 	if resp.Success {
@@ -275,7 +266,7 @@ func resourceMultiplexedAccountDelete(d *schema.ResourceData, m interface{}) err
 
 func createUpateGetMultiplexedAccountData(d *schema.ResourceData, object *vault.MultiplexedAccount) error {
 	object.Name = d.Get("name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	object.RealAccounts = flattenSchemaSetToStringSlice(d.Get("accounts"))

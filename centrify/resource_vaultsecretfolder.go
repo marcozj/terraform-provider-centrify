@@ -107,7 +107,7 @@ func resourceSecretFolderRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading SecretFolder: %v", err)
+		return fmt.Errorf(" Error reading SecretFolder: %v", err)
 	}
 	//logger.Debugf("SecretFolder from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -139,7 +139,7 @@ func resourceSecretFolderCreate(d *schema.ResourceData, m interface{}) error {
 	}
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating SecretFolder: %v", err)
+		return fmt.Errorf(" Error creating SecretFolder: %v", err)
 	}
 
 	id := resp.Result
@@ -149,10 +149,6 @@ func resourceSecretFolderCreate(d *schema.ResourceData, m interface{}) error {
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
 	object.ID = id
-
-	d.SetPartial("name")
-	d.SetPartial("description")
-	d.SetPartial("parent_id")
 
 	// 2nd step to update SecretFolder login profile
 	// Create API call doesn't set SecretFolder login profile so need to run update again
@@ -164,28 +160,24 @@ func resourceSecretFolderCreate(d *schema.ResourceData, m interface{}) error {
 	if object.CollectionMembersDefaultProfile != "" || object.ChallengeRules != nil {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
+			return fmt.Errorf(" Error updating SecretFolder attribute: %v", err)
 		}
-		d.SetPartial("default_profile_id")
-		d.SetPartial("challenge_rule")
 	}
 
 	// Handle Set permissions
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting SecretFolder permissions: %v", err)
+			return fmt.Errorf(" Error setting SecretFolder permissions: %v", err)
 		}
-		d.SetPartial("permission")
 	}
 
 	// Handle Set member permissions
 	if _, ok := d.GetOk("member_permission"); ok {
 		_, err = object.SetMemberPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting SecretFolder member permissions: %v", err)
+			return fmt.Errorf(" Error setting SecretFolder member permissions: %v", err)
 		}
-		d.SetPartial("member_permission")
 	}
 
 	// Creation completed
@@ -210,15 +202,15 @@ func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
 
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "description", "default_profile_id", "challenge_rule") {
+		// Special handling for default_profile_id. Whenever there is change, default_profile_id must be set otherwise default profile setting will be removed
+		if v, ok := d.GetOk("default_profile_id"); ok && !d.HasChange("default_profile_id") {
+			object.CollectionMembersDefaultProfile = v.(string)
+		}
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
+			return fmt.Errorf(" Error updating SecretFolder attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
-		d.SetPartial("name")
-		d.SetPartial("description")
-		d.SetPartial("default_profile_id")
-		d.SetPartial("challenge_rule")
 	}
 
 	if d.HasChange("parent_id") {
@@ -226,9 +218,8 @@ func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
 		object.ParentID = new.(string)
 		resp, err := object.MoveFolder()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
+			return fmt.Errorf(" Error updating SecretFolder attribute: %v", err)
 		}
-		d.SetPartial("parent_id")
 	}
 
 	// Deal with permission changes
@@ -245,7 +236,7 @@ func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing SecretFolder permissions: %v", err)
+				return fmt.Errorf(" Error removing SecretFolder permissions: %v", err)
 			}
 		}
 
@@ -256,10 +247,9 @@ func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding SecretFolder permissions: %v", err)
+				return fmt.Errorf(" Error adding SecretFolder permissions: %v", err)
 			}
 		}
-		d.SetPartial("permission")
 	}
 
 	// Deal with member permission changes
@@ -275,7 +265,7 @@ func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetMemberPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing SecretFolder member permissions: %v", err)
+				return fmt.Errorf(" Error removing SecretFolder member permissions: %v", err)
 			}
 		}
 
@@ -287,10 +277,9 @@ func resourceSecretFolderUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetMemberPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding SecretFolder member permissions: %v", err)
+				return fmt.Errorf(" Error adding SecretFolder member permissions: %v", err)
 			}
 		}
-		d.SetPartial("member_permission")
 	}
 
 	// We succeeded, disable partial mode. This causes Terraform to save all fields again.
@@ -316,7 +305,7 @@ func resourceSecretFolderDelete(d *schema.ResourceData, m interface{}) error {
 		object.ChallengeRules = nil
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating SecretFolder attribute: %v", err)
+			return fmt.Errorf(" Error updating SecretFolder attribute: %v", err)
 		}
 	}
 
@@ -325,7 +314,7 @@ func resourceSecretFolderDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting SecretFolder: %v", err)
+		return fmt.Errorf(" Error deleting SecretFolder: %v", err)
 	}
 
 	if resp.Success {
@@ -338,10 +327,10 @@ func resourceSecretFolderDelete(d *schema.ResourceData, m interface{}) error {
 
 func getCreateSecretFolderData(d *schema.ResourceData, object *vault.SecretFolder) error {
 	object.Name = d.Get("name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
-	if v, ok := d.GetOk("parent_id"); ok {
+	if v, ok := d.GetOk("parent_id"); ok && d.HasChange("parent_id") {
 		object.ParentID = v.(string)
 	}
 
@@ -351,7 +340,7 @@ func getCreateSecretFolderData(d *schema.ResourceData, object *vault.SecretFolde
 func getUpdateSecretFolderData(d *schema.ResourceData, object *vault.SecretFolder) error {
 	getCreateSecretFolderData(d, object)
 
-	if v, ok := d.GetOk("default_profile_id"); ok {
+	if v, ok := d.GetOk("default_profile_id"); ok && d.HasChange("default_profile_id") {
 		object.CollectionMembersDefaultProfile = v.(string)
 	}
 	if v, ok := d.GetOk("permission"); ok {
@@ -369,7 +358,7 @@ func getUpdateSecretFolderData(d *schema.ResourceData, object *vault.SecretFolde
 		}
 	}
 	// Challenge rules
-	if v, ok := d.GetOk("challenge_rule"); ok {
+	if v, ok := d.GetOk("challenge_rule"); ok && d.HasChange("challenge_rule") {
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {

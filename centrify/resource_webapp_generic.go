@@ -358,6 +358,10 @@ func resourceGenericWebAppUpdate(d *schema.ResourceData, m interface{}) error {
 		"submit_field", "form_field", "additional_login_field", "additional_login_field_value", "selector_timeout",
 		"order", "script", "default_profile_id", "challenge_rule", "policy_script", "username_strategy", "ad_attribute", "username",
 		"use_ad_login_pw", "password", "use_ad_login_pw_by_script", "user_map_script", "workflow_enabled", "workflow_approver") {
+		// Special handling for default_profile_id. Whenever there is change, default_profile_id must be set otherwise default profile setting will be removed
+		if v, ok := d.GetOk("default_profile_id"); ok && !d.HasChange("default_profile_id") {
+			object.DefaultAuthProfile = v.(string)
+		}
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("error updating Generic WebApp attribute: %v", err)
@@ -450,10 +454,10 @@ func resourceGenericWebAppDelete(d *schema.ResourceData, m interface{}) error {
 func createUpateGetGenericWebAppData(d *schema.ResourceData, object *vault.GenericWebApp) error {
 	object.Name = d.Get("name").(string)
 	object.TemplateName = d.Get("template_name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
-	if v, ok := d.GetOk("url"); ok {
+	if v, ok := d.GetOk("url"); ok && d.HasChange("url") {
 		object.Url = v.(string)
 	}
 
@@ -465,35 +469,35 @@ func createUpateGetGenericWebAppData(d *schema.ResourceData, object *vault.Gener
 		}
 	}
 
-	if v, ok := d.GetOk("hostname_suffix"); ok {
+	if v, ok := d.GetOk("hostname_suffix"); ok && d.HasChange("hostname_suffix") {
 		object.HostNameSuffix = v.(string)
 	}
-	if v, ok := d.GetOk("username_field"); ok {
+	if v, ok := d.GetOk("username_field"); ok && d.HasChange("username_field") {
 		object.UsernameField = v.(string)
 	}
-	if v, ok := d.GetOk("password_field"); ok {
+	if v, ok := d.GetOk("password_field"); ok && d.HasChange("password_field") {
 		object.PasswordField = v.(string)
 	}
-	if v, ok := d.GetOk("submit_field"); ok {
+	if v, ok := d.GetOk("submit_field"); ok && d.HasChange("submit_field") {
 		object.SubmitField = v.(string)
 	}
-	if v, ok := d.GetOk("form_field"); ok {
+	if v, ok := d.GetOk("form_field"); ok && d.HasChange("form_field") {
 		object.FormField = v.(string)
 	}
-	if v, ok := d.GetOk("additional_login_field"); ok {
+	if v, ok := d.GetOk("additional_login_field"); ok && d.HasChange("additional_login_field") {
 		object.CorpIdField = v.(string)
 	}
-	if v, ok := d.GetOk("additional_login_field_value"); ok {
+	if v, ok := d.GetOk("additional_login_field_value"); ok && d.HasChange("additional_login_field_value") {
 		object.CorpIdentifier = v.(string)
 	}
 	if v, ok := d.GetOk("selector_timeout"); ok {
 		object.SelectorTimeout = v.(int)
 	}
-	if v, ok := d.GetOk("order"); ok {
+	if v, ok := d.GetOk("order"); ok && d.HasChange("order") {
 		object.Order = v.(string)
 	}
 
-	if v, ok := d.GetOk("script"); ok {
+	if v, ok := d.GetOk("script"); ok && d.HasChange("script") {
 		object.Script = v.(string)
 	}
 	/*
@@ -510,16 +514,16 @@ func createUpateGetGenericWebAppData(d *schema.ResourceData, object *vault.Gener
 		}
 	*/
 	// Account mapping
-	if v, ok := d.GetOk("username_strategy"); ok {
+	if v, ok := d.GetOk("username_strategy"); ok && d.HasChange("username_strategy") {
 		object.UserNameStrategy = v.(string)
 	}
-	if v, ok := d.GetOk("username"); ok {
+	if v, ok := d.GetOk("username"); ok && d.HasChange("username") {
 		object.Username = v.(string)
 	}
-	if v, ok := d.GetOk("user_map_script"); ok {
+	if v, ok := d.GetOk("user_map_script"); ok && d.HasChange("user_map_script") {
 		object.UserMapScript = v.(string)
 	}
-	if v, ok := d.GetOk("password"); ok {
+	if v, ok := d.GetOk("password"); ok && d.HasChange("password") {
 		object.Password = v.(string)
 	}
 	if v, ok := d.GetOk("use_ad_login_pw"); ok {
@@ -529,11 +533,11 @@ func createUpateGetGenericWebAppData(d *schema.ResourceData, object *vault.Gener
 		object.UseLoginPwUseScript = v.(bool)
 	}
 	// Policy
-	if v, ok := d.GetOk("default_profile_id"); ok {
+	if v, ok := d.GetOk("default_profile_id"); ok && d.HasChange("default_profile_id") {
 		object.DefaultAuthProfile = v.(string)
 	}
 
-	if v, ok := d.GetOk("policy_script"); ok {
+	if v, ok := d.GetOk("policy_script"); ok && d.HasChange("policy_script") {
 		object.PolicyScript = v.(string)
 	}
 	if v, ok := d.GetOk("sets"); ok {
@@ -555,7 +559,7 @@ func createUpateGetGenericWebAppData(d *schema.ResourceData, object *vault.Gener
 		}
 	}
 	// Challenge rules
-	if v, ok := d.GetOk("challenge_rule"); ok {
+	if v, ok := d.GetOk("challenge_rule"); ok && d.HasChange("challenge_rule") {
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {

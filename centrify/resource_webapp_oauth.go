@@ -460,7 +460,7 @@ func resourceOauthWebAppDelete(d *schema.ResourceData, m interface{}) error {
 func createUpateGetOauthWebAppData(d *schema.ResourceData, object *vault.OauthWebApp) error {
 	object.Name = d.Get("name").(string)
 	object.TemplateName = d.Get("template_name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	if v, ok := d.GetOk("application_id"); ok {
@@ -470,7 +470,7 @@ func createUpateGetOauthWebAppData(d *schema.ResourceData, object *vault.OauthWe
 	if v, ok := d.GetOk("oauth_profile"); ok {
 		object.OAuthProfile = expandOAuthProfile(v)
 	}
-	if v, ok := d.GetOk("script"); ok {
+	if v, ok := d.GetOk("script"); ok && d.HasChange("script") {
 		object.Script = v.(string)
 	}
 	if v, ok := d.GetOk("sets"); ok {
@@ -542,7 +542,7 @@ func expandOAuthScope(v interface{}) []vault.OAuthScope {
 		scope := vault.OAuthScope{}
 		scope.Name = lrv.(map[string]interface{})["name"].(string)
 		scope.Description = lrv.(map[string]interface{})["description"].(string)
-		v := lrv.(map[string]interface{})["allowed_rest_apis"].(interface{})
+		v := lrv.(map[string]interface{})["allowed_rest_apis"]
 		scope.AllowedRestAPIs = flattenSchemaSetToStringSlice(v)
 
 		scopes = append(scopes, scope)

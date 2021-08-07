@@ -82,7 +82,7 @@ func resourceGroupMappingRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading global group mappings: %v", err)
+		return fmt.Errorf(" Error reading global group mappings: %v", err)
 	}
 	//logger.Debugf("Global group mapping from tenant: %v", object)
 
@@ -137,7 +137,7 @@ func resourceGroupMappingCreate(d *schema.ResourceData, m interface{}) error {
 		err = object.Create()
 	}
 	if err != nil {
-		return fmt.Errorf("error creating global group mappings: %v", err)
+		return fmt.Errorf(" Error creating global group mappings: %v", err)
 	}
 
 	// Creation completed
@@ -160,7 +160,7 @@ func resourceGroupMappingUpdate(d *schema.ResourceData, m interface{}) error {
 		if object.BulkUpdate {
 			err := object.Update()
 			if err != nil {
-				return fmt.Errorf("error updating global group mappings: %v", err)
+				return fmt.Errorf(" Error updating global group mappings: %v", err)
 			}
 		} else {
 			old, _ := d.GetChange("mapping")
@@ -168,12 +168,12 @@ func resourceGroupMappingUpdate(d *schema.ResourceData, m interface{}) error {
 			oldobject.Mappings = expandGroupMappings(old)
 			err := oldobject.Delete()
 			if err != nil {
-				return fmt.Errorf("error deleting global group mappings: %v", err)
+				return fmt.Errorf(" Error deleting global group mappings: %v", err)
 			}
 
 			err = object.Create()
 			if err != nil {
-				return fmt.Errorf("error adding global group mappings: %v", err)
+				return fmt.Errorf(" Error adding global group mappings: %v", err)
 			}
 		}
 	}
@@ -196,7 +196,7 @@ func resourceGroupMappingDelete(d *schema.ResourceData, m interface{}) error {
 		err = object.Delete()
 	}
 	if err != nil {
-		return fmt.Errorf("error deleting global group mappings: %v", err)
+		return fmt.Errorf(" Error deleting global group mappings: %v", err)
 	}
 
 	d.SetId("")
@@ -209,7 +209,7 @@ func createUpateGroupMappingsData(d *schema.ResourceData, object *vault.GroupMap
 	if v, ok := d.GetOk("bulkupdate"); ok {
 		object.BulkUpdate = v.(bool)
 	}
-	if v, ok := d.GetOk("mapping"); ok {
+	if v, ok := d.GetOk("mapping"); ok && d.HasChange("mapping") {
 		object.Mappings = expandAttributeGroup(v)
 	}
 }

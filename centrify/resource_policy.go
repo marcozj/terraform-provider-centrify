@@ -142,7 +142,7 @@ func resourcePolicyRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading policy: %v", err)
+		return fmt.Errorf(" Error reading policy: %v", err)
 	}
 	//logger.Debugf("Policy from tenant: %v", object)
 
@@ -204,7 +204,7 @@ func resourcePolicyDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting policy: %v", err)
+		return fmt.Errorf(" Error deleting policy: %v", err)
 	}
 
 	if resp.Success {
@@ -224,12 +224,12 @@ func resourcePolicyCreate(d *schema.ResourceData, m interface{}) error {
 	object := vault.NewPolicy(client)
 	err := createUpateGetPolicyData(d, object)
 	if err != nil {
-		return fmt.Errorf("error constructing policy data: %v", err)
+		return fmt.Errorf(" Error constructing policy data: %v", err)
 	}
 
 	_, err = object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating policy: %v", err)
+		return fmt.Errorf(" Error creating policy: %v", err)
 	}
 
 	// Creation API call doesn't return ID. ID isn't in UUID format but in "/Policy/<name>" format. So, set it manaully instead.
@@ -256,14 +256,14 @@ func resourcePolicyUpdate(d *schema.ResourceData, m interface{}) error {
 	object.Plink.ID = d.Id()
 	err := createUpateGetPolicyData(d, object)
 	if err != nil {
-		return fmt.Errorf("error constructing policy data: %v", err)
+		return fmt.Errorf(" Error constructing policy data: %v", err)
 	}
 
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "description", "link_type", "policy_assignment", "settings") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating policy attribute: %v", err)
+			return fmt.Errorf(" Error updating policy attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 	}

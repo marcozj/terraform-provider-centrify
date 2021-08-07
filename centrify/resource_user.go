@@ -208,18 +208,6 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 	// Need to populate ID attribute for subsequence processes
 	object.ID = id
 
-	d.SetPartial("username")
-	d.SetPartial("email")
-	d.SetPartial("displayname")
-	d.SetPartial("password_never_expire")
-	d.SetPartial("orce_password_change_next")
-	d.SetPartial("oauth_client")
-	d.SetPartial("office_number")
-	d.SetPartial("home_number")
-	d.SetPartial("mobile_number")
-	d.SetPartial("redirect_mfa_user_id")
-	d.SetPartial("manager_username")
-
 	// 2rd step to add system to Sets
 	if len(object.Roles) > 0 {
 		for _, v := range object.Roles {
@@ -230,7 +218,6 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 				return fmt.Errorf("error adding user to role: %v", err)
 			}
 		}
-		d.SetPartial("roles")
 	}
 
 	// Creation completed
@@ -253,24 +240,18 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "email", "displayname", "password_never_expire", "force_password_change_next", "oauth_client", "send_email_invite",
 		"description", "office_number", "home_number", "mobile_number", "redirect_mfa_user_id", "manager_username") {
+		// Special handling for manager_username. Whenever there is change, manager_username must be set otherwise its setting will be removed
+		if v, ok := d.GetOk("manager_username"); ok && !d.HasChange("manager_username") {
+			object.ReportsTo = v.(string)
+		}
+		if v, ok := d.GetOk("redirect_mfa_user_id"); ok && !d.HasChange("redirect_mfa_user_id") {
+			object.RedirectMFAUserID = v.(string)
+		}
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating user attribute: %v", err)
+			return fmt.Errorf(" Error updating user attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
-		d.SetPartial("name")
-		d.SetPartial("email")
-		d.SetPartial("displayname")
-		d.SetPartial("password_never_expire")
-		d.SetPartial("force_password_change_next")
-		d.SetPartial("oauth_client")
-		d.SetPartial("send_email_invite")
-		d.SetPartial("description")
-		d.SetPartial("office_number")
-		d.SetPartial("home_number")
-		d.SetPartial("mobile_number")
-		d.SetPartial("redirect_mfa_user_id")
-		d.SetPartial("manager_username")
 	}
 
 	// Change password
@@ -279,7 +260,6 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 		if err != nil || !resp.Success {
 			return fmt.Errorf("error updating user password: %v", err)
 		}
-		d.SetPartial("password")
 	}
 
 	// Deal with role member
@@ -303,7 +283,6 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 				return fmt.Errorf("error adding user to role: %v", err)
 			}
 		}
-		d.SetPartial("roles")
 	}
 
 	// We succeeded, disable partial mode. This causes Terraform to save all fields again.
@@ -336,10 +315,10 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 
 func createUpateGetUserData(d *schema.ResourceData, object *vault.User) error {
 	object.Name = d.Get("username").(string)
-	if v, ok := d.GetOk("email"); ok {
+	if v, ok := d.GetOk("email"); ok && d.HasChange("email") {
 		object.Mail = v.(string)
 	}
-	if v, ok := d.GetOk("displayname"); ok {
+	if v, ok := d.GetOk("displayname"); ok && d.HasChange("displayname") {
 		object.DisplayName = v.(string)
 	}
 	if v, ok := d.GetOk("password"); ok {
@@ -348,37 +327,37 @@ func createUpateGetUserData(d *schema.ResourceData, object *vault.User) error {
 	if v, ok := d.GetOk("confirm_password"); ok {
 		object.ConfirmPassword = v.(string)
 	}
-	if v, ok := d.GetOk("password_never_expire"); ok {
+	if v, ok := d.GetOk("password_never_expire"); ok && d.HasChange("password_never_expire") {
 		object.PasswordNeverExpire = v.(bool)
 	}
-	if v, ok := d.GetOk("force_password_change_next"); ok {
+	if v, ok := d.GetOk("force_password_change_next"); ok && d.HasChange("force_password_change_next") {
 		object.ForcePasswordChangeNext = v.(bool)
 	}
-	if v, ok := d.GetOk("oauth_client"); ok {
+	if v, ok := d.GetOk("oauth_client"); ok && d.HasChange("oauth_client") {
 		object.OauthClient = v.(bool)
 	}
-	if v, ok := d.GetOk("send_email_invite"); ok {
+	if v, ok := d.GetOk("send_email_invite"); ok && d.HasChange("send_email_invite") {
 		object.SendEmailInvite = v.(bool)
 	}
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
-	if v, ok := d.GetOk("office_number"); ok {
+	if v, ok := d.GetOk("office_number"); ok && d.HasChange("office_number") {
 		object.OfficeNumber = v.(string)
 	}
-	if v, ok := d.GetOk("home_number"); ok {
+	if v, ok := d.GetOk("home_number"); ok && d.HasChange("home_number") {
 		object.HomeNumber = v.(string)
 	}
-	if v, ok := d.GetOk("mobile_number"); ok {
+	if v, ok := d.GetOk("mobile_number"); ok && d.HasChange("mobile_number") {
 		object.MobileNumber = v.(string)
 	}
 	//if v, ok := d.GetOk("redirect_mfa"); ok {
 	//		object.RedirectMFA = v.(bool)
 	//}
-	if v, ok := d.GetOk("redirect_mfa_user_id"); ok {
+	if v, ok := d.GetOk("redirect_mfa_user_id"); ok && d.HasChange("redirect_mfa_user_id") {
 		object.RedirectMFAUserID = v.(string)
 	}
-	if v, ok := d.GetOk("manager_username"); ok {
+	if v, ok := d.GetOk("manager_username"); ok && d.HasChange("manager_username") {
 		object.ReportsTo = v.(string)
 	}
 	if v, ok := d.GetOk("roles"); ok {

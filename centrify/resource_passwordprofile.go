@@ -53,7 +53,7 @@ func getPasswordProfileSchema() map[string]*schema.Schema {
 		},
 		"description": {
 			Type:        schema.TypeString,
-			Required:    true,
+			Optional:    true,
 			Description: "Description of password profile",
 		},
 		"minimum_password_length": {
@@ -177,7 +177,7 @@ func resourcePasswordProfileRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading password profile: %v", err)
+		return fmt.Errorf(" Error reading password profile: %v", err)
 	}
 	//logger.Debugf("password profile from tenant: %v", object)
 
@@ -205,7 +205,7 @@ func resourcePasswordProfileDelete(d *schema.ResourceData, m interface{}) error 
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting password profile: %v", err)
+		return fmt.Errorf(" Error deleting password profile: %v", err)
 	}
 
 	if resp.Success {
@@ -227,7 +227,7 @@ func resourcePasswordProfileCreate(d *schema.ResourceData, m interface{}) error 
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating password profile: %v", err)
+		return fmt.Errorf(" Error creating password profile: %v", err)
 	}
 
 	id := resp.Result
@@ -258,7 +258,7 @@ func resourcePasswordProfileUpdate(d *schema.ResourceData, m interface{}) error 
 		"first_character_type", "last_character_type", "minimum_alphabetic_character_count", "minimum_non_alphabetic_character_count") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating password profile attribute: %v", err)
+			return fmt.Errorf(" Error updating password profile attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
 	}
@@ -269,7 +269,7 @@ func resourcePasswordProfileUpdate(d *schema.ResourceData, m interface{}) error 
 
 func createUpateGetPasswordProfileData(d *schema.ResourceData, object *vault.PasswordProfile) error {
 	object.Name = d.Get("name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	if v, ok := d.GetOk("minimum_password_length"); ok {
