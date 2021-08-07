@@ -366,6 +366,10 @@ func resourceOidcWebAppUpdate(d *schema.ResourceData, m interface{}) error {
 	// Deal with normal attribute changes first
 	if d.HasChanges("name", "template_name", "description", "application_id", "oauth_profile", "script", "default_profile_id", "challenge_rule",
 		"policy_script", "username_strategy", "ad_attribute", "username", "user_map_script", "workflow_enabled", "workflow_approver") {
+		// Special handling for default_profile_id. Whenever there is change, default_profile_id must be set otherwise default profile setting will be removed
+		if v, ok := d.GetOk("default_profile_id"); ok && !d.HasChange("default_profile_id") {
+			object.DefaultAuthProfile = v.(string)
+		}
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
 			return fmt.Errorf("error updating Oauth WebApp attribute: %v", err)
@@ -458,7 +462,7 @@ func resourceOidcWebAppDelete(d *schema.ResourceData, m interface{}) error {
 func createUpateGetOidcWebAppData(d *schema.ResourceData, object *vault.OidcWebApp) error {
 	object.Name = d.Get("name").(string)
 	object.TemplateName = d.Get("template_name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	if v, ok := d.GetOk("application_id"); ok {
@@ -468,7 +472,7 @@ func createUpateGetOidcWebAppData(d *schema.ResourceData, object *vault.OidcWebA
 	if v, ok := d.GetOk("oauth_profile"); ok {
 		object.OAuthProfile = expandOidcProfile(v, object.OAuthProfile.ClientID)
 	}
-	if v, ok := d.GetOk("script"); ok {
+	if v, ok := d.GetOk("script"); ok && d.HasChange("script") {
 		// This is annoying. "Script" attribute is used for update but "OpenIDConnectScript" attribute is used for read
 		object.Script = v.(string)
 		object.OpenIDConnectScript = v.(string)
@@ -483,21 +487,21 @@ func createUpateGetOidcWebAppData(d *schema.ResourceData, object *vault.OidcWebA
 	}
 
 	// Account mapping
-	if v, ok := d.GetOk("username_strategy"); ok {
+	if v, ok := d.GetOk("username_strategy"); ok && d.HasChange("username_strategy") {
 		object.UserNameStrategy = v.(string)
 	}
-	if v, ok := d.GetOk("username"); ok {
+	if v, ok := d.GetOk("username"); ok && d.HasChange("username") {
 		object.Username = v.(string)
 	}
-	if v, ok := d.GetOk("user_map_script"); ok {
+	if v, ok := d.GetOk("user_map_script"); ok && d.HasChange("user_map_script") {
 		object.UserMapScript = v.(string)
 	}
 	// Policy
-	if v, ok := d.GetOk("default_profile_id"); ok {
+	if v, ok := d.GetOk("default_profile_id"); ok && d.HasChange("default_profile_id") {
 		object.DefaultAuthProfile = v.(string)
 	}
 
-	if v, ok := d.GetOk("policy_script"); ok {
+	if v, ok := d.GetOk("policy_script"); ok && d.HasChange("policy_script") {
 		object.PolicyScript = v.(string)
 	}
 	if v, ok := d.GetOk("sets"); ok {
@@ -519,7 +523,7 @@ func createUpateGetOidcWebAppData(d *schema.ResourceData, object *vault.OidcWebA
 		}
 	}
 	// Challenge rules
-	if v, ok := d.GetOk("challenge_rule"); ok {
+	if v, ok := d.GetOk("challenge_rule"); ok && d.HasChange("challenge_rule") {
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {

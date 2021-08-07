@@ -201,7 +201,7 @@ func resourceDatabaseRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading Database: %v", err)
+		return fmt.Errorf(" Error reading Database: %v", err)
 	}
 	//logger.Debugf("Database from tenant: %v", object)
 
@@ -240,29 +240,23 @@ func resourceDatabaseCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating Database: %v", err)
+		return fmt.Errorf(" Error creating Database: %v", err)
 	}
 
 	id := resp.Result
 	if id == "" {
-		return fmt.Errorf("Database ID is not set")
+		return fmt.Errorf(" Database ID is not set")
 	}
 	d.SetId(id)
 	// Need to populate ID attribute for subsequence processes
 	object.ID = id
 
-	d.SetPartial("name")
-	d.SetPartial("hostname")
-	d.SetPartial("database_class")
-	d.SetPartial("description")
-
 	// 2nd step to update Database login profile
 	// Create API call doesn't set Database login profile so need to run update again
 	resp2, err2 := object.Update()
 	if err2 != nil || !resp2.Success {
-		return fmt.Errorf("error updating Database attribute: %v", err2)
+		return fmt.Errorf(" Error updating Database attribute: %v", err2)
 	}
-	d.SetPartial("password_profile_id")
 
 	// 3rd step to add Database to Sets
 	if len(object.Sets) > 0 {
@@ -270,16 +264,14 @@ func resourceDatabaseCreate(d *schema.ResourceData, m interface{}) error {
 		if err != nil {
 			return err
 		}
-		d.SetPartial("sets")
 	}
 
 	// 4th step to add permissions
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting Database permissions: %v", err)
+			return fmt.Errorf(" Error setting Database permissions: %v", err)
 		}
-		d.SetPartial("permission")
 	}
 
 	// Creation completed
@@ -310,13 +302,9 @@ func resourceDatabaseUpdate(d *schema.ResourceData, m interface{}) error {
 		"choose_connector", "connector_list") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating Database attribute: %v", err)
+			return fmt.Errorf(" Error updating Database attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
-		d.SetPartial("name")
-		d.SetPartial("hostname")
-		d.SetPartial("database_class")
-		d.SetPartial("description")
 	}
 
 	// Deal with Set member
@@ -329,7 +317,7 @@ func resourceDatabaseUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error removing Database from Set: %v", err)
+				return fmt.Errorf(" Error removing Database from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -339,10 +327,9 @@ func resourceDatabaseUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error adding Database to Set: %v", err)
+				return fmt.Errorf(" Error adding Database to Set: %v", err)
 			}
 		}
-		d.SetPartial("sets")
 	}
 
 	// Deal with Permissions
@@ -359,7 +346,7 @@ func resourceDatabaseUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing Database permissions: %v", err)
+				return fmt.Errorf(" Error removing Database permissions: %v", err)
 			}
 		}
 
@@ -370,10 +357,9 @@ func resourceDatabaseUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding Database permissions: %v", err)
+				return fmt.Errorf(" Error adding Database permissions: %v", err)
 			}
 		}
-		d.SetPartial("permission")
 	}
 
 	d.Partial(false)
@@ -392,7 +378,7 @@ func resourceDatabaseDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting Database: %v", err)
+		return fmt.Errorf(" Error deleting Database: %v", err)
 	}
 
 	if resp.Success {
@@ -408,16 +394,16 @@ func createUpateGetDatabaseData(d *schema.ResourceData, object *vault.Database) 
 	object.Name = d.Get("name").(string)
 	object.FQDN = d.Get("hostname").(string)
 	object.DatabaseClass = d.Get("database_class").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	if v, ok := d.GetOk("port"); ok {
 		object.Port = v.(int)
 	}
-	if v, ok := d.GetOk("instance_name"); ok {
+	if v, ok := d.GetOk("instance_name"); ok && d.HasChange("instance_name") {
 		object.InstanceName = v.(string)
 	}
-	if v, ok := d.GetOk("service_name"); ok {
+	if v, ok := d.GetOk("service_name"); ok && d.HasChange("service_name") {
 		object.ServiceName = v.(string)
 	}
 	if v, ok := d.GetOk("skip_reachability_test"); ok {
@@ -443,7 +429,7 @@ func createUpateGetDatabaseData(d *schema.ResourceData, object *vault.Database) 
 	if v, ok := d.GetOk("minimum_password_age"); ok {
 		object.MinimumPasswordAge = v.(int)
 	}
-	if v, ok := d.GetOk("password_profile_id"); ok {
+	if v, ok := d.GetOk("password_profile_id"); ok && d.HasChange("password_profile_id") {
 		object.PasswordProfileID = v.(string)
 	}
 	if v, ok := d.GetOk("enable_password_history_cleanup"); ok {

@@ -96,7 +96,7 @@ func resourceDomainReconciliationRead(d *schema.ResourceData, m interface{}) err
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading Domain: %v", err)
+		return fmt.Errorf(" Error reading Domain: %v", err)
 	}
 	//logger.Debugf("Domain from tenant: %v", object)
 
@@ -130,7 +130,7 @@ func resourceDomainReconciliationCreate(d *schema.ResourceData, m interface{}) e
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading Domain: %v", err)
+		return fmt.Errorf(" Error reading Domain: %v", err)
 	}
 
 	// Get the rest of attributes
@@ -142,16 +142,15 @@ func resourceDomainReconciliationCreate(d *schema.ResourceData, m interface{}) e
 	// set administrative account
 	err = object.SetAdminAccount()
 	if err != nil {
-		return fmt.Errorf("error setting Domain administrative account: %v", err)
+		return fmt.Errorf(" Error setting Domain administrative account: %v", err)
 	}
 
-	d.SetPartial("administrative_account_id")
 	d.SetId(fmt.Sprintf("%s-reconciliation", object.ID))
 
 	// Update Reconciliation Options and Unix/Linux Local Accounts settings
 	_, err = object.Update()
 	if err != nil {
-		return fmt.Errorf("error updating Domain: %v", err)
+		return fmt.Errorf(" Error updating Domain: %v", err)
 	}
 
 	// Creation completed
@@ -174,7 +173,7 @@ func resourceDomainReconciliationUpdate(d *schema.ResourceData, m interface{}) e
 	// return here to prevent further processing.
 	if err != nil {
 		//d.SetId("")
-		return fmt.Errorf("error reading Domain: %v", err)
+		return fmt.Errorf(" Error reading Domain: %v", err)
 	}
 
 	err = createUpateGetDomainReconciliationData(d, object)
@@ -186,23 +185,16 @@ func resourceDomainReconciliationUpdate(d *schema.ResourceData, m interface{}) e
 	if d.HasChange("administrative_account_id") {
 		err := object.SetAdminAccount()
 		if err != nil {
-			return fmt.Errorf("error updating Domain administrative account: %v", err)
+			return fmt.Errorf(" Error updating Domain administrative account: %v", err)
 		}
-		d.SetPartial("administrative_account_id")
 	}
 
 	if d.HasChanges("auto_domain_account_maintenance", "auto_local_account_maintenance", "manual_domain_account_unlock", "manual_local_account_unlock",
 		"provisioning_admin_id", "reconciliation_account_name") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating Domain attribute: %v", err)
+			return fmt.Errorf(" Error updating Domain attribute: %v", err)
 		}
-		d.SetPartial("auto_domain_account_maintenance")
-		d.SetPartial("auto_local_account_maintenance")
-		d.SetPartial("manual_domain_account_unlock")
-		d.SetPartial("manual_local_account_unlock")
-		d.SetPartial("provisioning_admin_id")
-		d.SetPartial("reconciliation_account_name")
 	}
 
 	d.Partial(false)
@@ -221,7 +213,7 @@ func resourceDomainReconciliationDelete(d *schema.ResourceData, m interface{}) e
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading Domain: %v", err)
+		return fmt.Errorf(" Error reading Domain: %v", err)
 	}
 	object.AdminAccountID = ""
 	object.ProvisioningAdminID = ""
@@ -233,12 +225,12 @@ func resourceDomainReconciliationDelete(d *schema.ResourceData, m interface{}) e
 
 	err = object.SetAdminAccount()
 	if err != nil {
-		return fmt.Errorf("error setting Domain administrative account: %v", err)
+		return fmt.Errorf(" Error setting Domain administrative account: %v", err)
 	}
 
 	resp, err := object.Update()
 	if err != nil || !resp.Success {
-		return fmt.Errorf("error removing of Domain reconciliation settings: %v", err)
+		return fmt.Errorf(" Error removing of Domain reconciliation settings: %v", err)
 	}
 
 	d.SetId("")

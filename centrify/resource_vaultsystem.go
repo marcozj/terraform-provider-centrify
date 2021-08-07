@@ -376,7 +376,7 @@ func resourceSystemRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading System: %v", err)
+		return fmt.Errorf(" Error reading System: %v", err)
 	}
 	//logger.Debugf("System from tenant: %v", object)
 
@@ -436,7 +436,7 @@ func resourceSystemCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating System: %v", err)
+		return fmt.Errorf(" Error creating System: %v", err)
 	}
 
 	id := resp.Result
@@ -447,22 +447,14 @@ func resourceSystemCreate(d *schema.ResourceData, m interface{}) error {
 	// Need to populate ID attribute for subsequence processes
 	object.ID = id
 
-	d.SetPartial("name")
-	d.SetPartial("fqdn")
-	d.SetPartial("computer_class")
-	d.SetPartial("session_type")
-	d.SetPartial("description")
-
 	// 2nd step to update system login profile and connectors
 	// Create API call doesn't set system login profile and connectors so need to run update again
 	if object.LoginDefaultProfile != "" || object.ProxyCollectionList != "" {
 		logger.Debugf("Update login profile and connector for System creation: %s", ResourceIDString(d))
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating System attribute: %v", err)
+			return fmt.Errorf(" Error updating System attribute: %v", err)
 		}
-		d.SetPartial("default_profile_id")
-		d.SetPartial("connector_list")
 	}
 
 	// 3rd step to add system to Sets
@@ -471,16 +463,14 @@ func resourceSystemCreate(d *schema.ResourceData, m interface{}) error {
 		if err != nil {
 			return err
 		}
-		d.SetPartial("sets")
 	}
 
 	// 4th step to add permissions
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting System permissions: %v", err)
+			return fmt.Errorf(" Error setting System permissions: %v", err)
 		}
-		d.SetPartial("permission")
 	}
 
 	// Creation completed
@@ -514,18 +504,19 @@ func resourceSystemUpdate(d *schema.ResourceData, m interface{}) error {
 		"use_domain_assignment_for_zoneroles", "assigned_zonerole", "use_domain_assignment_for_zonerole_approvers", "assigned_zonerole_approver",
 		"choose_connector", "connector_list", "challenge_rule", "agent_auth_workflow_enabled", "agent_auth_workflow_approver",
 		"privilege_elevation_workflow_enabled", "privilege_elevation_workflow_approver") {
+		// Special handling for default_profile_id. Whenever there is change, default_profile_id must be set otherwise default profile setting will be removed
+		if v, ok := d.GetOk("default_profile_id"); ok && !d.HasChange("default_profile_id") {
+			object.LoginDefaultProfile = v.(string)
+		}
+		if v, ok := d.GetOk("privilege_elevation_default_profile_id"); ok && !d.HasChange("privilege_elevation_default_profile_id") {
+			object.PrivilegeElevationDefaultProfile = v.(string)
+		}
+
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating System attribute: %v", err)
+			return fmt.Errorf(" Error updating System attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %+v", object)
-		d.SetPartial("name")
-		d.SetPartial("fqdn")
-		d.SetPartial("computer_class")
-		d.SetPartial("session_type")
-		d.SetPartial("description")
-		d.SetPartial("default_profile_id")
-		d.SetPartial("challenge_rule")
 	}
 
 	// Deal with Set member
@@ -538,7 +529,7 @@ func resourceSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error removing System from Set: %v", err)
+				return fmt.Errorf(" Error removing System from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -548,10 +539,9 @@ func resourceSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "add")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error adding System to Set: %v", err)
+				return fmt.Errorf(" Error adding System to Set: %v", err)
 			}
 		}
-		d.SetPartial("sets")
 	}
 
 	// Deal with Permissions
@@ -568,7 +558,7 @@ func resourceSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing System permissions: %v", err)
+				return fmt.Errorf(" Error removing System permissions: %v", err)
 			}
 		}
 
@@ -579,10 +569,9 @@ func resourceSystemUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding System permissions: %v", err)
+				return fmt.Errorf(" Error adding System permissions: %v", err)
 			}
 		}
-		d.SetPartial("permission")
 	}
 
 	d.Partial(false)
@@ -601,7 +590,7 @@ func resourceSystemDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting System: %v", err)
+		return fmt.Errorf(" Error deleting System: %v", err)
 	}
 
 	if resp.Success {
@@ -621,28 +610,28 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("description"); ok {
 		object.Description = v.(string)
 	}
-	if v, ok := d.GetOk("port"); ok {
+	if v, ok := d.GetOk("port"); ok && d.HasChange("port") {
 		object.Port = v.(int)
 	}
 	if v, ok := d.GetOk("use_my_account"); ok {
 		object.UseMyAccount = v.(bool)
 	}
-	if v, ok := d.GetOk("management_mode"); ok {
+	if v, ok := d.GetOk("management_mode"); ok && d.HasChange("management_mode") {
 		object.ManagementMode = v.(string)
 	}
-	if v, ok := d.GetOk("management_port"); ok {
+	if v, ok := d.GetOk("management_port"); ok && d.HasChange("management_port") {
 		object.ManagementPort = v.(int)
 	}
-	if v, ok := d.GetOk("system_timezone"); ok {
+	if v, ok := d.GetOk("system_timezone"); ok && d.HasChange("system_timezone") {
 		object.TimeZoneID = v.(string)
 	}
 	if v, ok := d.GetOk("proxyuser"); ok {
 		object.ProxyUser = v.(string)
 	}
-	if v, ok := d.GetOk("proxyuser_password"); ok {
+	if v, ok := d.GetOk("proxyuser_password"); ok && d.HasChange("proxyuser_password") {
 		object.ProxyUserPassword = v.(string)
 	}
-	if v, ok := d.GetOk("proxyuser_managed"); ok {
+	if v, ok := d.GetOk("proxyuser_managed"); ok && d.HasChange("proxyuser_managed") {
 		object.ProxyUserIsManaged = v.(bool)
 	}
 	// System -> Policy menu related settings
@@ -655,10 +644,10 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("allow_rdp_clipboard"); ok {
 		object.AllowRdpClipboard = v.(bool)
 	}
-	if v, ok := d.GetOk("default_profile_id"); ok {
+	if v, ok := d.GetOk("default_profile_id"); ok && d.HasChange("default_profile_id") {
 		object.LoginDefaultProfile = v.(string)
 	}
-	if v, ok := d.GetOk("privilege_elevation_default_profile_id"); ok {
+	if v, ok := d.GetOk("privilege_elevation_default_profile_id"); ok && d.HasChange("privilege_elevation_default_profile_id") {
 		object.PrivilegeElevationDefaultProfile = v.(string)
 	}
 	// System -> Advanced menu related settings
@@ -767,7 +756,7 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 		}
 	}
 	// Challenge rules
-	if v, ok := d.GetOk("challenge_rule"); ok {
+	if v, ok := d.GetOk("challenge_rule"); ok && d.HasChange("challenge_rule") {
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
@@ -775,7 +764,7 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 		}
 	}
 	// Privilege Elevation Challenge rules
-	if v, ok := d.GetOk("privilege_elevation_rule"); ok {
+	if v, ok := d.GetOk("privilege_elevation_rule"); ok && d.HasChange("privilege_elevation_rule") {
 		object.PrivilegeElevationRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {

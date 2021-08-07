@@ -209,7 +209,7 @@ func resourceDesktopAppRead(d *schema.ResourceData, m interface{}) error {
 	// return here to prevent further processing.
 	if err != nil {
 		d.SetId("")
-		return fmt.Errorf("error reading DesktopApp: %v", err)
+		return fmt.Errorf(" Error reading DesktopApp: %v", err)
 	}
 	//logger.Debugf("DesktopApp from tenant: %+v", object)
 	schemamap, err := vault.GenerateSchemaMap(object)
@@ -255,10 +255,10 @@ func resourceDesktopAppCreate(d *schema.ResourceData, m interface{}) error {
 	object.TemplateName = d.Get("template_name").(string)
 	resp, err := object.Create()
 	if err != nil {
-		return fmt.Errorf("error creating DesktopApp: %v", err)
+		return fmt.Errorf(" Error creating DesktopApp: %v", err)
 	}
 	if len(resp.Result) <= 0 {
-		return fmt.Errorf("import application template returns incorrect result")
+		return fmt.Errorf(" Import application template returns incorrect result")
 	}
 
 	id := resp.Result[0].(map[string]interface{})["_RowKey"].(string)
@@ -278,37 +278,22 @@ func resourceDesktopAppCreate(d *schema.ResourceData, m interface{}) error {
 
 	resp2, err2 := object.Update()
 	if err2 != nil || !resp2.Success {
-		return fmt.Errorf("error updating DesktopApp attribute: %v", err2)
+		return fmt.Errorf(" Error updating DesktopApp attribute: %v", err2)
 	}
-
-	d.SetPartial("name")
-	d.SetPartial("template_name")
-	d.SetPartial("description")
-	d.SetPartial("application_host_id")
-	d.SetPartial("login_credential_type")
-	d.SetPartial("application_account_id")
-	d.SetPartial("application_alias")
-	d.SetPartial("command_line")
-	d.SetPartial("command_parameter")
-	d.SetPartial("default_profile_id")
-	d.SetPartial("challenge_rule")
-	d.SetPartial("policy_script")
 
 	if len(object.Sets) > 0 {
 		err := object.AddToSetsByID(object.Sets)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("sets")
 	}
 
 	// add permissions
 	if _, ok := d.GetOk("permission"); ok {
 		_, err = object.SetPermissions(false)
 		if err != nil {
-			return fmt.Errorf("error setting DesktopApp permissions: %v", err)
+			return fmt.Errorf(" Error setting DesktopApp permissions: %v", err)
 		}
-		d.SetPartial("permission")
 	}
 
 	// Creation completed
@@ -336,23 +321,9 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 		"command_line", "command_parameter", "default_profile_id", "challenge_rule", "policy_script", "workflow_enabled", "workflow_approver") {
 		resp, err := object.Update()
 		if err != nil || !resp.Success {
-			return fmt.Errorf("error updating DesktopApp attribute: %v", err)
+			return fmt.Errorf(" Error updating DesktopApp attribute: %v", err)
 		}
 		logger.Debugf("Updated attributes to: %v", object)
-		d.SetPartial("name")
-		d.SetPartial("template_name")
-		d.SetPartial("description")
-		d.SetPartial("application_host_id")
-		d.SetPartial("login_credential_type")
-		d.SetPartial("application_account_id")
-		d.SetPartial("application_alias")
-		d.SetPartial("command_line")
-		d.SetPartial("command_parameter")
-		d.SetPartial("default_profile_id")
-		d.SetPartial("challenge_rule")
-		d.SetPartial("policy_script")
-		d.SetPartial("workflow_enabled")
-		d.SetPartial("workflow_approver")
 	}
 
 	if d.HasChange("sets") {
@@ -364,7 +335,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			setObj.ObjectType = object.SetType
 			resp, err := setObj.UpdateSetMembers([]string{object.ID}, "remove")
 			if err != nil || !resp.Success {
-				return fmt.Errorf("error removing DesktopApp from Set: %v", err)
+				return fmt.Errorf(" Error removing DesktopApp from Set: %v", err)
 			}
 		}
 		// Add new Sets
@@ -377,7 +348,6 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 				return fmt.Errorf("error adding DesktopApp to Set: %v", err)
 			}
 		}
-		d.SetPartial("sets")
 	}
 
 	// Deal with Permissions
@@ -394,7 +364,7 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(true)
 			if err != nil {
-				return fmt.Errorf("error removing DesktopApp permissions: %v", err)
+				return fmt.Errorf(" Error removing DesktopApp permissions: %v", err)
 			}
 		}
 
@@ -405,10 +375,9 @@ func resourceDesktopAppUpdate(d *schema.ResourceData, m interface{}) error {
 			}
 			_, err = object.SetPermissions(false)
 			if err != nil {
-				return fmt.Errorf("error adding DesktopApp permissions: %v", err)
+				return fmt.Errorf(" Error adding DesktopApp permissions: %v", err)
 			}
 		}
-		d.SetPartial("permission")
 	}
 
 	// We succeeded, disable partial mode. This causes Terraform to save all fields again.
@@ -428,7 +397,7 @@ func resourceDesktopAppDelete(d *schema.ResourceData, m interface{}) error {
 	// If the resource does not exist, inform Terraform. We want to immediately
 	// return here to prevent further processing.
 	if err != nil {
-		return fmt.Errorf("error deleting DesktopApp: %v", err)
+		return fmt.Errorf(" Error deleting DesktopApp: %v", err)
 	}
 
 	if resp.Success {
@@ -441,7 +410,7 @@ func resourceDesktopAppDelete(d *schema.ResourceData, m interface{}) error {
 
 func getUpateGetDesktopAppData(d *schema.ResourceData, object *vault.DesktopApp) error {
 	object.Name = d.Get("name").(string)
-	if v, ok := d.GetOk("description"); ok {
+	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
 		object.Description = v.(string)
 	}
 	if v, ok := d.GetOk("application_host_id"); ok {
@@ -450,22 +419,22 @@ func getUpateGetDesktopAppData(d *schema.ResourceData, object *vault.DesktopApp)
 	if v, ok := d.GetOk("login_credential_type"); ok {
 		object.DesktopAppRunAccountType = v.(string)
 	}
-	if v, ok := d.GetOk("application_account_id"); ok {
+	if v, ok := d.GetOk("application_account_id"); ok && d.HasChange("application_account_id") {
 		object.DesktopAppRunAccountID = v.(string)
 	}
 	if v, ok := d.GetOk("application_alias"); ok {
 		object.DesktopAppProgramName = v.(string)
 	}
-	if v, ok := d.GetOk("command_line"); ok {
+	if v, ok := d.GetOk("command_line"); ok && d.HasChange("command_line") {
 		object.DesktopAppCmdline = v.(string)
 	}
-	if v, ok := d.GetOk("command_parameter"); ok {
+	if v, ok := d.GetOk("command_parameter"); ok && d.HasChange("command_parameter") {
 		object.DesktopAppParams = expandCommandParams(v)
 	}
-	if v, ok := d.GetOk("default_profile_id"); ok {
+	if v, ok := d.GetOk("default_profile_id"); ok && d.HasChange("default_profile_id") {
 		object.DefaultAuthProfile = v.(string)
 	}
-	if v, ok := d.GetOk("policy_script"); ok {
+	if v, ok := d.GetOk("policy_script"); ok && d.HasChange("policy_script") {
 		object.PolicyScript = v.(string)
 	}
 	if v, ok := d.GetOk("sets"); ok {
@@ -487,7 +456,7 @@ func getUpateGetDesktopAppData(d *schema.ResourceData, object *vault.DesktopApp)
 		}
 	}
 	// Challenge rules
-	if v, ok := d.GetOk("challenge_rule"); ok {
+	if v, ok := d.GetOk("challenge_rule"); ok && d.HasChange("challenge_rule") {
 		object.ChallengeRules = expandChallengeRules(v.([]interface{}))
 		// Perform validations
 		if err := validateChallengeRules(object.ChallengeRules); err != nil {
