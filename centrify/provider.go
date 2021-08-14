@@ -162,6 +162,7 @@ func Provider() *schema.Provider {
 			"centrifyvault_webapp_oauth":              resourceOauthWebApp_deprecated(),
 			"centrifyvault_webapp_oidc":               resourceOidcWebApp_deprecated(),
 			"centrifyvault_webapp_generic":            resourceGenericWebApp_deprecated(),
+			"centrifyvault_federatedgroup":            resourceFederatedGroup_deprecated(),
 			// Change centrifyvault_* centrify_*
 			"centrify_user":                  resourceUser(),
 			"centrify_role":                  resourceRole(),
