@@ -51,4 +51,4 @@ Cloud Provider can be imported using the resource `id`, e.g.
 terraform import centrify_cloudprovider.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-**Limitation:** `permission` and `sets` aren't support in import process.
+**Limitation:** `permission` and `sets` aren't supported in import process.

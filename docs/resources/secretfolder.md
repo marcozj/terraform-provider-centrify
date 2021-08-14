@@ -46,4 +46,4 @@ Secret Folder can be imported using the resource `id`, e.g.
 terraform import centrify_secretfolder.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-**Limitation:** `permission` and `member_permission` aren't support in import process.
+**Limitation:** `permission` and `member_permission` aren't supported in import process.

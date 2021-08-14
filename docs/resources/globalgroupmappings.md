@@ -6,6 +6,8 @@ subcategory: "Settings"
 
 This resource allows you to create/update/delete global federated group mapping.
 
+~> **WARNING:** Multiple `centrify_globalgroupmappings` resources will produce inconsistent behavior! Do NOT use more than once!
+
 ## Example Usage
 
 ```terraform

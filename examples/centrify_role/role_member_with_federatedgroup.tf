@@ -2,7 +2,7 @@
 data "centrify_directoryservice" "federated_dir" {
     // name must be "Federated Directory Service"
     name = "Federated Directory Service"
-    // Avaiable types are: "Centrify Directory", "Active Directory", "Federated Directory", "Google Directory", "LDAP Directory"
+    // Available types are: "Centrify Directory", "Active Directory", "Federated Directory", "Google Directory", "LDAP Directory"
     type = "Federated Directory"
 }
 

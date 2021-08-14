@@ -1,10 +1,17 @@
 # RELEASE NOTES
 
+
+## 0.2.4 (Aug 14, 2021)
+
+IMPROVEMENTS:
+
+- **New Resource:** `centrify_role_membership`
+
 ## 0.2.3 (Aug 7, 2021)
 
 BUG FIXES:
 
-- Fix `secret_text` in `centrifyvault_vaultsecret` resource and some other attributes that do not honor ignore_changes when change made in Centrify Platform. However, in general bool, required attribute and workflow configuration in resource/account do not work well with ignore_changes due to Centrify Platform API limitation. 
+- Fix `secret_text` in `centrify_vaultsecret` resource and some other attributes that do not honor ignore_changes when change made in Centrify Platform. However, in general bool, required attribute and workflow configuration in resource/account do not work well with ignore_changes due to Centrify Platform API limitation. 
 
 ## 0.2.2 (Aug 2, 2021)
 

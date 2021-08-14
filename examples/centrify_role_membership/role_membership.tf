@@ -1,4 +1,3 @@
-// Existing Centrify Directory user
 data "centrify_user" "admin" {
     username = "admin@example.com"
 }
@@ -16,7 +15,7 @@ data "centrify_directoryobject" "ad_user" {
     directory_services = [
         data.centrify_directoryservice.demo_lab.id
     ]
-    name = "ad.user"
+    name = "alex.foster@demo.lab"
     object_type = "User"
 }
 
@@ -33,29 +32,45 @@ data "centrify_directoryobject" "federated_user" {
     directory_services = [
         data.centrify_directoryservice.federated_dir.id
     ]
-    name = "federated.user@democorp.club"
+    name = "alex.foster@democorp.club"
     object_type = "User"
 }
 
-resource "centrify_role" "test_role" {
-    name = "Test role"
-    description = "Test Role that has role as member."
+// Existing federated (virtual) group
+data "centrify_federatedgroup" "fedgroup1" {
+  name = "Okta Infra Admins"
+}
 
-    // Centrify Directory user
-    member {
-        id = data.centrify_user.admin.id
-        type = "User"
-    }
+// Existing role whose membership to be managed
+data "centrify_role" "testrole" {
+    name = "Test Role"
+}
 
-    // Active Directory user
-    member {
-        id = data.centrify_directoryobject.ad_user.id
-        type = "User"
-    }
+// Role membership for exsting role
+resource "centrify_role_membership" "testrolemembers" {
+  role_id = data.centrify_role.testrole.id
 
-    // Federated user
-    member {
-        id = data.centrify_directoryobject.federated_user.id
-        type = "User"
-    }
+  // Centrify Directory user
+  member {
+    id = data.centrify_user.admin.id
+    type = "User"
+  }
+
+  // Active Directory user
+  member {
+    id = data.centrify_directoryobject.ad_user.id
+    type = "User"
+  }
+
+  // Federated user
+  member {
+    id = data.centrify_directoryobject.federated_user.id
+    type = "User"
+  }
+
+  // Existing federated (virtual) group
+  member {
+    id = data.centrify_federatedgroup.fedgroup1.id
+    type = "Group"
+  }
 }

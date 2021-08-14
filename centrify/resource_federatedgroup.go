@@ -10,6 +10,21 @@ import (
 	"github.com/marcozj/golang-sdk/restapi"
 )
 
+func resourceFederatedGroup_deprecated() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceFederatedGroupCreate,
+		Read:   resourceFederatedGroupRead,
+		Delete: resourceFederatedGroupDelete,
+		Exists: resourceFederatedGroupExists,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
+		Schema:             getFederatedGroupSchema(),
+		DeprecationMessage: "resource centrifyvault_federatedgroup is deprecated will be removed in the future, use centrify_federatedgroup instead",
+	}
+}
+
 func resourceFederatedGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceFederatedGroupCreate,
