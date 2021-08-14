@@ -86,6 +86,7 @@ The Provider supports OAuth2 and DMC authentication methods.
 | Federated Group | [`centrify_federatedgroup`](./resources/federatedgroup.md) | [`centrify_federatedgroup`](./data-sources/federatedgroup.md) |
 | Centrify Directory User | [`centrify_user`](./resources/user.md) | [`centrify_user`](./data-sources/user.md) |
 | Role | [`centrify_role`](./resources/role.md) | [`centrify_role`](./data-sources/role.md) |
+| Role Membership | [`centrify_role_membership`](./resources/role_membership.md) | |
 | Authentication Profile | [`centrify_authenticationprofile`](./resources/authenticationprofile.md) | [`centrify_authenticationprofile`](./data-sources/authenticationprofile.md) |
 | Password Profile | [`centrify_passwordprofile`](./resources/passwordprofile.md) | [`centrify_passwordprofile`](./data-sources/passwordprofile.md) |
 | Connector | | [`centrify_connector`](./data-sources/connector.md) |

@@ -137,6 +137,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"centrifyvault_user":                      resourceUser_deprecated(),
 			"centrifyvault_role":                      resourceRole_deprecated(),
+			"centrifyvault_role_membership":           resourceRoleMembership_deprecated(),
 			"centrifyvault_policyorder":               resourcePolicyLinks_deprecated(),
 			"centrifyvault_policy":                    resourcePolicy_deprecated(),
 			"centrifyvault_manualset":                 resourceManualSet_deprecated(),
@@ -164,6 +165,7 @@ func Provider() *schema.Provider {
 			// Change centrifyvault_* centrify_*
 			"centrify_user":                  resourceUser(),
 			"centrify_role":                  resourceRole(),
+			"centrify_role_membership":       resourceRoleMembership(),
 			"centrify_policyorder":           resourcePolicyLinks(),
 			"centrify_policy":                resourcePolicy(),
 			"centrify_manualset":             resourceManualSet(),
