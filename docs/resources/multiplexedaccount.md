@@ -41,4 +41,4 @@ Multiplexed Account can be imported using the resource `id`, e.g.
 terraform import centrify_multiplexedaccount.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-**Limitation:** `permission` isn't support in import process.
+**Limitation:** `permission` isn't supported in import process.

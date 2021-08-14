@@ -54,4 +54,4 @@ Centrify Directory User can be imported using the resource `id`, e.g.
 terraform import centrify_user.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-**Limitation:** `roles` isn't support in import process.
+**Limitation:** `roles` isn't supported in import process.

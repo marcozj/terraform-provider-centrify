@@ -82,4 +82,4 @@ Domain can be imported using the resource `id`, e.g.
 terraform import centrify_domain.example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-**Limitation:** `permission` and `set` aren't support in import process.
+**Limitation:** `permission` and `set` aren't supported in import process.
