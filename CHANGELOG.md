@@ -1,5 +1,14 @@
 # RELEASE NOTES
 
+## 0.2.5 (Sep 07, 2021)
+
+IMPROVEMENTS:
+
+- **New Resource:** `centrify_userpassword` It is used for updating existing user password only.
+
+BUG FIXES:
+
+- Fix `centrify_user` user creation error in Centrify Platform 21.6. when redirect_mfa_user_id is not set
 
 ## 0.2.4 (Aug 14, 2021)
 
