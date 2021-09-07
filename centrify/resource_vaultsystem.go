@@ -610,7 +610,7 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("description"); ok {
 		object.Description = v.(string)
 	}
-	if v, ok := d.GetOk("port"); ok && d.HasChange("port") {
+	if v, ok := d.GetOk("port"); ok {
 		object.Port = v.(int)
 	}
 	if v, ok := d.GetOk("use_my_account"); ok {
@@ -619,7 +619,7 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("management_mode"); ok && d.HasChange("management_mode") {
 		object.ManagementMode = v.(string)
 	}
-	if v, ok := d.GetOk("management_port"); ok && d.HasChange("management_port") {
+	if v, ok := d.GetOk("management_port"); ok {
 		object.ManagementPort = v.(int)
 	}
 	if v, ok := d.GetOk("system_timezone"); ok && d.HasChange("system_timezone") {
@@ -631,7 +631,7 @@ func createUpateGetSystemData(d *schema.ResourceData, object *vault.System) erro
 	if v, ok := d.GetOk("proxyuser_password"); ok && d.HasChange("proxyuser_password") {
 		object.ProxyUserPassword = v.(string)
 	}
-	if v, ok := d.GetOk("proxyuser_managed"); ok && d.HasChange("proxyuser_managed") {
+	if v, ok := d.GetOk("proxyuser_managed"); ok {
 		object.ProxyUserIsManaged = v.(bool)
 	}
 	// System -> Policy menu related settings

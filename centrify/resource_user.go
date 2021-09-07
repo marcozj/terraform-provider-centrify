@@ -327,16 +327,16 @@ func createUpateGetUserData(d *schema.ResourceData, object *vault.User) error {
 	if v, ok := d.GetOk("confirm_password"); ok {
 		object.ConfirmPassword = v.(string)
 	}
-	if v, ok := d.GetOk("password_never_expire"); ok && d.HasChange("password_never_expire") {
+	if v, ok := d.GetOk("password_never_expire"); ok {
 		object.PasswordNeverExpire = v.(bool)
 	}
-	if v, ok := d.GetOk("force_password_change_next"); ok && d.HasChange("force_password_change_next") {
+	if v, ok := d.GetOk("force_password_change_next"); ok {
 		object.ForcePasswordChangeNext = v.(bool)
 	}
-	if v, ok := d.GetOk("oauth_client"); ok && d.HasChange("oauth_client") {
+	if v, ok := d.GetOk("oauth_client"); ok {
 		object.OauthClient = v.(bool)
 	}
-	if v, ok := d.GetOk("send_email_invite"); ok && d.HasChange("send_email_invite") {
+	if v, ok := d.GetOk("send_email_invite"); ok {
 		object.SendEmailInvite = v.(bool)
 	}
 	if v, ok := d.GetOk("description"); ok && d.HasChange("description") {
